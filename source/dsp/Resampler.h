@@ -30,6 +30,13 @@ public:
     void setParameters (const Parameters& p) noexcept;
     void process (float* const* channels, int numChannels, int numSamples) noexcept;
 
+    // Global Drift wanders the sample clock; Unstable adds clock jitter.
+    void setMovement (Movement m) noexcept
+    {
+        drift.setTarget (std::clamp (m.drift, 0.0f, 1.0f));
+        instability.setTarget (std::clamp (m.unstable, 0.0f, 1.0f));
+    }
+
 private:
     static constexpr int maxChannels = 2;
     static constexpr int coefficientInterval = 16;
@@ -42,6 +49,7 @@ private:
     std::array<Svf, maxChannels> filters;
     Noise noise { 0x51f15eedu };
 
-    Smoother rate, bits, filterHz, jitter, mix;
+    Smoother rate, bits, filterHz, jitter, mix, drift, instability;
+    RandomDrift clockWander;
 };
 } // namespace sfx::dsp

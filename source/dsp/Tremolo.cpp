@@ -30,6 +30,10 @@ void Tremolo::prepare (double newSampleRate, int)
     rate.prepare (sampleRate, 30.0f);
     depth.prepare (sampleRate, 20.0f);
     stereo.prepare (sampleRate, 30.0f);
+    drift.prepare (sampleRate, 100.0f);
+    instability.prepare (sampleRate, 100.0f);
+    rateWander.prepare (sampleRate, 0.25f, 0x7e3e1u);
+    depthFlicker.prepare (sampleRate, 5.0f, 0x7e3e2u);
     shapeFadeLength = std::max (1, static_cast<int> (sampleRate * 0.02));
     firstUpdate = true;
     reset();
@@ -40,7 +44,7 @@ void Tremolo::reset() noexcept
     phase = 0.0f;
     shapeFade = 0;
     previousShape = shape;
-    for (auto* s : { &rate, &depth, &stereo })
+    for (auto* s : { &rate, &depth, &stereo, &drift, &instability })
         s->snapToTarget();
 }
 
@@ -83,8 +87,8 @@ void Tremolo::process (float* const* channels, int numChannels, int numSamples) 
 
     for (int i = 0; i < numSamples; ++i)
     {
-        const auto r = rate.next();
-        const auto d = depth.next();
+        const auto r = rate.next() * (1.0f + 0.25f * drift.next() * rateWander.next());
+        const auto d = depth.next() * (1.0f - 0.35f * instability.next() * std::max (0.0f, depthFlicker.next()));
         const auto st = stereo.next();
 
         float fade = 0.0f;

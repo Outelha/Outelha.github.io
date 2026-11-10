@@ -245,6 +245,15 @@ private:
     float phase = 1.0f, step = 0.0f;
 };
 
+// Global analog movement amounts shared by every effect (0..1 each).
+//  drift:    slow, wandering variation (pitch, rate, time) like warm-up and component tolerance
+//  unstable: faster, irregular imperfections (flutter, jitter, level flicker)
+struct Movement
+{
+    float drift = 0.0f;
+    float unstable = 0.0f;
+};
+
 // Tempo-synced note divisions, expressed in quarter-note beats.
 inline constexpr int numDivisions = 14;
 inline constexpr std::array<float, numDivisions> divisionBeats {

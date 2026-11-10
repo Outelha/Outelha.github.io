@@ -10,6 +10,7 @@ add_executable(shobeats_dsp_tests
     TremoloTests.cpp
     ReverseTests.cpp
     DelayTests.cpp
+    MovementTests.cpp
     ReverbTests.cpp)
 target_link_libraries(shobeats_dsp_tests PRIVATE shobeats_dsp Catch2::Catch2WithMain)
 catch_discover_tests(shobeats_dsp_tests DISCOVERY_MODE PRE_TEST)

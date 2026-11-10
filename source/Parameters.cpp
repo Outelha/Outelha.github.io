@@ -12,7 +12,7 @@
 namespace sfx
 {
 const std::array<const char*, numParameters> allParameterIds {
-    ParamID::inputGain, ParamID::outputGain, ParamID::globalMix,
+    ParamID::inputGain, ParamID::outputGain, ParamID::globalMix, ParamID::drift, ParamID::unstable,
     ParamID::satEnabled, ParamID::satDrive, ParamID::satTone, ParamID::satMode, ParamID::satOutput, ParamID::satMix,
     ParamID::rsEnabled, ParamID::rsRate, ParamID::rsBits, ParamID::rsFilter, ParamID::rsJitter, ParamID::rsMix,
     ParamID::tapeEnabled, ParamID::tapeDrive, ParamID::tapeWow, ParamID::tapeFlutter, ParamID::tapeNoise, ParamID::tapeAge, ParamID::tapeMix,
@@ -157,6 +157,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     addFloat (*global, ParamID::inputGain, "Input", range (-24.0f, 24.0f, 0.01f), 0.0f, decibels());
     addFloat (*global, ParamID::globalMix, "Global Mix", range (0.0f, 1.0f, 0.001f), 1.0f, percent());
     addFloat (*global, ParamID::outputGain, "Output", range (-24.0f, 24.0f, 0.01f), 0.0f, decibels());
+    // Analog movement: affects every active effect (see each effect's setMovement()).
+    addFloat (*global, ParamID::drift, "Drift", range (0.0f, 1.0f, 0.001f), 0.0f, percent());
+    addFloat (*global, ParamID::unstable, "Unstable", range (0.0f, 1.0f, 0.001f), 0.0f, percent());
     layout.add (std::move (global));
 
     // All effects start switched off: a new instance is transparent until you choose a sound.

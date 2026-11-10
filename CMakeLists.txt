@@ -10,7 +10,7 @@ set(BUNDLE_ID "com.shobeats.shobeatsfx")
 set(MANUFACTURER_CODE "Shbt") # 4 chars, at least one uppercase
 set(PLUGIN_CODE "Shfx")       # 4 chars, unique per plugin
 
-project(${PRODUCT_NAME} VERSION 0.2.0 LANGUAGES C CXX)
+project(${PRODUCT_NAME} VERSION 0.3.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

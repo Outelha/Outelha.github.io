@@ -38,12 +38,20 @@ public:
     void setParameters (const Parameters& p, double bpm) noexcept;
     void process (float* const* channels, int numChannels, int numSamples) noexcept;
 
+    // Global Drift wanders the rate; Unstable makes the depth breathe irregularly.
+    void setMovement (Movement m) noexcept
+    {
+        drift.setTarget (std::clamp (m.drift, 0.0f, 1.0f));
+        instability.setTarget (std::clamp (m.unstable, 0.0f, 1.0f));
+    }
+
 private:
     double sampleRate = 44100.0;
     bool firstUpdate = true;
     Shape shape = Shape::sine, previousShape = Shape::sine;
     int shapeFade = 0, shapeFadeLength = 1;
     float phase = 0.0f;
-    Smoother rate, depth, stereo;
+    Smoother rate, depth, stereo, drift, instability;
+    RandomDrift rateWander, depthFlicker;
 };
 } // namespace sfx::dsp

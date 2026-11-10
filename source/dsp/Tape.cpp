@@ -17,7 +17,7 @@ void Tape::prepare (double newSampleRate, int)
 
     for (auto* s : { &drive, &comp, &noiseLevel, &mix })
         s->prepare (sampleRate, 30.0f);
-    for (auto* s : { &wow, &flutter, &age, &instability })
+    for (auto* s : { &wow, &flutter, &age, &drift, &instability })
         s->prepare (sampleRate, 80.0f);
     baseDelay.prepare (sampleRate, 300.0f);
 
@@ -42,7 +42,7 @@ void Tape::reset() noexcept
         hissFilter[c].reset();
     }
     wowPhase = flutterPhase = 0.0f;
-    for (auto* s : { &drive, &comp, &wow, &flutter, &noiseLevel, &age, &mix, &instability, &baseDelay })
+    for (auto* s : { &drive, &comp, &wow, &flutter, &noiseLevel, &age, &mix, &drift, &instability, &baseDelay })
         s->snapToTarget();
 }
 
@@ -58,16 +58,32 @@ void Tape::setParameters (const Parameters& p) noexcept
     age.setTarget (std::clamp (p.age, 0.0f, 1.0f));
     mix.setTarget (p.enabled ? std::clamp (p.mix, 0.0f, 1.0f) : 0.0f);
 
-    // The delay centre only needs to be as large as the modulation swing.
-    const auto swingMs = std::clamp (p.wow, 0.0f, 1.0f) * maxWowMs + std::clamp (p.flutter, 0.0f, 1.0f) * maxFlutterMs;
-    baseDelay.setTarget ((swingMs + 0.3f) * 0.001f * static_cast<float> (sampleRate));
+    paramWow = std::clamp (p.wow, 0.0f, 1.0f);
+    paramFlutter = std::clamp (p.flutter, 0.0f, 1.0f);
+    updateBaseDelay();
 
     if (firstUpdate)
     {
-        for (auto* s : { &drive, &comp, &wow, &flutter, &noiseLevel, &age, &mix, &instability, &baseDelay })
+        for (auto* s : { &drive, &comp, &wow, &flutter, &noiseLevel, &age, &mix, &drift, &instability, &baseDelay })
             s->snapToTarget();
         firstUpdate = false;
     }
+}
+
+void Tape::setMovement (Movement m) noexcept
+{
+    movement.drift = std::clamp (m.drift, 0.0f, 1.0f);
+    movement.unstable = std::clamp (m.unstable, 0.0f, 1.0f);
+    drift.setTarget (movement.drift);
+    instability.setTarget (movement.unstable);
+    updateBaseDelay();
+}
+
+void Tape::updateBaseDelay() noexcept
+{
+    // The delay centre only needs to be as large as the total modulation swing.
+    const auto swingMs = (paramWow + 0.6f * movement.drift) * maxWowMs + (paramFlutter + 0.6f * movement.unstable) * maxFlutterMs;
+    baseDelay.setTarget ((swingMs + 0.3f) * 0.001f * static_cast<float> (sampleRate));
 }
 
 void Tape::process (float* const* channels, int numChannels, int numSamples) noexcept
@@ -95,6 +111,7 @@ void Tape::process (float* const* channels, int numChannels, int numSamples) noe
         const auto n = noiseLevel.next();
         const auto a = age.next();
         const auto m = mix.next();
+        const auto slow = drift.next();
         const auto unstable = instability.next();
         const auto centre = baseDelay.next();
 
@@ -113,13 +130,13 @@ void Tape::process (float* const* channels, int numChannels, int numSamples) noe
         flutterPhase += 6.5f / sr;
         flutterPhase -= std::floor (flutterPhase);
 
-        const auto wowMod = (w + 0.5f * unstable) * maxWowMs * std::sin (twoPi * wowPhase);
-        const auto flutterMod = (f + 0.5f * unstable) * maxFlutterMs
+        const auto wowMod = (w + 0.6f * slow) * maxWowMs * std::sin (twoPi * wowPhase);
+        const auto flutterMod = (f + 0.6f * unstable) * maxFlutterMs
                                 * (0.7f * std::sin (twoPi * flutterPhase) + 0.3f * flutterDrift.next());
         const auto modSamples = (wowMod + flutterMod) * msToSamples;
 
         // Dropouts: random dips in level, only with age.
-        const auto dip = 1.0f - a * a * 0.6f * std::max (0.0f, dropout.next());
+        const auto dip = 1.0f - std::max (a * a * 0.6f, unstable * 0.35f) * std::max (0.0f, dropout.next());
 
         for (int ch = 0; ch < numChannels; ++ch)
         {

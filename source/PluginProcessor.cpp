@@ -127,6 +127,16 @@ void ShobeatsAudioProcessor::updateDspParameters (double bpm) noexcept
 {
     const auto& p = params;
 
+    const dsp::Movement movement { p.get (ParamID::drift), p.get (ParamID::unstable) };
+    saturation.setMovement (movement);
+    resampler.setMovement (movement);
+    tape.setMovement (movement);
+    chorus.setMovement (movement);
+    tremolo.setMovement (movement);
+    reverse.setMovement (movement);
+    delay.setMovement (movement);
+    reverb.setMovement (movement);
+
     dsp::Saturation::Parameters sp;
     sp.enabled = p.on (ParamID::satEnabled);
     sp.driveDb = p.get (ParamID::satDrive);

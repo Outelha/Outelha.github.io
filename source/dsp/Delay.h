@@ -33,7 +33,12 @@ public:
     void setParameters (const Parameters& p, double bpm) noexcept;
     void process (float* const* channels, int numChannels, int numSamples) noexcept;
 
-    void setInstability (float amount) noexcept { instability.setTarget (std::clamp (amount, 0.0f, 1.0f)); }
+    // Global Drift slowly wanders the delay time; Unstable adds wobble and jitter.
+    void setMovement (Movement m) noexcept
+    {
+        drift.setTarget (std::clamp (m.drift, 0.0f, 1.0f));
+        instability.setTarget (std::clamp (m.unstable, 0.0f, 1.0f));
+    }
 
 private:
     static constexpr int coefficientInterval = 32;
@@ -45,7 +50,7 @@ private:
 
     std::array<DelayLine, 2> lines;
     std::array<Svf, 2> lowCut, highCut;
-    RandomDrift wobble;
-    Smoother time, feedback, lowCutHz, highCutHz, width, mix, instability;
+    RandomDrift wobble, wander, jitter;
+    Smoother time, feedback, lowCutHz, highCutHz, width, mix, drift, instability;
 };
 } // namespace sfx::dsp

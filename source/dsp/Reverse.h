@@ -30,6 +30,13 @@ public:
     void setParameters (const Parameters& p, double bpm) noexcept;
     void process (float* const* channels, int numChannels, int numSamples) noexcept;
 
+    // Global Drift detunes each segment slightly; Unstable varies segment lengths.
+    void setMovement (Movement m) noexcept
+    {
+        movement.drift = std::clamp (m.drift, 0.0f, 1.0f);
+        movement.unstable = std::clamp (m.unstable, 0.0f, 1.0f);
+    }
+
     // Exact segment length currently used (samples), for tests.
     float getSegmentSamples() const noexcept { return targetSegment; }
 
@@ -51,5 +58,7 @@ private:
     std::array<Head, numHeads> heads {};
     float targetSegment = 1.0f, targetRate = 1.0f;
     Smoother mix;
+    Movement movement;
+    Noise noise { 0x4e7e45u };
 };
 } // namespace sfx::dsp

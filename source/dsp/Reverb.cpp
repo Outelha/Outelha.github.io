@@ -44,7 +44,7 @@ void Reverb::prepare (double newSampleRate, int)
     const auto modDepth = modulationDepthSamplesAt48k * static_cast<float> (sampleRate / 48000.0);
     for (std::size_t i = 0; i < numLines; ++i)
     {
-        const auto maxLen = baseLineMs[i] * maxSizeScale * msToSamples + modDepth + 4.0;
+        const auto maxLen = baseLineMs[i] * maxSizeScale * msToSamples + modDepth * 4.0f + 4.0; // x4: Drift deepens modulation
         lines[i].prepare (static_cast<std::size_t> (std::ceil (maxLen)));
         lineLength[i].prepare (sampleRate, 250.0f);
         modPhase[i] = static_cast<float> (i) / static_cast<float> (numLines);
@@ -53,6 +53,10 @@ void Reverb::prepare (double newSampleRate, int)
     predelaySamples.prepare (sampleRate, 100.0f);
     mix.prepare (sampleRate, 20.0f);
     width.prepare (sampleRate, 20.0f);
+    modDepthScale.prepare (sampleRate, 200.0f);
+    modRateScale.prepare (sampleRate, 200.0f);
+    modDepthScale.snap (1.0f);
+    modRateScale.snap (1.0f);
 
     firstUpdate = true;
     reset();
@@ -148,6 +152,8 @@ void Reverb::process (float* const* channels, int numChannels, int numSamples) n
         const auto pd = predelaySamples.next();
         const auto m = mix.next();
         const auto w = width.next();
+        const auto depthScale = modDepthScale.next();
+        const auto rateScale = modRateScale.next();
 
         const auto inL = channels[0][i];
         const auto inR = stereo ? channels[1][i] : inL;
@@ -169,10 +175,10 @@ void Reverb::process (float* const* channels, int numChannels, int numSamples) n
         for (std::size_t l = 0; l < numLines; ++l)
         {
             const auto len = lineLength[l].next();
-            modPhase[l] += modInc * (1.0f + 0.13f * static_cast<float> (l));
+            modPhase[l] += modInc * rateScale * (1.0f + 0.13f * static_cast<float> (l));
             if (modPhase[l] >= 1.0f)
                 modPhase[l] -= 1.0f;
-            const auto mod = modDepth * std::sin (twoPi * modPhase[l]);
+            const auto mod = modDepth * depthScale * std::sin (twoPi * modPhase[l]);
             y[l] = lines[l].readLinear (len - 1.0f + mod);
             sum += lineGain[l] * damping[l].process (y[l]);
         }

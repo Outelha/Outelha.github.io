@@ -34,6 +34,13 @@ public:
 
     void process (float* const* channels, int numChannels, int numSamples) noexcept;
 
+    // Global Drift wanders rate and centre delay; Unstable adds irregular voice jitter.
+    void setMovement (Movement m) noexcept
+    {
+        drift.setTarget (std::clamp (m.drift, 0.0f, 1.0f));
+        instability.setTarget (std::clamp (m.unstable, 0.0f, 1.0f));
+    }
+
 private:
     static constexpr int maxChannels = 2;
     static constexpr int voicesPerChannel = 2;
@@ -43,7 +50,8 @@ private:
     float lfoPhase = 0.0f;
     bool firstUpdate = true;
 
-    Smoother rate, depthMs, delaySamples, mix, feedback, width;
+    Smoother rate, depthMs, delaySamples, mix, feedback, width, drift, instability;
+    RandomDrift rateWander, delayWander, jitterL, jitterR;
     std::array<float, maxChannels> lastWet {};
 };
 } // namespace sfx::dsp

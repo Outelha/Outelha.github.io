@@ -32,8 +32,8 @@ public:
     void setParameters (const Parameters& p) noexcept;
     void process (float* const* channels, int numChannels, int numSamples) noexcept;
 
-    // Extra pitch/time instability added by the global Unstable control (0..1).
-    void setInstability (float amount) noexcept { instability.setTarget (std::clamp (amount, 0.0f, 1.0f)); }
+    // Global Drift adds slow wow; Unstable adds flutter and level dropouts.
+    void setMovement (Movement m) noexcept;
 
 private:
     static constexpr int maxChannels = 2;
@@ -50,6 +50,10 @@ private:
     RandomDrift wowDrift, flutterDrift, dropout;
 
     float wowPhase = 0.0f, flutterPhase = 0.0f;
-    Smoother drive, comp, wow, flutter, noiseLevel, age, mix, instability, baseDelay;
+    void updateBaseDelay() noexcept;
+
+    float paramWow = 0.0f, paramFlutter = 0.0f;
+    Movement movement;
+    Smoother drive, comp, wow, flutter, noiseLevel, age, mix, drift, instability, baseDelay;
 };
 } // namespace sfx::dsp

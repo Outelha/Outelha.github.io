@@ -49,6 +49,13 @@ public:
 
     void process (float* const* channels, int numChannels, int numSamples) noexcept;
 
+    // Global Drift slowly wanders the drive (+-1.5 dB); Unstable adds faster flicker (+-1 dB).
+    void setMovement (Movement m) noexcept
+    {
+        drift.setTarget (std::clamp (m.drift, 0.0f, 1.0f));
+        instability.setTarget (std::clamp (m.unstable, 0.0f, 1.0f));
+    }
+
 private:
     static constexpr int maxChannels = 2;
 
@@ -65,7 +72,8 @@ private:
     Mode previousMode = Mode::soft;
     int modeFadeRemaining = 0, modeFadeLength = 1;
 
-    Smoother driveGain, compGain, outGain, mix, lowGain, highGain;
+    Smoother driveGain, compGain, outGain, mix, lowGain, highGain, drift, instability;
+    RandomDrift driveWander, driveFlicker;
     bool firstUpdate = true;
 };
 } // namespace sfx::dsp

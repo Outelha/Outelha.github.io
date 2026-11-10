@@ -12,7 +12,10 @@ void Delay::prepare (double newSampleRate, int)
     for (auto* s : { &feedback, &lowCutHz, &highCutHz, &width, &mix })
         s->prepare (sampleRate, 30.0f);
     instability.prepare (sampleRate, 100.0f);
+    drift.prepare (sampleRate, 100.0f);
     wobble.prepare (sampleRate, 1.3f, 0xdeadbeu);
+    wander.prepare (sampleRate, 0.15f, 0x5eed01u);
+    jitter.prepare (sampleRate, 14.0f, 0x5eed02u);
     firstUpdate = true;
     reset();
 }
@@ -25,7 +28,7 @@ void Delay::reset() noexcept
         f.reset();
     for (auto& f : highCut)
         f.reset();
-    for (auto* s : { &time, &feedback, &lowCutHz, &highCutHz, &width, &mix, &instability })
+    for (auto* s : { &time, &feedback, &lowCutHz, &highCutHz, &width, &mix, &drift, &instability })
         s->snapToTarget();
     isIdle = false;
 }
@@ -66,7 +69,7 @@ void Delay::process (float* const* channels, int numChannels, int numSamples) no
     isIdle = false;
 
     const bool stereo = numChannels == 2;
-    const auto wobbleDepth = 0.002f * static_cast<float> (sampleRate); // up to 2 ms at full instability
+    const auto msToSamples = 0.001f * static_cast<float> (sampleRate);
 
     for (int i = 0; i < numSamples; ++i)
     {
@@ -77,6 +80,7 @@ void Delay::process (float* const* channels, int numChannels, int numSamples) no
         const auto w = width.next();
         const auto m = mix.next();
         const auto unstable = instability.next();
+        const auto slow = drift.next();
 
         if (i % coefficientInterval == 0)
             for (std::size_t c = 0; c < 2; ++c)
@@ -85,7 +89,9 @@ void Delay::process (float* const* channels, int numChannels, int numSamples) no
                 highCut[c].setCutoff (hc, sampleRate);
             }
 
-        const auto readDelay = std::max (1.0f, t - 1.0f + unstable * wobbleDepth * wobble.next());
+        // Drift: up to 4 ms slow wander. Unstable: 2 ms wobble plus 0.3 ms fast jitter.
+        const auto movementMs = slow * 4.0f * wander.next() + unstable * (2.0f * wobble.next() + 0.3f * jitter.next());
+        const auto readDelay = std::max (1.0f, t - 1.0f + movementMs * msToSamples);
 
         const auto inL = channels[0][i];
         const auto inR = stereo ? channels[1][i] : inL;

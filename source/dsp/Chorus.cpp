@@ -18,6 +18,12 @@ void Chorus::prepare (double newSampleRate, int)
     mix.prepare (sampleRate, 20.0f);
     feedback.prepare (sampleRate, 30.0f);
     width.prepare (sampleRate, 30.0f);
+    drift.prepare (sampleRate, 100.0f);
+    instability.prepare (sampleRate, 100.0f);
+    rateWander.prepare (sampleRate, 0.2f, 0xc0ffee1u);
+    delayWander.prepare (sampleRate, 0.12f, 0xc0ffee2u);
+    jitterL.prepare (sampleRate, 7.0f, 0xc0ffee3u);
+    jitterR.prepare (sampleRate, 7.0f, 0xc0ffee4u);
 
     firstUpdate = true;
     reset();
@@ -29,7 +35,7 @@ void Chorus::reset() noexcept
         d.reset();
     lfoPhase = 0.0f;
     lastWet = {};
-    for (auto* s : { &rate, &depthMs, &delaySamples, &mix, &feedback, &width })
+    for (auto* s : { &rate, &depthMs, &delaySamples, &mix, &feedback, &width, &drift, &instability })
         s->snapToTarget();
 }
 
@@ -48,7 +54,7 @@ void Chorus::setParameters (const Parameters& p) noexcept
 
     if (firstUpdate)
     {
-        for (auto* s : { &rate, &depthMs, &delaySamples, &mix, &feedback, &width })
+        for (auto* s : { &rate, &depthMs, &delaySamples, &mix, &feedback, &width, &drift, &instability })
             s->snapToTarget();
         firstUpdate = false;
     }
@@ -74,12 +80,16 @@ void Chorus::process (float* const* channels, int numChannels, int numSamples) n
 
     for (int i = 0; i < numSamples; ++i)
     {
-        const auto r = rate.next();
+        const auto slow = drift.next();
+        const auto unstable = instability.next();
+        const auto r = rate.next() * (1.0f + 0.4f * slow * rateWander.next());
         const auto swing = depthMs.next() * msToSamples;
-        const auto centre = delaySamples.next();
+        const auto centre = delaySamples.next() + slow * 2.0f * msToSamples * delayWander.next();
         const auto m = mix.next();
         const auto fb = feedback.next();
         const auto w = width.next();
+        const std::array<float, maxChannels> jitter { unstable * 0.6f * msToSamples * jitterL.next(),
+                                                      unstable * 0.6f * msToSamples * jitterR.next() };
 
         float dryGain, wetGain;
         equalPowerMix (m, dryGain, wetGain);
@@ -97,7 +107,7 @@ void Chorus::process (float* const* channels, int numChannels, int numSamples) n
             {
                 // Voices 180 degrees apart within a channel, channels 90 degrees apart.
                 const auto phase = lfoPhase + 0.5f * static_cast<float> (v) + 0.25f * static_cast<float> (ch);
-                sum += line.readCubic (centre + swing * std::sin (twoPi * phase));
+                sum += line.readCubic (centre + jitter[c] + swing * std::sin (twoPi * phase));
             }
             wet[c] = sum * (1.0f / static_cast<float> (voicesPerChannel));
             lastWet[c] = wet[c];

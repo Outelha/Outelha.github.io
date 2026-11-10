@@ -27,7 +27,7 @@ public:
 
 private:
     ShobeatsAudioProcessor& processor;
-    ui::Knob inputKnob, mixKnob, outputKnob;
+    ui::Knob driftKnob, unstableKnob, inputKnob, mixKnob, outputKnob;
     ui::LevelMeter inputMeter { "IN" }, outputMeter { "OUT" };
     ui::Pedalboard pedalboard;
     ui::DetailPanel detail;

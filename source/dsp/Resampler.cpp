@@ -10,6 +10,9 @@ void Resampler::prepare (double newSampleRate, int)
     filterHz.prepare (sampleRate, 30.0f);
     jitter.prepare (sampleRate, 30.0f);
     mix.prepare (sampleRate, 20.0f);
+    drift.prepare (sampleRate, 100.0f);
+    instability.prepare (sampleRate, 100.0f);
+    clockWander.prepare (sampleRate, 0.2f, 0xa11ce5u);
     firstUpdate = true;
     reset();
 }
@@ -20,7 +23,7 @@ void Resampler::reset() noexcept
     held = {};
     for (auto& f : filters)
         f.reset();
-    for (auto* s : { &rate, &bits, &filterHz, &jitter, &mix })
+    for (auto* s : { &rate, &bits, &filterHz, &jitter, &mix, &drift, &instability })
         s->snapToTarget();
 }
 
@@ -34,7 +37,7 @@ void Resampler::setParameters (const Parameters& p) noexcept
 
     if (firstUpdate)
     {
-        for (auto* s : { &rate, &bits, &filterHz, &jitter, &mix })
+        for (auto* s : { &rate, &bits, &filterHz, &jitter, &mix, &drift, &instability })
             s->snapToTarget();
         firstUpdate = false;
     }
@@ -54,10 +57,10 @@ void Resampler::process (float* const* channels, int numChannels, int numSamples
 
     for (int i = 0; i < numSamples; ++i)
     {
-        const auto r = rate.next();
+        const auto r = rate.next() * (1.0f + 0.15f * drift.next() * clockWander.next());
         const auto b = bits.next();
         const auto fc = filterHz.next();
-        const auto j = jitter.next();
+        const auto j = std::min (1.0f, jitter.next() + 0.6f * instability.next());
         const auto m = mix.next();
 
         if (i % coefficientInterval == 0)

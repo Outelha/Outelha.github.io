@@ -49,6 +49,10 @@ void Saturation::prepare (double newSampleRate, int)
     for (auto* s : { &driveGain, &compGain, &outGain, &mix, &lowGain, &highGain })
         s->prepare (sampleRate, 20.0f);
 
+    drift.prepare (sampleRate, 100.0f);
+    instability.prepare (sampleRate, 100.0f);
+    driveWander.prepare (sampleRate, 0.15f, 0x5a7u);
+    driveFlicker.prepare (sampleRate, 8.0f, 0x5a8u);
     modeFadeLength = std::max (1, static_cast<int> (sampleRate * 0.01)); // 10 ms
     firstUpdate = true;
     reset();
@@ -111,7 +115,8 @@ void Saturation::process (float* const* channels, int numChannels, int numSample
 
     for (int i = 0; i < numSamples; ++i)
     {
-        const auto g = driveGain.next();
+        const auto movementDb = 1.5f * drift.next() * driveWander.next() + 1.0f * instability.next() * driveFlicker.next();
+        const auto g = driveGain.next() * (movementDb != 0.0f ? dbToGain (movementDb) : 1.0f);
         const auto comp = compGain.next() * outGain.next();
         const auto wetAmount = mix.next();
         const auto lo = lowGain.next();

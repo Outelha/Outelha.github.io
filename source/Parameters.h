@@ -49,6 +49,8 @@ namespace ParamID
 inline constexpr auto inputGain = "inputGain";
 inline constexpr auto outputGain = "outputGain";
 inline constexpr auto globalMix = "globalMix";
+inline constexpr auto drift = "drift";
+inline constexpr auto unstable = "unstable";
 
 inline constexpr auto satEnabled = "satEnabled";
 inline constexpr auto satDrive = "satDrive";
@@ -120,7 +122,7 @@ inline constexpr int parameterVersion = 1;
 juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
 // Every parameter id, in a fixed order (used for caching and tests).
-inline constexpr std::size_t numParameters = 59;
+inline constexpr std::size_t numParameters = 61;
 extern const std::array<const char*, numParameters> allParameterIds;
 
 // Lock-free read access to parameter values from the audio thread. Pointers to the

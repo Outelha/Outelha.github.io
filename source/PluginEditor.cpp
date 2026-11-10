@@ -12,13 +12,15 @@ constexpr int margin = 22;
 
 MainView::MainView (ShobeatsAudioProcessor& p)
     : processor (p),
+      driftKnob (p.getState(), ParamID::drift, "Drift", Palette::brand),
+      unstableKnob (p.getState(), ParamID::unstable, "Unstable", Palette::brand),
       inputKnob (p.getState(), ParamID::inputGain, "Input", Palette::text),
       mixKnob (p.getState(), ParamID::globalMix, "Mix", Palette::brand),
       outputKnob (p.getState(), ParamID::outputGain, "Output", Palette::text),
       pedalboard (p.getState(), p.getChainOrder()),
       detail (p.getState())
 {
-    for (juce::Component* c : { (juce::Component*) &inputKnob, (juce::Component*) &mixKnob, (juce::Component*) &outputKnob,
+    for (juce::Component* c : { (juce::Component*) &driftKnob, (juce::Component*) &unstableKnob, (juce::Component*) &inputKnob, (juce::Component*) &mixKnob, (juce::Component*) &outputKnob,
                                 (juce::Component*) &inputMeter, (juce::Component*) &outputMeter,
                                 (juce::Component*) &pedalboard, (juce::Component*) &detail })
         addAndMakeVisible (*c);
@@ -59,7 +61,7 @@ void MainView::paint (juce::Graphics& g)
     g.drawText ("ANALOG PEDALBOARD  /  8 EFFECTS  /  v" JucePlugin_VersionString, sub.withTrimmedTop (34), juce::Justification::centredLeft);
 
     // Host tempo readout (used by every synced effect).
-    auto tempo = juce::Rectangle<int> (600, 30, 110, 32).toFloat();
+    auto tempo = juce::Rectangle<int> (540, 30, 110, 32).toFloat();
     g.setColour (Palette::display);
     g.fillRoundedRectangle (tempo, 6.0f);
     g.setColour (Palette::panelEdge);
@@ -78,6 +80,9 @@ void MainView::resized()
     auto header = area.removeFromTop (headerHeight);
 
     auto io = header.removeFromRight (330).reduced (0, 8);
+    auto movement = header.removeFromRight (190).reduced (0, 8);
+    driftKnob.setBounds (movement.removeFromLeft (90));
+    unstableKnob.setBounds (movement.removeFromLeft (90));
     inputMeter.setBounds (io.removeFromLeft (20));
     io.removeFromLeft (8);
     inputKnob.setBounds (io.removeFromLeft (84));
@@ -110,7 +115,7 @@ void MainView::refresh()
     {
         shownBpm = bpm;
         detail.setBpm (bpm);
-        repaint (600, 30, 110, 32);
+        repaint (540, 30, 110, 32);
     }
 }
 

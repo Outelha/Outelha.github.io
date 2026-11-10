@@ -32,6 +32,14 @@ public:
 
     void process (float* const* channels, int numChannels, int numSamples) noexcept;
 
+    // Global Drift deepens the delay-line modulation (lusher, chorused tail);
+    // Unstable speeds it up (more irregular shimmer).
+    void setMovement (Movement m) noexcept
+    {
+        modDepthScale.setTarget (1.0f + 3.0f * std::clamp (m.drift, 0.0f, 1.0f));
+        modRateScale.setTarget (1.0f + 3.0f * std::clamp (m.unstable, 0.0f, 1.0f));
+    }
+
     static constexpr int numLines = 8;
 
 private:
@@ -69,6 +77,6 @@ private:
     std::array<float, numLines> modPhase {};
     std::array<Smoother, numLines> lineLength;
 
-    Smoother predelaySamples, mix, width;
+    Smoother predelaySamples, mix, width, modDepthScale, modRateScale;
 };
 } // namespace sfx::dsp

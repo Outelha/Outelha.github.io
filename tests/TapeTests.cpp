@@ -112,7 +112,7 @@ TEST_CASE ("Tape: bounded and finite with everything maxed", "[tape]")
     p.driveDb = Tape::maxDriveDb;
     p.wow = p.flutter = p.noise = p.age = 1.0f;
     auto t = make (p);
-    t.setInstability (1.0f);
+    t.setMovement ({ 1.0f, 1.0f });
     StereoBuffer buf (48000);
     buf.left = noise (48000, 1.5f, 7);
     buf.right = noise (48000, 1.5f, 8);

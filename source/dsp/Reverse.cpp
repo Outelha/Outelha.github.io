@@ -90,15 +90,16 @@ void Reverse::process (float* const* channels, int numChannels, int numSamples) 
         if (h0.t >= h0.length)
         {
             h0.t = 0.0f;
-            h0.length = targetSegment;
-            h0.rate = targetRate;
+            // Unstable: +-15 % segment length; Drift: up to +-30 cents per segment.
+            h0.length = std::max (64.0f, targetSegment * (1.0f + 0.15f * movement.unstable * noise.nextBipolar()));
+            h0.rate = targetRate * std::pow (2.0f, 0.3f * movement.drift * noise.nextBipolar() / 12.0f);
             h1.length = h0.length;
             h1.t = 0.5f * h0.length;
         }
         if (h1.t >= h1.length)
         {
             h1.t -= h1.length;
-            h1.rate = targetRate;
+            h1.rate = h0.rate;
         }
 
         for (int ch = 0; ch < numChannels; ++ch)
