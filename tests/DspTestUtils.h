@@ -8,7 +8,7 @@
 #include <random>
 #include <vector>
 
-namespace trio::test
+namespace sfx::test
 {
 constexpr double sampleRate = 48000.0;
 
@@ -98,4 +98,4 @@ void processInBlocks (Module& m, StereoBuffer& buf, int blockSize = 256, int cha
         m.process (ptrs.data(), channels, n);
     }
 }
-} // namespace trio::test
+} // namespace sfx::test

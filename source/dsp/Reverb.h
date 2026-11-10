@@ -4,7 +4,7 @@
 
 #include <array>
 
-namespace trio::dsp
+namespace sfx::dsp
 {
 // Algorithmic stereo reverb: pre-delay -> input allpass diffusion -> 8-line
 // feedback delay network (Householder mixing, per-line damping and gentle
@@ -71,4 +71,4 @@ private:
 
     Smoother predelaySamples, mix, width;
 };
-} // namespace trio::dsp
+} // namespace sfx::dsp

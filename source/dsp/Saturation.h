@@ -4,7 +4,7 @@
 
 #include <array>
 
-namespace trio::dsp
+namespace sfx::dsp
 {
 // Waveshaping saturator with drive, tilt tone control, automatic level
 // compensation and a phase-coherent dry/wet mix.
@@ -17,10 +17,13 @@ public:
     {
         soft = 0, // symmetric tanh: smooth, tape-like, odd harmonics
         warm,     // biased tanh: asymmetric, tube-like, adds even harmonics
-        hard      // hard clip: aggressive, bright
+        hard,     // hard clip: aggressive, bright
+        fuzz,     // high-gain asymmetric clip with a gated, sputtery edge
+        fold      // sine wavefolder: metallic, synth-like overtones
     };
 
-    static constexpr int numModes = 3;
+    static constexpr int numModes = 5;
+    static constexpr float minOutputDb = -24.0f, maxOutputDb = 12.0f;
     static constexpr float minDriveDb = 0.0f;
     static constexpr float maxDriveDb = 36.0f;
 
@@ -28,6 +31,7 @@ public:
     {
         float driveDb = 12.0f; // input gain into the shaper
         float tone = 0.0f;     // -1 (dark) .. +1 (bright), tilt around 1 kHz
+        float outputDb = 0.0f; // post-shaper trim (wet path)
         float mix = 1.0f;      // 0 = dry, 1 = fully saturated
         Mode mode = Mode::soft;
         bool enabled = true;
@@ -61,7 +65,7 @@ private:
     Mode previousMode = Mode::soft;
     int modeFadeRemaining = 0, modeFadeLength = 1;
 
-    Smoother driveGain, compGain, mix, lowGain, highGain;
+    Smoother driveGain, compGain, outGain, mix, lowGain, highGain;
     bool firstUpdate = true;
 };
-} // namespace trio::dsp
+} // namespace sfx::dsp

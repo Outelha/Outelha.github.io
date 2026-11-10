@@ -7,8 +7,8 @@
 #include <random>
 #include <thread>
 
-using trio::TrioAudioProcessor;
-namespace ParamID = trio::ParamID;
+using sfx::ShobeatsAudioProcessor;
+namespace ParamID = sfx::ParamID;
 
 namespace
 {
@@ -20,14 +20,14 @@ struct JuceFixture
     juce::ScopedJuceInitialiser_GUI juce;
 };
 
-void setParam (TrioAudioProcessor& p, const char* id, float value)
+void setParam (ShobeatsAudioProcessor& p, const char* id, float value)
 {
     auto* param = p.getState().getParameter (id);
     REQUIRE (param != nullptr);
     param->setValueNotifyingHost (param->convertTo0to1 (value));
 }
 
-void prepare (TrioAudioProcessor& p, double sr = sampleRate, int block = blockSize, int channels = 2)
+void prepare (ShobeatsAudioProcessor& p, double sr = sampleRate, int block = blockSize, int channels = 2)
 {
     const auto set = channels == 1 ? juce::AudioChannelSet::mono() : juce::AudioChannelSet::stereo();
     juce::AudioProcessor::BusesLayout layout;
@@ -54,32 +54,58 @@ bool isFinite (const juce::AudioBuffer<float>& b)
     return true;
 }
 
-void disableAllModules (TrioAudioProcessor& p)
+void disableAllModules (ShobeatsAudioProcessor& p)
 {
-    setParam (p, ParamID::satEnabled, 0.0f);
-    setParam (p, ParamID::chorusEnabled, 0.0f);
-    setParam (p, ParamID::reverbEnabled, 0.0f);
+    for (const auto& info : sfx::effectInfo)
+        setParam (p, info.enabledId, 0.0f);
+}
+
+void enableAllModules (ShobeatsAudioProcessor& p)
+{
+    for (const auto& info : sfx::effectInfo)
+        setParam (p, info.enabledId, 1.0f);
+}
+
+float processSine (ShobeatsAudioProcessor& p, int blocks, std::vector<float>* capture = nullptr)
+{
+    juce::MidiBuffer midi;
+    juce::AudioBuffer<float> buffer (2, blockSize);
+    float lastRms = 0.0f;
+    for (int block = 0; block < blocks; ++block)
+    {
+        fillSine (buffer, 500.0f, 0.5f, block * blockSize);
+        p.processBlock (buffer, midi);
+        lastRms = buffer.getRMSLevel (0, 0, blockSize);
+        if (capture != nullptr)
+            capture->insert (capture->end(), buffer.getReadPointer (0), buffer.getReadPointer (0) + blockSize);
+    }
+    return lastRms;
 }
 } // namespace
 
 TEST_CASE_METHOD (JuceFixture, "Plugin: exposes every expected parameter", "[plugin]")
 {
-    TrioAudioProcessor p;
-    for (auto* id : { ParamID::inputGain, ParamID::outputGain,
-                      ParamID::satEnabled, ParamID::satDrive, ParamID::satTone, ParamID::satMode, ParamID::satMix,
-                      ParamID::chorusEnabled, ParamID::chorusRate, ParamID::chorusDepth, ParamID::chorusDelay, ParamID::chorusMix,
-                      ParamID::reverbEnabled, ParamID::reverbSize, ParamID::reverbDecay, ParamID::reverbDamping,
-                      ParamID::reverbPredelay, ParamID::reverbWidth, ParamID::reverbMix })
+    ShobeatsAudioProcessor p;
+    for (auto* id : sfx::allParameterIds)
     {
         INFO (id);
         CHECK (p.getState().getParameter (id) != nullptr);
     }
-    CHECK (p.getParameters().size() == 19);
+    CHECK (static_cast<size_t> (p.getParameters().size()) == sfx::numParameters);
+
+    // Every effect has an on/off switch, and a fresh instance starts with all of them off.
+    for (const auto& info : sfx::effectInfo)
+    {
+        INFO (info.name);
+        auto* param = p.getState().getParameter (info.enabledId);
+        REQUIRE (param != nullptr);
+        CHECK (param->getValue() < 0.5f);
+    }
 }
 
 TEST_CASE_METHOD (JuceFixture, "Plugin: supports mono and stereo, rejects other layouts", "[plugin]")
 {
-    TrioAudioProcessor p;
+    ShobeatsAudioProcessor p;
     auto layoutOf = [] (juce::AudioChannelSet in, juce::AudioChannelSet out) {
         juce::AudioProcessor::BusesLayout l;
         l.inputBuses.add (in);
@@ -94,19 +120,23 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: supports mono and stereo, rejects other 
 
 TEST_CASE_METHOD (JuceFixture, "Plugin: state save/restore round-trips every parameter", "[plugin]")
 {
-    TrioAudioProcessor a;
+    ShobeatsAudioProcessor a;
     setParam (a, ParamID::satDrive, 27.5f);
     setParam (a, ParamID::satMode, 2.0f);
     setParam (a, ParamID::chorusRate, 3.3f);
     setParam (a, ParamID::reverbDecay, 7.0f);
     setParam (a, ParamID::reverbEnabled, 0.0f);
     setParam (a, ParamID::outputGain, -6.0f);
+    setParam (a, ParamID::delaySync, 0.0f);
+    setParam (a, ParamID::tremShape, 3.0f);
+    a.getChainOrder().move (7, 0); // reverb first
+    a.getChainOrder().move (3, 5);
 
     juce::MemoryBlock blob;
     a.getStateInformation (blob);
     REQUIRE (blob.getSize() > 0);
 
-    TrioAudioProcessor b;
+    ShobeatsAudioProcessor b;
     b.setStateInformation (blob.getData(), static_cast<int> (blob.getSize()));
 
     for (auto* param : a.getParameters())
@@ -118,11 +148,47 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: state save/restore round-trips every par
         INFO (withId->paramID);
         CHECK (std::abs (other->getValue() - param->getValue()) < 1.0e-6f);
     }
+    CHECK (b.getChainOrder().get() == a.getChainOrder().get());
+    CHECK (b.getChainOrder().get()[0] == static_cast<int> (sfx::EffectId::reverb));
+}
+
+TEST_CASE_METHOD (JuceFixture, "Plugin: invalid chain order in a saved state falls back to default", "[plugin]")
+{
+    ShobeatsAudioProcessor a;
+    a.getChainOrder().move (0, 7);
+    juce::MemoryBlock blob;
+    a.getStateInformation (blob);
+
+    auto xml = juce::AudioProcessor::getXmlFromBinary (blob.getData(), static_cast<int> (blob.getSize()));
+    REQUIRE (xml != nullptr);
+    xml->setAttribute ("chainOrder", "sat,sat,tape,chorus,trem,rev,delay,reverb");
+    juce::MemoryBlock corrupted;
+    juce::AudioProcessor::copyXmlToBinary (*xml, corrupted);
+
+    ShobeatsAudioProcessor b;
+    b.getChainOrder().move (2, 4);
+    b.setStateInformation (corrupted.getData(), static_cast<int> (corrupted.getSize()));
+    CHECK (b.getChainOrder().get() == sfx::ChainOrder::defaultOrder());
+}
+
+TEST_CASE ("ChainOrder: move keeps a valid permutation", "[plugin]")
+{
+    sfx::ChainOrder order;
+    juce::Random r (5);
+    for (int i = 0; i < 500; ++i)
+    {
+        order.move (r.nextInt (sfx::numEffects), r.nextInt (sfx::numEffects));
+        REQUIRE (sfx::ChainOrder::isValid (order.get()));
+    }
+    sfx::ChainOrder copy;
+    REQUIRE (copy.fromString (order.toString()));
+    CHECK (copy.get() == order.get());
+    CHECK_FALSE (copy.fromString ("sat,rs"));
 }
 
 TEST_CASE_METHOD (JuceFixture, "Plugin: garbage state data is ignored safely", "[plugin]")
 {
-    TrioAudioProcessor p;
+    ShobeatsAudioProcessor p;
     const char junk[] = "definitely not a plugin state";
     p.setStateInformation (junk, static_cast<int> (sizeof (junk)));
     CHECK (p.getState().getParameter (ParamID::satDrive)->getValue()
@@ -131,7 +197,7 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: garbage state data is ignored safely", "
 
 TEST_CASE_METHOD (JuceFixture, "Plugin: reports oversampling latency", "[plugin]")
 {
-    TrioAudioProcessor p;
+    ShobeatsAudioProcessor p;
     prepare (p);
     CHECK (p.getLatencySamples() > 0);
     CHECK (p.getLatencySamples() < 64);
@@ -140,7 +206,7 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: reports oversampling latency", "[plugin]
 
 TEST_CASE_METHOD (JuceFixture, "Plugin: with every module off the signal passes at unity gain", "[plugin]")
 {
-    TrioAudioProcessor p;
+    ShobeatsAudioProcessor p;
     disableAllModules (p);
     prepare (p);
 
@@ -165,7 +231,7 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: with every module off the signal passes 
 
 TEST_CASE_METHOD (JuceFixture, "Plugin: host bypass delays the dry signal by exactly the latency", "[plugin]")
 {
-    TrioAudioProcessor p;
+    ShobeatsAudioProcessor p;
     prepare (p);
     const auto latency = p.getLatencySamples();
 
@@ -183,7 +249,7 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: host bypass delays the dry signal by exa
 
 TEST_CASE_METHOD (JuceFixture, "Plugin: input/output gain apply", "[plugin]")
 {
-    TrioAudioProcessor p;
+    ShobeatsAudioProcessor p;
     disableAllModules (p);
     setParam (p, ParamID::outputGain, -12.0f);
     prepare (p);
@@ -201,12 +267,93 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: input/output gain apply", "[plugin]")
     CHECK (std::abs (juce::Decibels::gainToDecibels (lastRms / expected)) < 0.2f);
 }
 
+TEST_CASE_METHOD (JuceFixture, "Plugin: global mix at 0 returns the latency-aligned dry signal", "[plugin]")
+{
+    // Every effect on with heavy settings, but global mix at zero: output == input delayed by latency.
+    ShobeatsAudioProcessor p;
+    enableAllModules (p);
+    setParam (p, ParamID::satDrive, 36.0f);
+    setParam (p, ParamID::delayFeedback, 0.9f);
+    setParam (p, ParamID::globalMix, 0.0f);
+    prepare (p);
+    const auto latency = p.getLatencySamples();
+
+    juce::MidiBuffer midi;
+    juce::AudioBuffer<float> buffer (2, blockSize);
+    std::vector<float> in, out;
+    for (int block = 0; block < 20; ++block)
+    {
+        fillSine (buffer, 300.0f, 0.5f, block * blockSize);
+        in.insert (in.end(), buffer.getReadPointer (0), buffer.getReadPointer (0) + blockSize);
+        p.processBlock (buffer, midi);
+        out.insert (out.end(), buffer.getReadPointer (0), buffer.getReadPointer (0) + blockSize);
+    }
+    float maxError = 0.0f;
+    for (size_t i = static_cast<size_t> (blockSize); i < out.size(); ++i)
+        maxError = std::max (maxError, std::abs (out[i] - in[i - static_cast<size_t> (latency)]));
+    CHECK (maxError < 1.0e-5f);
+}
+
+TEST_CASE_METHOD (JuceFixture, "Plugin: each effect changes the sound when switched on", "[plugin]")
+{
+    // Guards against controls that look active but do nothing.
+    for (const auto& info : sfx::effectInfo)
+    {
+        ShobeatsAudioProcessor dry, wet;
+        disableAllModules (dry);
+        disableAllModules (wet);
+        setParam (wet, info.enabledId, 1.0f);
+        // Make the subtler effects obvious.
+        setParam (wet, ParamID::rsRate, 2000.0f);
+        setParam (wet, ParamID::tremDepth, 1.0f);
+        setParam (wet, ParamID::chorusMix, 1.0f);
+        setParam (wet, ParamID::revMix, 1.0f);
+        setParam (wet, ParamID::delayMix, 1.0f);
+        setParam (wet, ParamID::reverbMix, 1.0f);
+        setParam (wet, ParamID::tapeWow, 1.0f);
+        prepare (dry);
+        prepare (wet);
+
+        std::vector<float> a, b;
+        processSine (dry, 40, &a);
+        processSine (wet, 40, &b);
+        double diff = 0.0;
+        for (size_t i = a.size() / 2; i < a.size(); ++i)
+            diff += std::abs (a[i] - b[i]);
+        INFO (info.name);
+        CHECK (diff / static_cast<double> (a.size() / 2) > 0.01);
+    }
+}
+
+TEST_CASE_METHOD (JuceFixture, "Plugin: chain order changes the result", "[plugin]")
+{
+    // Saturation before vs after a deep tremolo produces different audio.
+    auto render = [] (bool satFirst) {
+        ShobeatsAudioProcessor p;
+        setParam (p, ParamID::satEnabled, 1.0f);
+        setParam (p, ParamID::satDrive, 30.0f);
+        setParam (p, ParamID::tremEnabled, 1.0f);
+        setParam (p, ParamID::tremDepth, 1.0f);
+        if (! satFirst)
+            p.getChainOrder().move (0, 7);
+        prepare (p);
+        std::vector<float> out;
+        processSine (p, 30, &out);
+        return out;
+    };
+    const auto a = render (true), b = render (false);
+    double diff = 0.0;
+    for (size_t i = 0; i < a.size(); ++i)
+        diff += std::abs (a[i] - b[i]);
+    CHECK (diff / static_cast<double> (a.size()) > 0.01);
+}
+
 TEST_CASE_METHOD (JuceFixture, "Plugin: survives randomised automation, odd block sizes and sample rates", "[plugin]")
 {
     for (double sr : { 44100.0, 96000.0 })
         for (int channels : { 1, 2 })
         {
-            TrioAudioProcessor p;
+            ShobeatsAudioProcessor p;
             prepare (p, sr, 256, channels);
 
             std::mt19937 rng (static_cast<unsigned> (sr) + static_cast<unsigned> (channels));
@@ -219,6 +366,8 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: survives randomised automation, odd bloc
                 for (auto* param : p.getParameters())
                     if (unit (rng) < 0.3f)
                         param->setValueNotifyingHost (unit (rng));
+                if (unit (rng) < 0.2f)
+                    p.getChainOrder().move (static_cast<int> (unit (rng) * 8.0f), static_cast<int> (unit (rng) * 8.0f));
 
                 juce::AudioBuffer<float> buffer (channels, blockDist (rng));
                 for (int ch = 0; ch < channels; ++ch)
@@ -239,7 +388,7 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: survives randomised automation, odd bloc
 
 TEST_CASE_METHOD (JuceFixture, "Plugin: silence in gives silence out after reset", "[plugin]")
 {
-    TrioAudioProcessor p;
+    ShobeatsAudioProcessor p;
     prepare (p);
     p.reset();
 
@@ -259,27 +408,61 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor opens, resizes and closes", "[plu
     if (std::getenv ("DISPLAY") == nullptr)
         SKIP ("No display available");
 #endif
-    TrioAudioProcessor p;
+    ShobeatsAudioProcessor p;
     prepare (p);
 
     std::unique_ptr<juce::AudioProcessorEditor> editor (p.createEditorAndMakeActive());
     REQUIRE (editor != nullptr);
-    CHECK (editor->getWidth() == trio::MainView::designWidth);
-    CHECK (editor->getHeight() == trio::MainView::designHeight);
+    CHECK (editor->getWidth() == sfx::MainView::designWidth * 85 / 100);
+    CHECK (editor->getHeight() == sfx::MainView::designHeight * 85 / 100);
 
-    editor->setSize (trio::MainView::designWidth * 3 / 2, trio::MainView::designHeight * 3 / 2);
+    editor->setSize (sfx::MainView::designWidth, sfx::MainView::designHeight);
     auto snapshot = editor->createComponentSnapshot (editor->getLocalBounds());
-    CHECK (snapshot.getWidth() == trio::MainView::designWidth * 3 / 2);
+    CHECK (snapshot.getWidth() == sfx::MainView::designWidth);
 
-    // Optional: TRIOFX_SNAPSHOT=/path/to/file.png saves a rendering of the UI.
-    if (const auto* path = std::getenv ("TRIOFX_SNAPSHOT"))
+    // Optional: SHOBEATS_SNAPSHOT=/path/prefix saves renderings of the UI (one per selected pedal).
+    if (const auto* prefix = std::getenv ("SHOBEATS_SNAPSHOT"))
     {
-        juce::File file (juce::String::fromUTF8 (path));
-        file.deleteFile();
-        juce::FileOutputStream out (file);
-        REQUIRE (out.openedOk());
-        CHECK (juce::PNGImageFormat().writeImageToStream (snapshot, out));
+        auto& view = dynamic_cast<sfx::ShobeatsAudioProcessorEditor&> (*editor).getView();
+        for (int i = 0; i < sfx::numEffects; ++i)
+        {
+            setParam (p, sfx::effectInfo[static_cast<size_t> (i)].enabledId, i % 3 == 0 ? 0.0f : 1.0f);
+            view.getPedalboard().select (static_cast<sfx::EffectId> (i));
+            juce::File file (juce::String::fromUTF8 (prefix) + juce::String (i) + ".png");
+            file.deleteFile();
+            juce::FileOutputStream out (file);
+            REQUIRE (out.openedOk());
+            CHECK (juce::PNGImageFormat().writeImageToStream (editor->createComponentSnapshot (editor->getLocalBounds(), true, 2.0f), out));
+        }
     }
+
+    editor.reset();
+}
+
+TEST_CASE_METHOD (JuceFixture, "Plugin: every pedal can be selected and moved from the editor", "[plugin][gui]")
+{
+#if JUCE_LINUX
+    if (std::getenv ("DISPLAY") == nullptr)
+        SKIP ("No display available");
+#endif
+    ShobeatsAudioProcessor p;
+    prepare (p);
+    std::unique_ptr<juce::AudioProcessorEditor> editor (p.createEditorAndMakeActive());
+    auto& view = dynamic_cast<sfx::ShobeatsAudioProcessorEditor&> (*editor).getView();
+
+    for (int i = 0; i < sfx::numEffects; ++i)
+    {
+        const auto id = static_cast<sfx::EffectId> (i);
+        view.getPedalboard().select (id);
+        CHECK (view.getDetailPanel().getEffect() == id);
+        juce::ignoreUnused (editor->createComponentSnapshot (editor->getLocalBounds()));
+    }
+
+    // Move the selected pedal (reverb, last) to the front, one step at a time.
+    for (int i = 0; i < sfx::numEffects; ++i)
+        view.getPedalboard().nudgeSelected (-1);
+    CHECK (p.getChainOrder().get()[0] == static_cast<int> (sfx::EffectId::reverb));
+    CHECK (sfx::ChainOrder::isValid (p.getChainOrder().get()));
 
     editor.reset();
 }
@@ -292,7 +475,7 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor survives parameter changes from a
 #endif
     // Mirrors pluginval's "Editor Automation" test: a non-message thread hammers every
     // parameter while the editor is open and the message loop is running.
-    TrioAudioProcessor p;
+    ShobeatsAudioProcessor p;
     prepare (p);
     std::unique_ptr<juce::AudioProcessorEditor> editor (p.createEditorAndMakeActive());
     REQUIRE (editor != nullptr);

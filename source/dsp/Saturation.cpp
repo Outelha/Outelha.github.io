@@ -1,6 +1,6 @@
 #include "Saturation.h"
 
-namespace trio::dsp
+namespace sfx::dsp
 {
 namespace
 {
@@ -20,6 +20,15 @@ float Saturation::shape (Mode mode, float x) noexcept
             return std::tanh (x + warmBias) - std::tanh (warmBias);
         case Mode::hard:
             return std::clamp (x, -1.0f, 1.0f);
+        case Mode::fuzz:
+        {
+            // Asymmetric exponential clip: the positive half saturates harder.
+            const auto y = x >= 0.0f ? 1.0f - std::exp (-2.0f * x) : -0.8f * (1.0f - std::exp (1.6f * x));
+            return y;
+        }
+        case Mode::fold:
+            // Smooth folding: a sine of the input keeps folding back as drive increases.
+            return std::sin (std::clamp (x, -12.0f, 12.0f) * (pi * 0.5f));
     }
     return x;
 }
@@ -27,6 +36,8 @@ float Saturation::shape (Mode mode, float x) noexcept
 float Saturation::compensationGain (Mode mode, float driveGain) noexcept
 {
     const auto in = referenceLevel * driveGain;
+    if (mode == Mode::fold)
+        return 1.0f; // folding is not monotonic: a level match would be meaningless
     const auto out = 0.5f * (std::abs (shape (mode, in)) + std::abs (shape (mode, -in)));
     return out > 1.0e-6f ? referenceLevel / out : 1.0f;
 }
@@ -35,7 +46,7 @@ void Saturation::prepare (double newSampleRate, int)
 {
     sampleRate = newSampleRate;
 
-    for (auto* s : { &driveGain, &compGain, &mix, &lowGain, &highGain })
+    for (auto* s : { &driveGain, &compGain, &outGain, &mix, &lowGain, &highGain })
         s->prepare (sampleRate, 20.0f);
 
     modeFadeLength = std::max (1, static_cast<int> (sampleRate * 0.01)); // 10 ms
@@ -54,7 +65,7 @@ void Saturation::reset() noexcept
     }
     modeFadeRemaining = 0;
     previousMode = params.mode;
-    for (auto* s : { &driveGain, &compGain, &mix, &lowGain, &highGain })
+    for (auto* s : { &driveGain, &compGain, &outGain, &mix, &lowGain, &highGain })
         s->snapToTarget();
 }
 
@@ -73,13 +84,14 @@ void Saturation::setParameters (const Parameters& p) noexcept
 
     driveGain.setTarget (drive);
     compGain.setTarget (compensationGain (p.mode, drive));
+    outGain.setTarget (dbToGain (std::clamp (p.outputDb, minOutputDb, maxOutputDb)));
     mix.setTarget (p.enabled ? std::clamp (p.mix, 0.0f, 1.0f) : 0.0f);
     lowGain.setTarget (dbToGain (-tone * toneRangeDb));
     highGain.setTarget (dbToGain (tone * toneRangeDb));
 
     if (firstUpdate)
     {
-        for (auto* s : { &driveGain, &compGain, &mix, &lowGain, &highGain })
+        for (auto* s : { &driveGain, &compGain, &outGain, &mix, &lowGain, &highGain })
             s->snapToTarget();
         previousMode = p.mode;
         firstUpdate = false;
@@ -100,7 +112,7 @@ void Saturation::process (float* const* channels, int numChannels, int numSample
     for (int i = 0; i < numSamples; ++i)
     {
         const auto g = driveGain.next();
-        const auto comp = compGain.next();
+        const auto comp = compGain.next() * outGain.next();
         const auto wetAmount = mix.next();
         const auto lo = lowGain.next();
         const auto hi = highGain.next();
@@ -128,4 +140,4 @@ void Saturation::process (float* const* channels, int numChannels, int numSample
         }
     }
 }
-} // namespace trio::dsp
+} // namespace sfx::dsp

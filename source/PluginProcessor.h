@@ -1,16 +1,22 @@
 #pragma once
 
+#include "ChainOrder.h"
 #include "Parameters.h"
 #include "dsp/Chorus.h"
+#include "dsp/Delay.h"
+#include "dsp/Resampler.h"
 #include "dsp/Reverb.h"
+#include "dsp/Reverse.h"
 #include "dsp/Saturation.h"
+#include "dsp/Tape.h"
+#include "dsp/Tremolo.h"
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
 
 #include <array>
 
-namespace trio
+namespace sfx
 {
 // Peak meters written by the audio thread, read (and cleared) by the UI.
 struct LevelMeters
@@ -25,14 +31,15 @@ struct LevelMeters
     static float take (std::atomic<float>& slot) noexcept { return slot.exchange (0.0f, std::memory_order_relaxed); }
 };
 
-class TrioAudioProcessor final : public juce::AudioProcessor
+class ShobeatsAudioProcessor final : public juce::AudioProcessor
 {
 public:
     // Saturation runs at 4x to keep aliasing out of the audible band.
     static constexpr int oversamplingFactorLog2 = 2;
+    static constexpr double defaultBpm = 120.0;
 
-    TrioAudioProcessor();
-    ~TrioAudioProcessor() override = default;
+    ShobeatsAudioProcessor();
+    ~ShobeatsAudioProcessor() override = default;
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -63,30 +70,49 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     juce::AudioProcessorValueTreeState& getState() noexcept { return state; }
+    ChainOrder& getChainOrder() noexcept { return chainOrder; }
     LevelMeters& getMeters() noexcept { return meters; }
+    double getCurrentBpm() const noexcept { return currentBpm.load (std::memory_order_relaxed); }
+
+    // For tests and hosts without a playhead.
+    void setFallbackBpm (double bpm) noexcept { fallbackBpm = bpm; }
 
 private:
-    void updateDspParameters() noexcept;
+    void updateDspParameters (double bpm) noexcept;
     void processChunk (juce::dsp::AudioBlock<float> block) noexcept;
+    void processEffect (EffectId id, juce::dsp::AudioBlock<float>& block) noexcept;
+    double readHostBpm() const;
 
     juce::AudioProcessorValueTreeState state;
-    ParameterRefs params;
+    ParameterReader params;
+    ChainOrder chainOrder;
 
     dsp::Saturation saturation;
+    dsp::Resampler resampler;
+    dsp::Tape tape;
     dsp::Chorus chorus;
+    dsp::Tremolo tremolo;
+    dsp::Reverse reverse;
+    dsp::Delay delay;
     dsp::Reverb reverb;
 
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
     int maxChunkSize = 512;
     int preparedChannels = 0;
 
-    juce::SmoothedValue<float> inputGain, outputGain;
+    juce::SmoothedValue<float> inputGain, outputGain, globalMix;
+
+    // Dry path for the global mix, delayed to match the oversampling latency.
+    std::array<dsp::DelayLine, 2> dryDelay;
+    juce::AudioBuffer<float> dryBuffer;
 
     // Latency-matching delay used while the host bypasses the plugin.
     std::array<dsp::DelayLine, 2> bypassDelay;
 
     LevelMeters meters;
+    std::atomic<double> currentBpm { defaultBpm };
+    double fallbackBpm = defaultBpm;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrioAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShobeatsAudioProcessor)
 };
-} // namespace trio
+} // namespace sfx

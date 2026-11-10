@@ -4,8 +4,8 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 
-using namespace trio;
-using namespace trio::test;
+using namespace sfx;
+using namespace sfx::test;
 using Sat = dsp::Saturation;
 
 namespace
@@ -81,8 +81,9 @@ TEST_CASE ("Saturation: output stays bounded and finite for hot input", "[satura
         INFO ("mode " << mode);
         CHECK (allFinite (buf.left));
         CHECK (allFinite (buf.right));
-        CHECK (peak (buf.left, 4800) < 2.0f);
-        CHECK (peak (buf.right, 4800) < 2.0f);
+        // Tone at +100 % boosts highs by up to 6 dB after the shaper.
+        CHECK (peak (buf.left, 4800) < 2.5f);
+        CHECK (peak (buf.right, 4800) < 2.5f);
     }
 }
 

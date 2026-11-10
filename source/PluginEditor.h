@@ -1,54 +1,57 @@
 #pragma once
 
 #include "PluginProcessor.h"
-#include "ui/Components.h"
-#include "ui/TrioLookAndFeel.h"
+#include "ui/Controls.h"
+#include "ui/DetailPanel.h"
+#include "ui/Pedalboard.h"
+#include "ui/ShobeatsLookAndFeel.h"
 
-namespace trio
+namespace sfx
 {
 // The whole UI is laid out at a fixed design size and scaled as one unit, so
 // it stays pixel-consistent at every window size.
 class MainView final : public juce::Component
 {
 public:
-    static constexpr int designWidth = 1000;
-    static constexpr int designHeight = 600;
+    static constexpr int designWidth = 1240;
+    static constexpr int designHeight = 800;
 
-    explicit MainView (TrioAudioProcessor&);
-    ~MainView() override;
+    explicit MainView (ShobeatsAudioProcessor&);
 
     void paint (juce::Graphics&) override;
     void resized() override;
+    void refresh();
 
-    void updateMeters();
+    ui::Pedalboard& getPedalboard() noexcept { return pedalboard; }
+    ui::DetailPanel& getDetailPanel() noexcept { return detail; }
 
 private:
-    class SaturationPanel;
-    class ChorusPanel;
-    class ReverbPanel;
-
-    TrioAudioProcessor& processor;
-    ui::Knob inputKnob, outputKnob;
+    ShobeatsAudioProcessor& processor;
+    ui::Knob inputKnob, mixKnob, outputKnob;
     ui::LevelMeter inputMeter { "IN" }, outputMeter { "OUT" };
-    std::unique_ptr<juce::Component> saturationPanel, chorusPanel, reverbPanel;
+    ui::Pedalboard pedalboard;
+    ui::DetailPanel detail;
+    double shownBpm = 0.0;
 };
 
-class TrioAudioProcessorEditor final : public juce::AudioProcessorEditor, private juce::Timer
+class ShobeatsAudioProcessorEditor final : public juce::AudioProcessorEditor, private juce::Timer
 {
 public:
-    explicit TrioAudioProcessorEditor (TrioAudioProcessor&);
-    ~TrioAudioProcessorEditor() override;
+    explicit ShobeatsAudioProcessorEditor (ShobeatsAudioProcessor&);
+    ~ShobeatsAudioProcessorEditor() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
+
+    MainView& getView() noexcept { return view; }
 
 private:
     void timerCallback() override;
 
-    ui::TrioLookAndFeel lookAndFeel;
+    ui::ShobeatsLookAndFeel lookAndFeel;
     juce::TooltipWindow tooltips { this, 700 };
     MainView view;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrioAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShobeatsAudioProcessorEditor)
 };
-} // namespace trio
+} // namespace sfx

@@ -4,7 +4,7 @@
 
 #include <array>
 
-namespace trio::dsp
+namespace sfx::dsp
 {
 // Stereo two-voice chorus. Each channel has two modulated delay taps driven by
 // sine LFOs in quadrature across channels, which gives a wide image even from
@@ -15,12 +15,15 @@ public:
     static constexpr float minRateHz = 0.05f, maxRateHz = 5.0f;
     static constexpr float minDelayMs = 5.0f, maxDelayMs = 30.0f;
     static constexpr float maxModulationMs = 5.0f;
+    static constexpr float maxFeedback = 0.9f;
 
     struct Parameters
     {
         float rateHz = 0.8f;
         float depth = 0.5f;    // 0..1, scales the modulation swing
         float delayMs = 12.0f; // centre delay of the voices
+        float feedback = 0.0f; // 0..0.9, wet signal fed back into the delay line
+        float width = 1.0f;    // 0 = mono wet, 1 = full stereo
         float mix = 0.5f;
         bool enabled = true;
     };
@@ -40,6 +43,7 @@ private:
     float lfoPhase = 0.0f;
     bool firstUpdate = true;
 
-    Smoother rate, depthMs, delaySamples, mix;
+    Smoother rate, depthMs, delaySamples, mix, feedback, width;
+    std::array<float, maxChannels> lastWet {};
 };
-} // namespace trio::dsp
+} // namespace sfx::dsp

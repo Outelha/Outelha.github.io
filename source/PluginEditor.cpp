@@ -1,214 +1,100 @@
 #include "PluginEditor.h"
 
-namespace trio
+namespace sfx
 {
 using namespace ui;
 
 namespace
 {
-constexpr int headerHeight = 104;
-
-// Lays out knobs in rows of equal-width cells, centred horizontally.
-void layoutKnobRows (juce::Rectangle<int> area, std::initializer_list<std::initializer_list<juce::Component*>> rows)
-{
-    const auto rowHeight = area.getHeight() / static_cast<int> (rows.size());
-    constexpr int cellWidth = 86;
-    for (const auto& row : rows)
-    {
-        auto r = area.removeFromTop (rowHeight);
-        const auto total = cellWidth * static_cast<int> (row.size());
-        r = r.withSizeKeepingCentre (juce::jmin (r.getWidth(), total), r.getHeight());
-        const auto w = r.getWidth() / static_cast<int> (row.size());
-        for (auto* c : row)
-            c->setBounds (r.removeFromLeft (w).reduced (2, 4));
-    }
-}
+constexpr int headerHeight = 92;
+constexpr int margin = 22;
 } // namespace
 
-//==============================================================================
-class MainView::SaturationPanel final : public ModulePanel
-{
-public:
-    explicit SaturationPanel (APVTS& s)
-        : ModulePanel (s, "Saturation", "Oversampled waveshaper", ParamID::satEnabled, Palette::saturation),
-          curve (s), character (s, ParamID::satMode, Palette::saturation),
-          drive (s, ParamID::satDrive, "Drive", Palette::saturation),
-          tone (s, ParamID::satTone, "Tone", Palette::saturation),
-          mix (s, ParamID::satMix, "Mix", Palette::saturation)
-    {
-        for (juce::Component* c : { (juce::Component*) &curve, (juce::Component*) &character, (juce::Component*) &drive,
-                                    (juce::Component*) &tone, (juce::Component*) &mix })
-            addContent (*c);
-    }
-
-private:
-    void layoutContent (juce::Rectangle<int> area) override
-    {
-        // The single knob row lines up with the bottom knob row of the other cards.
-        auto knobs = area.removeFromBottom (116);
-        area.removeFromBottom (14);
-        character.setBounds (area.removeFromBottom (30));
-        area.removeFromBottom (14);
-        curve.setBounds (area);
-        layoutKnobRows (knobs, { { &drive, &tone, &mix } });
-    }
-
-    SaturationCurve curve;
-    SegmentedChoice character;
-    Knob drive, tone, mix;
-};
-
-class MainView::ChorusPanel final : public ModulePanel
-{
-public:
-    explicit ChorusPanel (APVTS& s)
-        : ModulePanel (s, "Chorus", "Stereo modulated delay", ParamID::chorusEnabled, Palette::chorus),
-          display (s),
-          rate (s, ParamID::chorusRate, "Rate", Palette::chorus),
-          depth (s, ParamID::chorusDepth, "Depth", Palette::chorus),
-          delay (s, ParamID::chorusDelay, "Delay", Palette::chorus),
-          mix (s, ParamID::chorusMix, "Mix", Palette::chorus)
-    {
-        for (juce::Component* c : { (juce::Component*) &display, (juce::Component*) &rate, (juce::Component*) &depth,
-                                    (juce::Component*) &delay, (juce::Component*) &mix })
-            addContent (*c);
-    }
-
-private:
-    void layoutContent (juce::Rectangle<int> area) override
-    {
-        auto knobs = area.removeFromBottom (232);
-        area.removeFromBottom (12);
-        display.setBounds (area);
-        layoutKnobRows (knobs, { { &rate, &depth }, { &delay, &mix } });
-    }
-
-    ChorusDisplay display;
-    Knob rate, depth, delay, mix;
-};
-
-class MainView::ReverbPanel final : public ModulePanel
-{
-public:
-    explicit ReverbPanel (APVTS& s)
-        : ModulePanel (s, "Reverb", "8-line feedback delay network", ParamID::reverbEnabled, Palette::reverb),
-          display (s),
-          size (s, ParamID::reverbSize, "Size", Palette::reverb),
-          decay (s, ParamID::reverbDecay, "Decay", Palette::reverb),
-          damping (s, ParamID::reverbDamping, "Damping", Palette::reverb),
-          predelay (s, ParamID::reverbPredelay, "Pre-Delay", Palette::reverb),
-          width (s, ParamID::reverbWidth, "Width", Palette::reverb),
-          mix (s, ParamID::reverbMix, "Mix", Palette::reverb)
-    {
-        for (juce::Component* c : { (juce::Component*) &display, (juce::Component*) &size, (juce::Component*) &decay,
-                                    (juce::Component*) &damping, (juce::Component*) &predelay, (juce::Component*) &width,
-                                    (juce::Component*) &mix })
-            addContent (*c);
-    }
-
-private:
-    void layoutContent (juce::Rectangle<int> area) override
-    {
-        auto knobs = area.removeFromBottom (232);
-        area.removeFromBottom (12);
-        display.setBounds (area);
-        layoutKnobRows (knobs, { { &size, &decay, &damping }, { &predelay, &width, &mix } });
-    }
-
-    ReverbDisplay display;
-    Knob size, decay, damping, predelay, width, mix;
-};
-
-//==============================================================================
-MainView::MainView (TrioAudioProcessor& p)
+MainView::MainView (ShobeatsAudioProcessor& p)
     : processor (p),
-      inputKnob (p.getState(), ParamID::inputGain, "Input", Palette::neutral),
-      outputKnob (p.getState(), ParamID::outputGain, "Output", Palette::neutral)
+      inputKnob (p.getState(), ParamID::inputGain, "Input", Palette::text),
+      mixKnob (p.getState(), ParamID::globalMix, "Mix", Palette::brand),
+      outputKnob (p.getState(), ParamID::outputGain, "Output", Palette::text),
+      pedalboard (p.getState(), p.getChainOrder()),
+      detail (p.getState())
 {
-    auto& s = p.getState();
-    saturationPanel = std::make_unique<SaturationPanel> (s);
-    chorusPanel = std::make_unique<ChorusPanel> (s);
-    reverbPanel = std::make_unique<ReverbPanel> (s);
-
-    for (auto* c : { saturationPanel.get(), chorusPanel.get(), reverbPanel.get() })
+    for (juce::Component* c : { (juce::Component*) &inputKnob, (juce::Component*) &mixKnob, (juce::Component*) &outputKnob,
+                                (juce::Component*) &inputMeter, (juce::Component*) &outputMeter,
+                                (juce::Component*) &pedalboard, (juce::Component*) &detail })
         addAndMakeVisible (*c);
 
-    for (juce::Component* c : { (juce::Component*) &inputKnob, (juce::Component*) &outputKnob,
-                                (juce::Component*) &inputMeter, (juce::Component*) &outputMeter })
-        addAndMakeVisible (*c);
+    pedalboard.onSelectionChanged = [this] (EffectId id) { detail.showEffect (id); };
+    detail.onMove = [this] (int direction) { pedalboard.nudgeSelected (direction); };
+    detail.showEffect (pedalboard.getSelected());
+    shownBpm = p.getCurrentBpm();
+    detail.setBpm (shownBpm);
 
     setSize (designWidth, designHeight);
 }
 
-MainView::~MainView() = default;
-
 void MainView::paint (juce::Graphics& g)
 {
     const auto b = getLocalBounds().toFloat();
-    g.setGradientFill (juce::ColourGradient (Palette::backgroundTop, 0.0f, 0.0f, Palette::background, 0.0f, b.getHeight(), false));
+    g.setGradientFill (juce::ColourGradient (Palette::background.brighter (0.06f), 0.0f, 0.0f, Palette::background, 0.0f, b.getHeight(), false));
     g.fillAll();
 
-    // Brand
-    auto header = getLocalBounds().reduced (28, 0).removeFromTop (headerHeight);
-    auto brand = header.removeFromLeft (420).withSizeKeepingCentre (420, 48);
-
-    // Logo mark: three overlapping dots in the module colours.
-    auto mark = brand.removeFromLeft (52).toFloat().withSizeKeepingCentre (46, 30);
-    const std::array<juce::Colour, 3> marks { Palette::saturation, Palette::chorus, Palette::reverb };
-    for (size_t i = 0; i < marks.size(); ++i)
-    {
-        g.setColour (marks[i].withAlpha (0.9f));
-        g.fillEllipse (mark.getX() + static_cast<float> (i) * 12.0f, mark.getCentreY() - 11.0f, 22.0f, 22.0f);
-    }
-
-    brand.removeFromLeft (8);
+    // Wordmark: SHOBEATS + FX badge.
+    auto header = getLocalBounds().reduced (margin + 4, 0).removeFromTop (headerHeight);
+    auto brand = header.removeFromLeft (520).withSizeKeepingCentre (520, 50);
     g.setColour (Palette::text);
-    g.setFont (uiFont (26.0f, true));
-    g.drawText ("TRIO FX", brand.removeFromTop (28), juce::Justification::bottomLeft);
-    g.setColour (Palette::textFaint);
-    g.setFont (uiFont (12.0f));
-    g.drawText ("SATURATION  /  CHORUS  /  REVERB      v" JucePlugin_VersionString, brand, juce::Justification::centredLeft);
+    g.setFont (uiFont (34.0f, true).withExtraKerningFactor (0.06f));
+    const juce::String word ("SHOBEATS");
+    const auto wordWidth = juce::roundToInt (juce::GlyphArrangement::getStringWidth (g.getCurrentFont(), word)) + 6;
+    g.drawText (word, brand.removeFromLeft (wordWidth).withTrimmedBottom (14), juce::Justification::centredLeft);
+    auto badge = brand.removeFromLeft (46).withTrimmedBottom (14).withSizeKeepingCentre (42, 26).toFloat();
+    g.setColour (Palette::brand);
+    g.fillRoundedRectangle (badge, 5.0f);
+    g.setColour (Palette::background);
+    g.setFont (uiFont (17.0f, true));
+    g.drawText ("FX", badge, juce::Justification::centred);
 
-    // Signal flow arrows between cards.
-    const auto drawArrow = [&g] (juce::Rectangle<int> from, juce::Rectangle<int> to) {
-        const auto y = static_cast<float> (from.getY() + 32);
-        const auto x1 = static_cast<float> (from.getRight()) + 2.0f;
-        const auto x2 = static_cast<float> (to.getX()) - 2.0f;
-        juce::Path arrow;
-        arrow.addTriangle (x1 + 2.0f, y - 4.0f, x1 + 2.0f, y + 4.0f, x2 - 1.0f, y);
-        g.setColour (Palette::textFaint);
-        g.fillPath (arrow);
-    };
-    drawArrow (saturationPanel->getBounds(), chorusPanel->getBounds());
-    drawArrow (chorusPanel->getBounds(), reverbPanel->getBounds());
+    auto sub = getLocalBounds().reduced (margin + 4, 0).removeFromTop (headerHeight).withSizeKeepingCentre (getWidth() - 2 * (margin + 4), 50);
+    g.setColour (Palette::textFaint);
+    g.setFont (uiFont (11.5f, true));
+    g.drawText ("ANALOG PEDALBOARD  /  8 EFFECTS  /  v" JucePlugin_VersionString, sub.withTrimmedTop (34), juce::Justification::centredLeft);
+
+    // Host tempo readout (used by every synced effect).
+    auto tempo = juce::Rectangle<int> (600, 30, 110, 32).toFloat();
+    g.setColour (Palette::display);
+    g.fillRoundedRectangle (tempo, 6.0f);
+    g.setColour (Palette::panelEdge);
+    g.drawRoundedRectangle (tempo.reduced (0.5f), 6.0f, 1.0f);
+    g.setColour (Palette::brand);
+    g.setFont (uiFont (15.0f, true));
+    g.drawText (juce::String (shownBpm, 1), tempo.withTrimmedRight (40.0f), juce::Justification::centredRight);
+    g.setColour (Palette::textDim);
+    g.setFont (uiFont (10.5f, true));
+    g.drawText ("BPM", tempo.withTrimmedLeft (74.0f), juce::Justification::centredLeft);
 }
 
 void MainView::resized()
 {
-    auto area = getLocalBounds().reduced (28, 0);
+    auto area = getLocalBounds().reduced (margin, 0);
     auto header = area.removeFromTop (headerHeight);
 
-    // Header right side: IN meter | Input | Output | OUT meter
-    auto io = header.removeFromRight (240).reduced (0, 10);
-    inputMeter.setBounds (io.removeFromLeft (22));
-    io.removeFromLeft (10);
-    inputKnob.setBounds (io.removeFromLeft (84));
+    auto io = header.removeFromRight (330).reduced (0, 8);
+    inputMeter.setBounds (io.removeFromLeft (20));
     io.removeFromLeft (8);
+    inputKnob.setBounds (io.removeFromLeft (84));
+    io.removeFromLeft (4);
+    mixKnob.setBounds (io.removeFromLeft (84));
+    io.removeFromLeft (4);
     outputKnob.setBounds (io.removeFromLeft (84));
-    io.removeFromLeft (10);
-    outputMeter.setBounds (io.removeFromLeft (22));
+    io.removeFromLeft (8);
+    outputMeter.setBounds (io.removeFromLeft (20));
 
-    area.removeFromBottom (24);
-    constexpr int gap = 16;
-    const auto cardWidth = (area.getWidth() - 2 * gap) / 3;
-    saturationPanel->setBounds (area.removeFromLeft (cardWidth));
-    area.removeFromLeft (gap);
-    chorusPanel->setBounds (area.removeFromLeft (cardWidth));
-    area.removeFromLeft (gap);
-    reverbPanel->setBounds (area);
+    area.removeFromBottom (margin);
+    pedalboard.setBounds (area.removeFromTop (352));
+    area.removeFromTop (16);
+    detail.setBounds (area);
 }
 
-void MainView::updateMeters()
+void MainView::refresh()
 {
     auto& m = processor.getMeters();
     const auto stereo = processor.getTotalNumOutputChannels() > 1;
@@ -218,10 +104,18 @@ void MainView::updateMeters()
     const auto outR = stereo ? LevelMeters::take (m.output[1]) : outL;
     inputMeter.setLevels (inL, inR);
     outputMeter.setLevels (outL, outR);
+
+    const auto bpm = processor.getCurrentBpm();
+    if (std::abs (bpm - shownBpm) > 0.01)
+    {
+        shownBpm = bpm;
+        detail.setBpm (bpm);
+        repaint (600, 30, 110, 32);
+    }
 }
 
 //==============================================================================
-TrioAudioProcessorEditor::TrioAudioProcessorEditor (TrioAudioProcessor& p)
+ShobeatsAudioProcessorEditor::ShobeatsAudioProcessorEditor (ShobeatsAudioProcessor& p)
     : AudioProcessorEditor (p), view (p)
 {
     setLookAndFeel (&lookAndFeel);
@@ -231,34 +125,34 @@ TrioAudioProcessorEditor::TrioAudioProcessorEditor (TrioAudioProcessor& p)
 
     constexpr double aspect = static_cast<double> (MainView::designWidth) / MainView::designHeight;
     setResizable (true, true);
-    setResizeLimits (MainView::designWidth * 3 / 4, MainView::designHeight * 3 / 4,
-                     MainView::designWidth * 2, MainView::designHeight * 2);
+    setResizeLimits (MainView::designWidth * 3 / 5, MainView::designHeight * 3 / 5, MainView::designWidth * 2, MainView::designHeight * 2);
     if (auto* c = getConstrainer())
         c->setFixedAspectRatio (aspect);
-    setSize (MainView::designWidth, MainView::designHeight);
+    // Default to 85 % so the full board fits on a 1080p screen inside a DAW.
+    setSize (MainView::designWidth * 85 / 100, MainView::designHeight * 85 / 100);
 
     startTimerHz (30);
 }
 
-TrioAudioProcessorEditor::~TrioAudioProcessorEditor()
+ShobeatsAudioProcessorEditor::~ShobeatsAudioProcessorEditor()
 {
     setLookAndFeel (nullptr);
 }
 
-void TrioAudioProcessorEditor::paint (juce::Graphics& g)
+void ShobeatsAudioProcessorEditor::paint (juce::Graphics& g)
 {
     g.fillAll (Palette::background);
 }
 
-void TrioAudioProcessorEditor::resized()
+void ShobeatsAudioProcessorEditor::resized()
 {
     const auto scale = static_cast<float> (getWidth()) / static_cast<float> (MainView::designWidth);
     view.setTransform (juce::AffineTransform::scale (scale));
     view.setBounds (0, 0, MainView::designWidth, MainView::designHeight);
 }
 
-void TrioAudioProcessorEditor::timerCallback()
+void ShobeatsAudioProcessorEditor::timerCallback()
 {
-    view.updateMeters();
+    view.refresh();
 }
-} // namespace trio
+} // namespace sfx

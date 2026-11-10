@@ -16,7 +16,7 @@ permissions:
 
 env:
   BUILD_DIR: build
-  PLUGIN_NAME: TrioFX
+  PLUGIN_NAME: ShobeatsFX
   PLUGINVAL_VERSION: v1.0.4
 
 jobs:
@@ -40,7 +40,7 @@ jobs:
 
       - name: Configure (Visual Studio, x64)
         shell: pwsh
-        run: cmake -S . -B $env:BUILD_DIR -A x64 -DTRIOFX_BUILD_TESTS=ON
+        run: cmake -S . -B $env:BUILD_DIR -A x64 -DSHOBEATS_BUILD_TESTS=ON
 
       - name: Build Release
         shell: pwsh
@@ -126,8 +126,8 @@ jobs:
       - name: Upload VST3 bundle
         uses: actions/upload-artifact@v4
         with:
-          # The artifact root contains the complete TrioFX.vst3 folder
-          # (Contents/x86_64-win/TrioFX.vst3 + Contents/Resources/moduleinfo.json).
+          # The artifact root contains the complete ShobeatsFX.vst3 folder
+          # (Contents/x86_64-win/ShobeatsFX.vst3 + Contents/Resources/moduleinfo.json).
           name: ${{ env.PLUGIN_NAME }}-VST3-Windows-x64-Release
           path: ${{ steps.bundle.outputs.vst3_dir }}
           if-no-files-found: error

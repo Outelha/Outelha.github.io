@@ -1,6 +1,6 @@
 #include "Reverb.h"
 
-namespace trio::dsp
+namespace sfx::dsp
 {
 namespace
 {
@@ -211,4 +211,4 @@ void Reverb::process (float* const* channels, int numChannels, int numSamples) n
         }
     }
 }
-} // namespace trio::dsp
+} // namespace sfx::dsp

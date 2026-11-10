@@ -3,8 +3,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-using namespace trio;
-using namespace trio::test;
+using namespace sfx;
+using namespace sfx::test;
 using dsp::Reverb;
 
 namespace
