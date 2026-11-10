@@ -4,6 +4,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstdlib>
+#include <cstring>
 #include <random>
 #include <thread>
 
@@ -169,6 +170,21 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: invalid chain order in a saved state fal
     b.getChainOrder().move (2, 4);
     b.setStateInformation (corrupted.getData(), static_cast<int> (corrupted.getSize()));
     CHECK (b.getChainOrder().get() == sfx::ChainOrder::defaultOrder());
+}
+
+TEST_CASE_METHOD (JuceFixture, "ParameterReader: finds parameters by id text, not by pointer", "[plugin]")
+{
+    // Regression: MSVC does not merge identical string literals across files, so an id
+    // pointer from another translation unit can differ from the cached one.
+    ShobeatsAudioProcessor p;
+    setParam (p, ParamID::delayFeedback, 0.77f);
+    sfx::ParameterReader reader (p.getState());
+
+    char copy[32] = {};
+    std::strncpy (copy, ParamID::delayFeedback, sizeof (copy) - 1);
+    REQUIRE (copy != ParamID::delayFeedback);
+    CHECK (std::abs (reader.get (copy) - 0.77f) < 1.0e-3f);
+    CHECK (std::abs (reader.get (ParamID::delayFeedback) - 0.77f) < 1.0e-3f);
 }
 
 TEST_CASE ("ChainOrder: move keeps a valid permutation", "[plugin]")

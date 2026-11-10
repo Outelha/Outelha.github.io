@@ -3,6 +3,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include <array>
+#include <cstring>
 
 namespace sfx
 {
@@ -123,7 +124,7 @@ inline constexpr std::size_t numParameters = 59;
 extern const std::array<const char*, numParameters> allParameterIds;
 
 // Lock-free read access to parameter values from the audio thread. Pointers to the
-// parameters' atomic values are cached once; lookups compare id pointers only.
+// parameters' atomic values are cached once at construction.
 class ParameterReader
 {
 public:
@@ -131,10 +132,16 @@ public:
 
     float get (const char* id) const noexcept
     {
+        // Fast path: identical pointer. Compilers are not required to merge identical
+        // string literals across translation units (MSVC often does not), so fall back
+        // to comparing the text. No allocation either way.
         for (std::size_t i = 0; i < allParameterIds.size(); ++i)
             if (allParameterIds[i] == id)
                 return values[i]->load (std::memory_order_relaxed);
-        jassertfalse; // unknown id: always pass a ParamID:: constant
+        for (std::size_t i = 0; i < allParameterIds.size(); ++i)
+            if (std::strcmp (allParameterIds[i], id) == 0)
+                return values[i]->load (std::memory_order_relaxed);
+        jassertfalse; // unknown parameter id
         return 0.0f;
     }
     bool on (const char* id) const noexcept { return get (id) > 0.5f; }
