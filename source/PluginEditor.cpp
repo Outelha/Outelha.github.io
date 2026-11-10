@@ -1,35 +1,39 @@
 #include "PluginEditor.h"
 
+#include "ui/Hardware.h"
+
 namespace sfx
 {
 using namespace ui;
 
 namespace
 {
-constexpr int headerHeight = 92;
-constexpr int margin = 22;
+constexpr int topBarHeight = 96;
+const juce::Rectangle<int> logoArea { 30, 20, 300, 60 };
+const juce::Rectangle<int> presetArea { 372, 30, 520, 42 };
+const juce::Rectangle<int> switchArea { 1022, 26, 186, 50 };
 } // namespace
 
 MainView::MainView (ShobeatsAudioProcessor& p)
     : processor (p),
-      driftKnob (p.getState(), ParamID::drift, "Drift", Palette::brand),
-      unstableKnob (p.getState(), ParamID::unstable, "Unstable", Palette::brand),
-      inputKnob (p.getState(), ParamID::inputGain, "Input", Palette::text),
-      mixKnob (p.getState(), ParamID::globalMix, "Mix", Palette::brand),
-      outputKnob (p.getState(), ParamID::outputGain, "Output", Palette::text),
+      presetBar (p),
+      mainPanel (p),
       pedalboard (p.getState(), p.getChainOrder()),
       detail (p.getState()),
-      presetBar (p),
-      generator (p.getPresetManager()),
       browser (p.getPresetManager()),
       savePanel (p.getPresetManager())
 {
-    for (juce::Component* c : { (juce::Component*) &driftKnob, (juce::Component*) &unstableKnob, (juce::Component*) &inputKnob, (juce::Component*) &mixKnob, (juce::Component*) &outputKnob,
-                                (juce::Component*) &inputMeter, (juce::Component*) &outputMeter,
-                                (juce::Component*) &pedalboard, (juce::Component*) &detail, (juce::Component*) &presetBar, (juce::Component*) &generator })
-        addAndMakeVisible (*c);
+    addAndMakeVisible (presetBar);
+    addAndMakeVisible (viewSwitch);
+    addAndMakeVisible (mainPanel);
+    addChildComponent (pedalboard);
+    addChildComponent (detail);
     addChildComponent (browser);
     addChildComponent (savePanel);
+
+    viewSwitch.setTooltip ("Switch between the main view and the full pedalboard");
+    viewSwitch.onClick = [this] { setAdvanced (! advanced); };
+
     presetBar.onBrowse = [this] { showBrowser (true); };
     presetBar.onSave = [this] { showSavePanel (true); };
     browser.onClose = [this] { showBrowser (false); };
@@ -38,39 +42,24 @@ MainView::MainView (ShobeatsAudioProcessor& p)
     pedalboard.onSelectionChanged = [this] (EffectId id) { detail.showEffect (id); };
     detail.onMove = [this] (int direction) { pedalboard.nudgeSelected (direction); };
     detail.showEffect (pedalboard.getSelected());
-    shownBpm = p.getCurrentBpm();
-    detail.setBpm (shownBpm);
+    detail.setBpm (p.getCurrentBpm());
+
+    mainPanel.onOpenEffect = [this] (EffectId id) {
+        pedalboard.select (id);
+        setAdvanced (true);
+    };
 
     setSize (designWidth, designHeight);
 }
 
-void MainView::paint (juce::Graphics& g)
+void MainView::setAdvanced (bool shouldShowAdvanced)
 {
-    const auto b = getLocalBounds().toFloat();
-    g.setGradientFill (juce::ColourGradient (Palette::background.brighter (0.06f), 0.0f, 0.0f, Palette::background, 0.0f, b.getHeight(), false));
-    g.fillAll();
-
-    // Wordmark: SHOBEATS + FX badge.
-    auto header = getLocalBounds().reduced (margin + 4, 0).removeFromTop (headerHeight);
-    auto brand = header.removeFromLeft (320).withSizeKeepingCentre (320, 50);
-    g.setColour (Palette::text);
-    g.setFont (uiFont (34.0f, true).withExtraKerningFactor (0.06f));
-    const juce::String word ("SHOBEATS");
-    const auto wordWidth = juce::roundToInt (juce::GlyphArrangement::getStringWidth (g.getCurrentFont(), word)) + 6;
-    g.drawText (word, brand.removeFromLeft (wordWidth).withTrimmedBottom (14), juce::Justification::centredLeft);
-    auto badge = brand.removeFromLeft (46).withTrimmedBottom (14).withSizeKeepingCentre (42, 26).toFloat();
-    g.setColour (Palette::brand);
-    g.fillRoundedRectangle (badge, 5.0f);
-    g.setColour (Palette::background);
-    g.setFont (uiFont (17.0f, true));
-    g.drawText ("FX", badge, juce::Justification::centred);
-
-    auto sub = getLocalBounds().reduced (margin + 4, 0).removeFromTop (headerHeight).withSizeKeepingCentre (getWidth() - 2 * (margin + 4), 50);
-    g.setColour (Palette::textFaint);
-    g.setFont (uiFont (11.5f, true));
-    g.drawText ("8-PEDAL FX RACK  /  v" JucePlugin_VersionString, sub.withTrimmedTop (34), juce::Justification::centredLeft);
-
-
+    advanced = shouldShowAdvanced;
+    mainPanel.setVisible (! advanced);
+    pedalboard.setVisible (advanced);
+    detail.setVisible (advanced);
+    viewSwitch.setButtonText (advanced ? "Main" : "Advanced");
+    viewSwitch.repaint();
 }
 
 void MainView::showBrowser (bool show)
@@ -93,34 +82,52 @@ void MainView::showSavePanel (bool show)
     }
 }
 
+void MainView::paint (juce::Graphics& g)
+{
+    // Chassis: brushed gunmetal with a darker inner deck.
+    g.fillAll (juce::Colour (0xff0b0b0d));
+    const auto chassis = getLocalBounds().toFloat().reduced (6.0f);
+    hw::drawBrushedPlate (g, chassis, hw::chassisTop, hw::chassisBottom, 16.0f, 0.55f);
+    for (auto c : { chassis.getTopLeft().translated (16.0f, 16.0f), chassis.getTopRight().translated (-16.0f, 16.0f),
+                    chassis.getBottomLeft().translated (16.0f, -16.0f), chassis.getBottomRight().translated (-16.0f, -16.0f) })
+        hw::drawScrew (g, c, 5.0f, c.x * 0.01f);
+
+    // Top bar: engraved logo plate.
+    const auto logo = logoArea.toFloat();
+    hw::drawRecess (g, logo, 10.0f, juce::Colour (0xff141518));
+    auto word = logo.reduced (16.0f, 8.0f);
+    hw::drawEngraved (g, "SHOBEATS", word.removeFromLeft (196.0f), uiFont (31.0f, true).withExtraKerningFactor (0.12f),
+                      juce::Justification::centredLeft, juce::Colour (0xffeee8dc));
+    auto badge = word.removeFromLeft (52.0f).withSizeKeepingCentre (46.0f, 28.0f);
+    g.setGradientFill (juce::ColourGradient (juce::Colour (0xffef7e44), 0.0f, badge.getY(), juce::Colour (0xffb24c22), 0.0f, badge.getBottom(), false));
+    g.fillRoundedRectangle (badge, 5.0f);
+    g.setColour (juce::Colours::black.withAlpha (0.5f));
+    g.drawRoundedRectangle (badge, 5.0f, 1.0f);
+    g.setColour (juce::Colour (0xfffff3e8));
+    g.setFont (uiFont (17.0f, true));
+    g.drawText ("FX", badge, juce::Justification::centred);
+
+    // Faint model line under the top bar.
+    hw::drawEngraved (g, juce::String (advanced ? "ADVANCED  /  PEDALBOARD" : "MAIN  /  SOUND DESIGN") + "     v" JucePlugin_VersionString,
+                      juce::Rectangle<float> (presetArea.getX() + 4.0f, presetArea.getBottom() + 4.0f, 400.0f, 16.0f),
+                      uiFont (10.5f, true).withExtraKerningFactor (0.15f), juce::Justification::centredLeft, hw::engraving.withAlpha (0.5f));
+}
+
 void MainView::resized()
 {
-    auto area = getLocalBounds().reduced (margin, 0);
-    auto header = area.removeFromTop (headerHeight);
+    presetBar.setBounds (presetArea);
+    viewSwitch.setBounds (switchArea);
 
-    auto io = header.removeFromRight (330).reduced (0, 8);
-    auto movement = header.removeFromRight (190).reduced (0, 8);
-    driftKnob.setBounds (movement.removeFromLeft (90));
-    unstableKnob.setBounds (movement.removeFromLeft (90));
-    inputMeter.setBounds (io.removeFromLeft (20));
-    io.removeFromLeft (8);
-    inputKnob.setBounds (io.removeFromLeft (84));
-    io.removeFromLeft (4);
-    mixKnob.setBounds (io.removeFromLeft (84));
-    io.removeFromLeft (4);
-    outputKnob.setBounds (io.removeFromLeft (84));
-    io.removeFromLeft (8);
-    outputMeter.setBounds (io.removeFromLeft (20));
+    const auto content = getLocalBounds().withTrimmedTop (topBarHeight);
+    mainPanel.setBounds (content);
 
-    presetBar.setBounds (juce::Rectangle<int> (330, 18, 360, 32));
-    generator.setBounds (juce::Rectangle<int> (330, 56, 360, 26));
+    auto adv = content.reduced (22, 0).withTrimmedBottom (22);
+    pedalboard.setBounds (adv.removeFromTop (352));
+    adv.removeFromTop (14);
+    detail.setBounds (adv);
+
     browser.setBounds (getLocalBounds());
     savePanel.setBounds (getLocalBounds());
-
-    area.removeFromBottom (margin);
-    pedalboard.setBounds (area.removeFromTop (352));
-    area.removeFromTop (16);
-    detail.setBounds (area);
 }
 
 void MainView::refresh()
@@ -131,15 +138,8 @@ void MainView::refresh()
     const auto inR = stereo ? LevelMeters::take (m.input[1]) : inL;
     const auto outL = LevelMeters::take (m.output[0]);
     const auto outR = stereo ? LevelMeters::take (m.output[1]) : outL;
-    inputMeter.setLevels (inL, inR);
-    outputMeter.setLevels (outL, outR);
-
-    const auto bpm = processor.getCurrentBpm();
-    if (std::abs (bpm - shownBpm) > 0.01)
-    {
-        shownBpm = bpm;
-        detail.setBpm (bpm);
-    }
+    mainPanel.setMeterLevels (inL, inR, outL, outR);
+    detail.setBpm (processor.getCurrentBpm());
 }
 
 //==============================================================================
@@ -156,7 +156,7 @@ ShobeatsAudioProcessorEditor::ShobeatsAudioProcessorEditor (ShobeatsAudioProcess
     setResizeLimits (MainView::designWidth * 3 / 5, MainView::designHeight * 3 / 5, MainView::designWidth * 2, MainView::designHeight * 2);
     if (auto* c = getConstrainer())
         c->setFixedAspectRatio (aspect);
-    // Default to 85 % so the full board fits on a 1080p screen inside a DAW.
+    // Default to 85 % so the full UI fits on a 1080p screen inside a DAW.
     setSize (MainView::designWidth * 85 / 100, MainView::designHeight * 85 / 100);
 
     startTimerHz (30);
@@ -169,7 +169,7 @@ ShobeatsAudioProcessorEditor::~ShobeatsAudioProcessorEditor()
 
 void ShobeatsAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (Palette::background);
+    g.fillAll (juce::Colour (0xff0b0b0d));
 }
 
 void ShobeatsAudioProcessorEditor::resized()

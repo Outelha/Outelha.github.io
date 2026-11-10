@@ -1,5 +1,8 @@
 #include "Pedalboard.h"
 
+#include "Hardware.h"
+#include "dsp/DspCommon.h"
+
 namespace sfx::ui
 {
 namespace
@@ -81,7 +84,7 @@ void Footswitch::paintButton (juce::Graphics& g, bool over, bool down)
 }
 
 //==============================================================================
-Pedal::Pedal (APVTS& state, EffectId id) : effect (id), colour (pedalColour (id)), footswitch (state, infoFor (id).enabledId)
+Pedal::Pedal (APVTS& s, EffectId id) : state (s), effect (id), colour (pedalColour (id)), footswitch (s, infoFor (id).enabledId)
 {
     ink = colour.getPerceivedBrightness() > 0.62f ? juce::Colour (0xff1b1a18) : juce::Colour (0xfff4f1ea);
 
@@ -121,6 +124,224 @@ Pedal::Pedal (APVTS& state, EffectId id) : effect (id), colour (pedalColour (id)
     setMouseCursor (juce::MouseCursor::DraggingHandCursor);
     setTitle (infoFor (id).name);
     setSize (width, height);
+
+    // Pedals with live readouts or animation refresh themselves.
+    if (id == EffectId::resampler || id == EffectId::reverse || id == EffectId::delay || id == EffectId::tape)
+        startTimerHz (20);
+}
+
+float Pedal::value (const char* id) const
+{
+    auto* v = state.getRawParameterValue (id);
+    return v != nullptr ? v->load() : 0.0f;
+}
+
+juce::String Pedal::readout() const
+{
+    auto division = [this] (const char* id) {
+        return juce::String (dsp::divisionNames[static_cast<size_t> (juce::jlimit (0, dsp::numDivisions - 1, juce::roundToInt (value (id))))]);
+    };
+    switch (effect)
+    {
+        case EffectId::resampler:
+            return juce::String (value (ParamID::rsRate) / 1000.0f, 1) + "k " + juce::String (juce::roundToInt (value (ParamID::rsBits))) + "b";
+        case EffectId::reverse:
+        {
+            const auto pitch = juce::roundToInt (value (ParamID::revPitch));
+            return (value (ParamID::revSync) > 0.5f ? division (ParamID::revDivision) : juce::String (juce::roundToInt (value (ParamID::revTime))) + "ms")
+                   + " " + (pitch > 0 ? "+" : "") + juce::String (pitch);
+        }
+        case EffectId::delay:
+            return value (ParamID::delaySync) > 0.5f ? division (ParamID::delayDivision) : juce::String (juce::roundToInt (value (ParamID::delayTime))) + "ms";
+        case EffectId::saturation:
+        case EffectId::tape:
+        case EffectId::chorus:
+        case EffectId::tremolo:
+        case EffectId::reverb:
+            break;
+    }
+    return {};
+}
+
+void Pedal::timerCallback()
+{
+    animationTime = juce::Time::getMillisecondCounterHiRes() * 0.001;
+    const auto text = readout();
+    // Tape reels and the delay tap LED animate while the pedal is on.
+    if (text != lastReadout || (enabled && (effect == EffectId::tape || effect == EffectId::delay)))
+    {
+        lastReadout = text;
+        repaint();
+    }
+}
+
+void Pedal::drawSurface (juce::Graphics& g, const juce::Path& body, juce::Rectangle<float> b) const
+{
+    using namespace juce;
+    Graphics::ScopedSaveState save (g);
+    g.reduceClipRegion (body);
+    Random rng (static_cast<int64> (effect) * 7919 + 17);
+
+    switch (effect)
+    {
+        case EffectId::saturation: // hammertone: overlapping shallow dimples
+            for (int i = 0; i < 260; ++i)
+            {
+                const auto r = rng.nextFloat() * 4.0f + 2.5f;
+                const Point<float> c { b.getX() + rng.nextFloat() * b.getWidth(), b.getY() + rng.nextFloat() * b.getHeight() };
+                g.setColour (Colours::black.withAlpha (0.10f));
+                g.fillEllipse (Rectangle<float> (r * 2.0f, r * 2.0f).withCentre (c.translated (0.6f, 0.8f)));
+                g.setColour (Colours::white.withAlpha (0.09f));
+                g.fillEllipse (Rectangle<float> (r * 1.4f, r * 1.4f).withCentre (c.translated (-0.5f, -0.6f)));
+            }
+            break;
+
+        case EffectId::resampler: // anodised with circuit traces
+            g.setColour (Colours::white.withAlpha (0.07f));
+            for (int i = 0; i < 18; ++i)
+            {
+                auto x = b.getX() + rng.nextFloat() * b.getWidth();
+                auto y = b.getY() + 175.0f + rng.nextFloat() * (b.getHeight() - 190.0f);
+                Path trace;
+                trace.startNewSubPath (x, y);
+                for (int s = 0; s < 3; ++s)
+                {
+                    if (rng.nextBool())
+                        x += (rng.nextFloat() - 0.5f) * 50.0f;
+                    else
+                        y += (rng.nextFloat() - 0.5f) * 40.0f;
+                    trace.lineTo (x, y);
+                }
+                g.strokePath (trace, PathStrokeType (1.2f));
+                g.fillEllipse (Rectangle<float> (4.0f, 4.0f).withCentre ({ x, y }));
+            }
+            break;
+
+        case EffectId::tape: // tolex: dense grain with a diagonal weave
+            g.setTiledImageFill (noiseTexture(), 0, 0, 0.45f);
+            g.fillPath (body);
+            g.setColour (Colours::black.withAlpha (0.04f));
+            for (float d = -b.getHeight(); d < b.getWidth(); d += 4.0f)
+                g.drawLine (b.getX() + d, b.getY(), b.getX() + d + b.getHeight(), b.getBottom(), 1.0f);
+            break;
+
+        case EffectId::chorus: // metal-flake sparkle
+            for (int i = 0; i < 420; ++i)
+            {
+                const auto s = rng.nextFloat() * 1.4f + 0.5f;
+                g.setColour (Colours::white.withAlpha (rng.nextFloat() * 0.45f));
+                g.fillEllipse (b.getX() + rng.nextFloat() * b.getWidth(), b.getY() + rng.nextFloat() * b.getHeight(), s, s);
+            }
+            break;
+
+        case EffectId::tremolo: // brushed with a wave silkscreen
+        {
+            g.setTiledImageFill (hw::brushedTexture(), 0, 0, 0.55f);
+            g.fillPath (body);
+            Path wave;
+            for (int i = 0; i <= 60; ++i)
+            {
+                const auto x = b.getX() + 14.0f + (b.getWidth() - 28.0f) * static_cast<float> (i) / 60.0f;
+                const auto y = 206.0f + 6.0f * std::sin (static_cast<float> (i) / 60.0f * MathConstants<float>::twoPi * 2.0f);
+                i == 0 ? wave.startNewSubPath (x, y) : wave.lineTo (x, y);
+            }
+            g.setColour (Colours::white.withAlpha (0.18f));
+            g.strokePath (wave, PathStrokeType (1.5f));
+            break;
+        }
+
+        case EffectId::reverse: // diagonal stripes and reverse arrows
+            g.setColour (Colours::white.withAlpha (0.05f));
+            for (float d = -b.getHeight(); d < b.getWidth(); d += 14.0f)
+                g.drawLine (b.getX() + d + b.getHeight(), b.getY(), b.getX() + d, b.getBottom(), 3.0f);
+            g.setColour (Colours::white.withAlpha (0.22f));
+            for (int i = 0; i < 2; ++i)
+            {
+                const auto x = b.getCentreX() - 12.0f + static_cast<float> (i) * 12.0f;
+                Path arrow;
+                arrow.addTriangle (x + 10.0f, 200.0f, x + 10.0f, 214.0f, x, 207.0f);
+                g.fillPath (arrow);
+            }
+            break;
+
+        case EffectId::delay: // echo rings silkscreen
+            g.setColour (Colours::black.withAlpha (0.10f));
+            for (int i = 1; i <= 6; ++i)
+            {
+                const auto r = static_cast<float> (i) * 16.0f;
+                g.drawEllipse (Rectangle<float> (r * 2.0f, r * 2.0f).withCentre ({ b.getCentreX(), 245.0f }), 1.5f);
+            }
+            break;
+
+        case EffectId::reverb: // starfield
+            for (int i = 0; i < 140; ++i)
+            {
+                const auto s = rng.nextFloat() * 1.8f + 0.6f;
+                g.setColour (Colours::white.withAlpha (0.15f + rng.nextFloat() * 0.5f));
+                g.fillEllipse (b.getX() + rng.nextFloat() * b.getWidth(), b.getY() + rng.nextFloat() * b.getHeight(), s, s);
+            }
+            for (int i = 0; i < 5; ++i)
+            {
+                const Point<float> c { b.getX() + rng.nextFloat() * b.getWidth(), b.getY() + 175.0f + rng.nextFloat() * 100.0f };
+                g.setColour (Colours::white.withAlpha (0.5f));
+                g.drawLine (c.x - 4.0f, c.y, c.x + 4.0f, c.y, 0.8f);
+                g.drawLine (c.x, c.y - 4.0f, c.x, c.y + 4.0f, 0.8f);
+            }
+            break;
+    }
+}
+
+void Pedal::drawNamePlate (juce::Graphics& g, juce::Rectangle<float> plate) const
+{
+    using namespace juce;
+    g.setColour (Colour (0xff121214));
+    g.fillRoundedRectangle (plate, 5.0f);
+    g.setColour (Colours::white.withAlpha (0.08f));
+    g.drawRoundedRectangle (plate.reduced (0.5f), 5.0f, 1.0f);
+
+    g.setColour (Colour (0xfff4f1ea));
+    g.setFont (uiFont (15.0f, true));
+    g.drawText (String (infoFor (effect).name).toUpperCase(), plate.withTrimmedBottom (18.0f).toNearestInt(), Justification::centredBottom);
+
+    auto lower = plate.withTrimmedTop (32.0f).reduced (10.0f, 4.0f);
+    const auto text = readout();
+    if (text.isNotEmpty())
+    {
+        // Small LCD readout.
+        g.setColour (Colour (0xff0b1a12));
+        g.fillRoundedRectangle (lower, 2.0f);
+        const auto lcd = enabled ? Colour (0xff7dffb0) : Colour (0xff2d5a3e);
+        g.setFont (Font (FontOptions (Font::getDefaultMonospacedFontName(), 11.0f, Font::bold)));
+        g.setColour (lcd.withAlpha (0.25f));
+        g.drawText (text, lower.translated (0.0f, 0.5f), Justification::centred);
+        g.setColour (lcd);
+        g.drawText (text, lower, Justification::centred);
+    }
+    else if (effect == EffectId::tape)
+    {
+        // Cassette window with turning reels.
+        g.setColour (Colour (0xff2a2622));
+        g.fillRoundedRectangle (lower, 3.0f);
+        const auto spin = enabled ? static_cast<float> (animationTime * 3.0) : 0.4f;
+        for (int i = 0; i < 2; ++i)
+        {
+            const Point<float> c { lower.getX() + lower.getWidth() * (i == 0 ? 0.3f : 0.7f), lower.getCentreY() };
+            const auto r = lower.getHeight() * 0.42f;
+            g.setColour (Colour (0xffd9cdb4));
+            g.drawEllipse (Rectangle<float> (r * 2.0f, r * 2.0f).withCentre (c), 1.0f);
+            for (int s = 0; s < 3; ++s)
+            {
+                const auto a = spin + MathConstants<float>::twoPi * static_cast<float> (s) / 3.0f;
+                g.drawLine (c.x, c.y, c.x + r * std::cos (a), c.y + r * std::sin (a), 1.0f);
+            }
+        }
+    }
+    else
+    {
+        g.setColour (colour.brighter (0.4f));
+        g.setFont (uiFont (8.5f, true));
+        g.drawText ("S H O B E A T S", lower.toNearestInt(), Justification::centred);
+    }
 }
 
 Pedal::~Pedal() = default;
@@ -144,12 +365,13 @@ void Pedal::paint (juce::Graphics& g)
     g.setColour (Colours::black.withAlpha (0.55f));
     g.fillRoundedRectangle (bounds.translated (0.0f, 5.0f), corner);
 
-    // Enclosure: painted metal with a light top edge and darker bottom.
+    // Enclosure: painted metal with a light top edge and darker bottom, plus the pedal's own finish.
     Path body;
     body.addRoundedRectangle (bounds, corner);
     g.setGradientFill (ColourGradient (colour.brighter (0.18f), bounds.getX(), bounds.getY(), colour.darker (0.35f), bounds.getRight(), bounds.getBottom(), false));
     g.fillPath (body);
-    fillWithTexture (g, body, 0.35f);
+    fillWithTexture (g, body, 0.25f);
+    drawSurface (g, body, bounds);
     g.setColour (Colours::white.withAlpha (0.18f));
     g.drawRoundedRectangle (bounds.reduced (1.0f), corner - 1.0f, 1.2f);
     g.setColour (Colours::black.withAlpha (0.45f));
@@ -162,18 +384,17 @@ void Pedal::paint (juce::Graphics& g)
     drawScrew (g, { bounds.getX() + inset, bounds.getBottom() - inset }, 3.5f, 2.6f);
     drawScrew (g, { bounds.getRight() - inset, bounds.getBottom() - inset }, 3.5f, 0.2f);
 
-    // Name plate.
-    const auto plate = Rectangle<float> (bounds.getX() + 12.0f, 118.0f, bounds.getWidth() - 24.0f, 50.0f);
-    g.setColour (Colour (0xff121214));
-    g.fillRoundedRectangle (plate, 5.0f);
-    g.setColour (Colours::white.withAlpha (0.08f));
-    g.drawRoundedRectangle (plate.reduced (0.5f), 5.0f, 1.0f);
-    g.setColour (Colour (0xfff4f1ea));
-    g.setFont (uiFont (15.0f, true));
-    g.drawText (String (infoFor (effect).name).toUpperCase(), plate.withTrimmedBottom (16.0f).toNearestInt(), Justification::centredBottom);
-    g.setColour (colour.brighter (0.4f));
-    g.setFont (uiFont (8.5f, true));
-    g.drawText ("S H O B E A T S", plate.withTrimmedTop (30.0f).toNearestInt(), Justification::centred);
+    drawNamePlate (g, Rectangle<float> (bounds.getX() + 12.0f, 118.0f, bounds.getWidth() - 24.0f, 52.0f));
+
+    // Delay: a second, amber "tap" LED blinks at the delay time.
+    if (effect == EffectId::delay && enabled)
+    {
+        const auto seconds = value (ParamID::delaySync) > 0.5f
+                                 ? dsp::divisionSeconds (roundToInt (value (ParamID::delayDivision)), 120.0)
+                                 : value (ParamID::delayTime) * 0.001f;
+        const bool blink = std::fmod (animationTime, static_cast<double> (std::max (0.05f, seconds))) < 0.06;
+        hw::drawLed (g, { bounds.getRight() - 20.0f, 190.0f }, 3.0f, Colour (0xffffb347), blink);
+    }
 
     // Status LED with glow.
     const Point<float> led { bounds.getCentreX(), 190.0f };

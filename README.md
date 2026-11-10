@@ -2,7 +2,9 @@
 
 An analog-style multi-effects pedalboard plugin (VST3, Windows x64) built with C++ and JUCE.
 
-![SHOBEATS FX user interface](docs/screenshot.png)
+![SHOBEATS FX main view](docs/screenshot.png)
+
+![SHOBEATS FX advanced view](docs/screenshot-advanced.png)
 
 ## Effects
 
@@ -19,16 +21,37 @@ Eight pedals, every control processes audio:
 | Delay | Time (ms or BPM-synced), Feedback, Low Cut, High Cut, Ping-Pong, Width, Mix |
 | Reverb | Size, Decay, Damping, Pre-Delay, Width, Mix |
 
-Global: Input, Mix (whole chain wet/dry, latency-aligned), Output, peak meters, host tempo display.
+Global: Input, Mix (whole chain wet/dry, latency-aligned), Output, peak meters, host tempo display,
+and two analog-movement controls that act on every active pedal:
+
+- **Drift** – slow wander: tape wow, delay-time and chorus/tremolo rate drift, per-segment detune, drive drift, lusher reverb modulation
+- **Unstable** – fast irregularity: flutter and dropouts, delay wobble/jitter, chorus voice jitter, resampler clock jitter, tremolo depth flicker
+
+## Presets and the FX Generator
+
+- **60 original factory presets** in six categories (Vintage / Analog, Dreamy / Ambient, Dark / Trap,
+  Lo-Fi / Texture, Space / Experimental, Creative / Movement) – see [docs/PRESETS.md](docs/PRESETS.md).
+  They are JSON files in `presets/factory/`, compiled into the plugin.
+- **Preset browser** with categories, search and descriptions; previous/next buttons; **Save** for user presets
+  (stored as `.sfxpreset` files in `%APPDATA%\SHOBEATS\SHOBEATS FX\Presets`, listed under *User*).
+- **FX Generator**: pick a vibe (Vintage, Dreamy, Dark, Lo-Fi, Space, Experimental) and press **GENERATE**.
+  Each vibe is a curated recipe (signature pedal, likely pedals, safe parameter ranges, order template,
+  movement ranges, loudness trim). Every press gives a new idea; press **Save** to keep it.
+- Loading a preset or generating fades out, swaps and clears old tails in silence, then fades in – no clicks
+  or level spikes while audio plays. The DAW project stores parameters, pedal order and the preset name.
 
 ## Using it
 
+**Main view** – Drift and Unstable, the preset display, the vibe keys and GENERATE, the FX chain
+(click a tile to switch a pedal, double-click to open it), and Input / Mix / Output.
+
+**Advanced view** (ADVANCED button) – the full pedalboard:
+
 - **Stomp** a pedal's footswitch to switch it on/off (red LED = on). New instances start with every pedal off.
 - **Turn** the two knobs on a pedal for its main controls. Shift-drag for fine control, double-click to reset.
-- **Click** a pedal to open its *Advanced* panel with every control and a live display.
-- **Drag** a pedal left/right to change the processing order (or use *Earlier / Later* in the panel).
-  The order is saved with your project.
-- Synced effects follow the host tempo (shown in the header).
+- **Click** a pedal to show every control and a live display in the settings panel below.
+- **Drag** a pedal left/right to change the processing order (or use *Earlier / Later*).
+- Synced effects follow the host tempo (shown in the main display).
 
 ## Status
 
@@ -36,9 +59,10 @@ Global: Input, Mix (whole chain wet/dry, latency-aligned), Output, peak meters, 
 | --- | --- | --- |
 | M1 | Saturation, chorus, reverb, CMake, CI | Done |
 | M2 | 8 effects, reorderable chain, global mix, BPM sync, pedalboard UI + advanced panel | Done |
-| M3 | Global Drift / Unstable analog movement, UI polish | Next |
-| M4 | Preset browser, factory presets, save/load user presets | Planned |
-| M5 | FX Generator (Vintage, Dreamy, Dark, Lo-Fi, Space, Experimental) | Planned |
+| M3 | Global Drift / Unstable analog movement | Done |
+| M4 | 60 factory presets, browser, user presets, click-free switching | Done |
+| M5 | FX Generator (Vintage, Dreamy, Dark, Lo-Fi, Space, Experimental) | Done |
+| M6 | Hardware-style Main view and Advanced pedalboard | Done |
 
 ## Testing in FL Studio (Windows)
 

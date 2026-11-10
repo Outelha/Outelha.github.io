@@ -1,5 +1,6 @@
 #include "PresetBrowser.h"
 
+#include "Hardware.h"
 #include "PluginProcessor.h"
 
 namespace sfx::ui
@@ -36,7 +37,7 @@ PresetBar::PresetBar (ShobeatsAudioProcessor& p) : processor (p)
 
 juce::Rectangle<int> PresetBar::nameArea() const
 {
-    return getLocalBounds().withTrimmedLeft (36).withTrimmedRight (36 + 70);
+    return getLocalBounds().withTrimmedLeft (44).withTrimmedRight (44 + 80);
 }
 
 void PresetBar::timerCallback()
@@ -52,28 +53,30 @@ void PresetBar::timerCallback()
 
 void PresetBar::paint (juce::Graphics& g)
 {
-    const auto area = nameArea().toFloat();
-    g.setColour (Palette::display);
-    g.fillRoundedRectangle (area, 6.0f);
-    g.setColour (isMouseOver() ? Palette::brand.withAlpha (0.7f) : Palette::panelEdge);
-    g.drawRoundedRectangle (area.reduced (0.5f), 6.0f, 1.0f);
+    const auto area = nameArea().toFloat().reduced (2.0f);
+    hw::drawGlassDisplay (g, area, 6.0f);
+    if (isMouseOver())
+    {
+        g.setColour (hw::amber.withAlpha (0.35f));
+        g.drawRoundedRectangle (area, 6.0f, 1.0f);
+    }
 
-    auto text = nameArea().reduced (12, 0);
-    g.setColour (Palette::text);
-    g.setFont (uiFont (15.0f, true));
-    g.drawText (shownName.isEmpty() ? juce::String ("Init") : shownName, text, juce::Justification::centredLeft);
-    g.setColour (Palette::textDim);
-    g.setFont (uiFont (11.0f, true));
-    g.drawText ((shownCategory.isEmpty() ? juce::String ("Browse presets") : shownCategory.toUpperCase()) + "   v", text, juce::Justification::centredRight);
+    auto text = nameArea().reduced (14, 0);
+    g.setColour (hw::amber);
+    g.setFont (uiFont (16.0f, true));
+    g.drawText ((shownName.isEmpty() ? juce::String ("Init") : shownName).toUpperCase(), text, juce::Justification::centredLeft);
+    g.setColour (hw::amber.withAlpha (0.6f));
+    g.setFont (uiFont (10.5f, true));
+    g.drawText ((shownCategory.isEmpty() ? juce::String ("BROWSE") : shownCategory.toUpperCase()) + "   =", text, juce::Justification::centredRight);
 }
 
 void PresetBar::resized()
 {
     auto area = getLocalBounds();
-    prev.setBounds (area.removeFromLeft (32));
-    save.setBounds (area.removeFromRight (66));
+    prev.setBounds (area.removeFromLeft (40));
+    save.setBounds (area.removeFromRight (76));
     area.removeFromRight (4);
-    next.setBounds (area.removeFromRight (32));
+    next.setBounds (area.removeFromRight (40));
 }
 
 void PresetBar::mouseUp (const juce::MouseEvent& e)
@@ -277,46 +280,6 @@ void PresetBrowser::resized()
     search.setBounds (panel.removeFromTop (36));
     panel.removeFromTop (10);
     list.setBounds (panel);
-}
-
-//==============================================================================
-GeneratorStrip::GeneratorStrip (PresetManager& m) : manager (m)
-{
-    const auto names = Generator::vibeNames();
-    for (int i = 0; i < names.size(); ++i)
-    {
-        auto* b = vibes.add (new juce::TextButton (names[i]));
-        b->setConnectedEdges ((i > 0 ? juce::Button::ConnectedOnLeft : 0) | (i < names.size() - 1 ? juce::Button::ConnectedOnRight : 0));
-        b->setTooltip ("Vibe for the generator: " + names[i]);
-        b->onClick = [this, i] {
-            manager.setSelectedVibe (static_cast<Generator::Vibe> (i));
-            refreshSelection();
-        };
-        addAndMakeVisible (b);
-    }
-    // Always drawn "lit" so it reads as the primary action.
-    generate.setColour (juce::TextButton::buttonOnColourId, Palette::brand);
-    generate.setToggleState (true, juce::dontSendNotification);
-    generate.setTooltip ("Create a new effect chain in the selected vibe (save it with Save if you like it)");
-    generate.onClick = [this] { manager.generate (manager.getSelectedVibe()); };
-    addAndMakeVisible (generate);
-    refreshSelection();
-}
-
-void GeneratorStrip::refreshSelection()
-{
-    for (int i = 0; i < vibes.size(); ++i)
-        vibes[i]->setToggleState (i == static_cast<int> (manager.getSelectedVibe()), juce::dontSendNotification);
-}
-
-void GeneratorStrip::resized()
-{
-    auto area = getLocalBounds();
-    generate.setBounds (area.removeFromRight (juce::jmax (80, area.getWidth() / 5)));
-    area.removeFromRight (6);
-    const auto w = area.getWidth() / juce::jmax (1, vibes.size());
-    for (int i = 0; i < vibes.size(); ++i)
-        vibes[i]->setBounds (i == vibes.size() - 1 ? area : area.removeFromLeft (w));
 }
 
 //==============================================================================

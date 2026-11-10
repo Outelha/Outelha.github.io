@@ -20,6 +20,13 @@ Knob::Knob (APVTS& state, const juce::String& paramId, const juce::String& capti
         slider.setPopupDisplayEnabled (true, true, nullptr, 900);
         slider.setColour (juce::Slider::rotarySliderOutlineColourId, juce::Colour (0xff1b1a18).withAlpha (0.75f));
     }
+    else if (style == Style::alu)
+    {
+        slider.getProperties().set ("style", "alu");
+        slider.setTextBoxStyle (juce::Slider::TextBoxBelow, false, 96, 22);
+        slider.setColour (juce::Slider::textBoxTextColourId, juce::Colour (0xffffb347));
+        slider.setMouseDragSensitivity (300);
+    }
     else
     {
         slider.setTextBoxStyle (juce::Slider::TextBoxBelow, false, 84, 18);
@@ -27,9 +34,11 @@ Knob::Knob (APVTS& state, const juce::String& paramId, const juce::String& capti
     addAndMakeVisible (slider);
 
     caption.setText (captionText.toUpperCase(), juce::dontSendNotification);
-    caption.setFont (uiFont (style == Style::pedal ? 10.5f : 11.0f, true));
+    caption.setFont (uiFont (style == Style::pedal ? 10.5f : style == Style::alu ? 15.0f : 11.0f, true));
     caption.setJustificationType (juce::Justification::centred);
-    caption.setColour (juce::Label::textColourId, style == Style::pedal ? juce::Colour (0xff1b1a18) : Palette::textDim);
+    caption.setColour (juce::Label::textColourId, style == Style::pedal ? juce::Colour (0xff1b1a18)
+                                                  : style == Style::alu  ? juce::Colour (0xffc9c3b8)
+                                                                         : Palette::textDim);
     caption.setInterceptsMouseClicks (false, false);
     addAndMakeVisible (caption);
 
@@ -55,7 +64,7 @@ void Knob::resized()
     if (style == Style::pedal)
         caption.setBounds (area.removeFromBottom (14));
     else
-        caption.setBounds (area.removeFromTop (16));
+        caption.setBounds (area.removeFromTop (style == Style::alu ? 22 : 16));
     slider.setBounds (area);
 }
 

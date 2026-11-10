@@ -57,20 +57,6 @@ private:
     std::vector<int> filtered;
 };
 
-// Vibe selector + GENERATE button for the FX idea generator.
-class GeneratorStrip final : public juce::Component
-{
-public:
-    explicit GeneratorStrip (PresetManager& manager);
-    void resized() override;
-    void refreshSelection();
-
-private:
-    PresetManager& manager;
-    juce::OwnedArray<juce::TextButton> vibes;
-    juce::TextButton generate { "Generate" };
-};
-
 // Small modal-style panel to name and save a user preset.
 class SavePresetPanel final : public juce::Component
 {

@@ -440,6 +440,17 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor opens, resizes and closes", "[plu
     if (const auto* prefix = std::getenv ("SHOBEATS_SNAPSHOT"))
     {
         auto& view = dynamic_cast<sfx::ShobeatsAudioProcessorEditor&> (*editor).getView();
+        auto save = [&] (const juce::String& suffix) {
+            juce::File file (juce::String::fromUTF8 (prefix) + suffix + ".png");
+            file.deleteFile();
+            juce::FileOutputStream out (file);
+            REQUIRE (out.openedOk());
+            CHECK (juce::PNGImageFormat().writeImageToStream (editor->createComponentSnapshot (editor->getLocalBounds(), true, 2.0f), out));
+        };
+        p.getPresetManager().load (p.getPresetManager().indexOf ("Dusty Memories", "Vintage / Analog"));
+        view.getMainPanel().refreshDisplay();
+        save ("main");
+        view.setAdvanced (true);
         for (int i = 0; i < sfx::numEffects; ++i)
         {
             setParam (p, sfx::effectInfo[static_cast<size_t> (i)].enabledId, i % 3 == 0 ? 0.0f : 1.0f);

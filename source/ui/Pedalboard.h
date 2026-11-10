@@ -18,7 +18,7 @@ private:
 
 // One effect pedal: enclosure, two main knobs, name plate, status LED, stomp switch.
 // Click the enclosure to open its detail panel; drag it to move it in the chain.
-class Pedal final : public juce::Component
+class Pedal final : public juce::Component, private juce::Timer
 {
 public:
     static constexpr int width = 138, height = 300;
@@ -40,8 +40,17 @@ public:
     void endDrag();
 
 private:
+    void timerCallback() override;
+    void drawSurface (juce::Graphics&, const juce::Path& body, juce::Rectangle<float> bounds) const;
+    void drawNamePlate (juce::Graphics&, juce::Rectangle<float> plate) const;
+    juce::String readout() const;
+    float value (const char* id) const;
+
+    APVTS& state;
     EffectId effect;
     juce::Colour colour, ink;
+    juce::String lastReadout;
+    double animationTime = 0.0;
     bool selected = false, enabled = false, dragging = false;
     std::unique_ptr<juce::Component> knobA, knobB;
     Footswitch footswitch;

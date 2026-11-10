@@ -16,8 +16,9 @@ class Knob final : public juce::Component
 public:
     enum class Style
     {
-        panel,
-        pedal
+        panel, // arc knob, caption above, editable value below
+        pedal, // black hardware knob on a pedal, caption below, value bubble
+        alu    // large spun-aluminium knob, engraved caption above, amber value below
     };
 
     Knob (APVTS& state, const juce::String& paramId, const juce::String& caption, juce::Colour accent, Style style = Style::panel);

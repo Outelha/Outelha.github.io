@@ -1,5 +1,7 @@
 #include "DetailPanel.h"
 
+#include "Hardware.h"
+
 namespace sfx::ui
 {
 DetailPanel::DetailPanel (APVTS& s) : state (s), display (s)
@@ -112,24 +114,17 @@ void DetailPanel::showEffect (EffectId id)
 
 void DetailPanel::paint (juce::Graphics& g)
 {
-    const auto b = getLocalBounds().toFloat().reduced (0.5f);
+    const auto b = getLocalBounds().toFloat().reduced (1.0f);
     const auto accent = accentColour (effect);
-    juce::Path panel;
-    panel.addRoundedRectangle (b, 14.0f);
-    g.setGradientFill (juce::ColourGradient (Palette::panel.brighter (0.05f), 0.0f, 0.0f, Palette::panel.darker (0.2f), 0.0f, b.getBottom(), false));
-    g.fillPath (panel);
-    fillWithTexture (g, panel, 0.18f);
-    g.setColour (Palette::panelEdge);
-    g.strokePath (panel, juce::PathStrokeType (1.0f));
+    hw::drawRecess (g, b, 14.0f, juce::Colour (0xff16171a));
 
     // Accent strip + title.
     g.setColour (accent);
     g.fillRoundedRectangle (b.getX() + 22.0f, b.getY(), 120.0f, 3.0f, 1.5f);
 
     auto info = getLocalBounds().reduced (24, 20).removeFromLeft (230);
-    g.setColour (Palette::textFaint);
-    g.setFont (uiFont (11.0f, true));
-    g.drawText ("ADVANCED", info.removeFromTop (16), juce::Justification::centredLeft);
+    hw::drawEngraved (g, "PEDAL SETTINGS", info.removeFromTop (16).toFloat(), uiFont (11.0f, true).withExtraKerningFactor (0.18f),
+                      juce::Justification::centredLeft, hw::engraving.withAlpha (0.6f));
     g.setColour (Palette::text);
     g.setFont (uiFont (26.0f, true));
     g.drawText (juce::String (infoFor (effect).name).toUpperCase(), info.removeFromTop (34), juce::Justification::centredLeft);

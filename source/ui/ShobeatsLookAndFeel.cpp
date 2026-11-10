@@ -1,5 +1,7 @@
 #include "ShobeatsLookAndFeel.h"
 
+#include "Hardware.h"
+
 namespace sfx::ui
 {
 juce::Font uiFont (float height, bool bold)
@@ -66,8 +68,12 @@ void ShobeatsLookAndFeel::drawRotarySlider (juce::Graphics& g, int x, int y, int
 {
     const auto bounds = juce::Rectangle<int> (x, y, width, height).toFloat();
     const auto angle = startAngle + sliderPos * (endAngle - startAngle);
-    if (slider.getProperties()["style"].toString() == "pedal")
+    const auto style = slider.getProperties()["style"].toString();
+    if (style == "pedal")
         drawPedalKnob (g, bounds, angle, startAngle, endAngle, slider);
+    else if (style == "alu")
+        hw::drawAluminiumKnob (g, bounds, angle, startAngle, endAngle, sliderPos,
+                               slider.findColour (juce::Slider::rotarySliderFillColourId), slider.isMouseOverOrDragging());
     else
         drawArcKnob (g, bounds, angle, startAngle, endAngle, slider);
 }
