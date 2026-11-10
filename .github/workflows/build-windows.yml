@@ -84,9 +84,15 @@ jobs:
           Expand-Archive $zip -DestinationPath pluginval
           $exe = Get-ChildItem -Recurse pluginval -Filter pluginval.exe | Select-Object -First 1
           New-Item -ItemType Directory -Force -Path pluginval-logs | Out-Null
-          & $exe.FullName --strictness-level 10 --verbose --validate-in-process --output-dir pluginval-logs --validate "${{ steps.bundle.outputs.bundle }}"
-          $code = $LASTEXITCODE
-          if ($code -ne 0) { throw "pluginval failed with exit code $code" }
+          # pluginval.exe is a GUI-subsystem program: PowerShell's '&' would not wait for it
+          # (and $LASTEXITCODE would stay empty), so start it explicitly and wait.
+          $args = @("--strictness-level", "10", "--verbose", "--validate-in-process",
+                    "--output-dir", "pluginval-logs", "--validate", "`"${{ steps.bundle.outputs.bundle }}`"")
+          $p = Start-Process -FilePath $exe.FullName -ArgumentList $args -NoNewWindow -Wait -PassThru `
+                 -RedirectStandardOutput pluginval-stdout.txt -RedirectStandardError pluginval-stderr.txt
+          Get-Content pluginval-stdout.txt, pluginval-stderr.txt -ErrorAction SilentlyContinue
+          Write-Host "pluginval exit code: $($p.ExitCode)"
+          if ($p.ExitCode -ne 0) { throw "pluginval failed with exit code $($p.ExitCode)" }
 
       - name: Diagnose pluginval failure
         if: failure()
@@ -111,6 +117,7 @@ jobs:
           name: diagnostics-windows-x64
           path: |
             pluginval-logs
+            pluginval-std*.txt
             ${{ env.DUMP_DIR }}
             ${{ env.BUILD_DIR }}/**/*.pdb
           if-no-files-found: ignore
