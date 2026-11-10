@@ -280,6 +280,46 @@ void PresetBrowser::resized()
 }
 
 //==============================================================================
+GeneratorStrip::GeneratorStrip (PresetManager& m) : manager (m)
+{
+    const auto names = Generator::vibeNames();
+    for (int i = 0; i < names.size(); ++i)
+    {
+        auto* b = vibes.add (new juce::TextButton (names[i]));
+        b->setConnectedEdges ((i > 0 ? juce::Button::ConnectedOnLeft : 0) | (i < names.size() - 1 ? juce::Button::ConnectedOnRight : 0));
+        b->setTooltip ("Vibe for the generator: " + names[i]);
+        b->onClick = [this, i] {
+            manager.setSelectedVibe (static_cast<Generator::Vibe> (i));
+            refreshSelection();
+        };
+        addAndMakeVisible (b);
+    }
+    // Always drawn "lit" so it reads as the primary action.
+    generate.setColour (juce::TextButton::buttonOnColourId, Palette::brand);
+    generate.setToggleState (true, juce::dontSendNotification);
+    generate.setTooltip ("Create a new effect chain in the selected vibe (save it with Save if you like it)");
+    generate.onClick = [this] { manager.generate (manager.getSelectedVibe()); };
+    addAndMakeVisible (generate);
+    refreshSelection();
+}
+
+void GeneratorStrip::refreshSelection()
+{
+    for (int i = 0; i < vibes.size(); ++i)
+        vibes[i]->setToggleState (i == static_cast<int> (manager.getSelectedVibe()), juce::dontSendNotification);
+}
+
+void GeneratorStrip::resized()
+{
+    auto area = getLocalBounds();
+    generate.setBounds (area.removeFromRight (juce::jmax (80, area.getWidth() / 5)));
+    area.removeFromRight (6);
+    const auto w = area.getWidth() / juce::jmax (1, vibes.size());
+    for (int i = 0; i < vibes.size(); ++i)
+        vibes[i]->setBounds (i == vibes.size() - 1 ? area : area.removeFromLeft (w));
+}
+
+//==============================================================================
 SavePresetPanel::SavePresetPanel (PresetManager& m) : manager (m)
 {
     styleEditor (name, "Preset name");

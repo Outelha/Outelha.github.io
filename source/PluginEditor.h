@@ -35,6 +35,7 @@ private:
     ui::Pedalboard pedalboard;
     ui::DetailPanel detail;
     ui::PresetBar presetBar;
+    ui::GeneratorStrip generator;
     ui::PresetBrowser browser;
     ui::SavePresetPanel savePanel;
     double shownBpm = 0.0;

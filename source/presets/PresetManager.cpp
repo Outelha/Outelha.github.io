@@ -130,6 +130,23 @@ bool PresetManager::loadNext (int direction)
     return load (((start + direction) % n + n) % n);
 }
 
+const Preset& PresetManager::generate (Generator::Vibe vibe)
+{
+    // A new seed each time so every press gives a different idea.
+    generatorSeed = generatorSeed * 1664525u + 1013904223u;
+    lastGenerated = Generator::generate (vibe, generatorSeed);
+
+    processor.requestTransition (true);
+    lastGenerated->applyTo (processor.getState(), processor.getChainOrder());
+    currentIndex = -1;
+    currentName = lastGenerated->name;
+    currentCategory = lastGenerated->category;
+    processor.setCurrentPresetLabel (currentName, currentCategory);
+    if (onCurrentPresetChanged)
+        onCurrentPresetChanged();
+    return *lastGenerated;
+}
+
 juce::String PresetManager::safeFileName (const juce::String& name)
 {
     auto s = juce::File::createLegalFileName (name.trim());

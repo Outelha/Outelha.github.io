@@ -20,12 +20,13 @@ MainView::MainView (ShobeatsAudioProcessor& p)
       pedalboard (p.getState(), p.getChainOrder()),
       detail (p.getState()),
       presetBar (p),
+      generator (p.getPresetManager()),
       browser (p.getPresetManager()),
       savePanel (p.getPresetManager())
 {
     for (juce::Component* c : { (juce::Component*) &driftKnob, (juce::Component*) &unstableKnob, (juce::Component*) &inputKnob, (juce::Component*) &mixKnob, (juce::Component*) &outputKnob,
                                 (juce::Component*) &inputMeter, (juce::Component*) &outputMeter,
-                                (juce::Component*) &pedalboard, (juce::Component*) &detail, (juce::Component*) &presetBar })
+                                (juce::Component*) &pedalboard, (juce::Component*) &detail, (juce::Component*) &presetBar, (juce::Component*) &generator })
         addAndMakeVisible (*c);
     addChildComponent (browser);
     addChildComponent (savePanel);
@@ -69,11 +70,7 @@ void MainView::paint (juce::Graphics& g)
     g.setFont (uiFont (11.5f, true));
     g.drawText ("8-PEDAL FX RACK  /  v" JucePlugin_VersionString, sub.withTrimmedTop (34), juce::Justification::centredLeft);
 
-    // Host tempo readout (used by every synced effect).
-    auto tempo = juce::Rectangle<int> (346, 64, 90, 20).toFloat();
-    g.setColour (Palette::textDim);
-    g.setFont (uiFont (11.0f, true));
-    g.drawText ("HOST " + juce::String (shownBpm, 1) + " BPM", tempo, juce::Justification::centredLeft);
+
 }
 
 void MainView::showBrowser (bool show)
@@ -115,7 +112,8 @@ void MainView::resized()
     io.removeFromLeft (8);
     outputMeter.setBounds (io.removeFromLeft (20));
 
-    presetBar.setBounds (juce::Rectangle<int> (346, 26, 330, 34));
+    presetBar.setBounds (juce::Rectangle<int> (330, 18, 360, 32));
+    generator.setBounds (juce::Rectangle<int> (330, 56, 360, 26));
     browser.setBounds (getLocalBounds());
     savePanel.setBounds (getLocalBounds());
 
@@ -141,7 +139,6 @@ void MainView::refresh()
     {
         shownBpm = bpm;
         detail.setBpm (bpm);
-        repaint (346, 64, 90, 20);
     }
 }
 

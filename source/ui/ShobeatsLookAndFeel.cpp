@@ -224,7 +224,7 @@ void ShobeatsLookAndFeel::drawButtonText (juce::Graphics& g, juce::TextButton& b
     g.setFont (uiFont (11.5f, true));
     g.setColour (button.findColour (button.getToggleState() ? juce::TextButton::textColourOnId : juce::TextButton::textColourOffId)
                      .withMultipliedAlpha (button.isEnabled() ? 1.0f : 0.4f));
-    g.drawText (button.getButtonText().toUpperCase(), button.getLocalBounds().reduced (4, 0), juce::Justification::centred);
+    g.drawFittedText (button.getButtonText().toUpperCase(), button.getLocalBounds().reduced (3, 0), juce::Justification::centred, 1, 0.7f);
 }
 
 void ShobeatsLookAndFeel::drawBubble (juce::Graphics& g, juce::BubbleComponent&, const juce::Point<float>&, const juce::Rectangle<float>& body)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Generator.h"
 #include "Preset.h"
 
 namespace sfx
@@ -30,6 +31,14 @@ public:
     bool load (int index);
     bool loadNext (int direction);
 
+    // Creates and applies a new idea for the vibe (click-free), and remembers it so it
+    // can be saved as a user preset. Returns the generated preset.
+    const Preset& generate (Generator::Vibe vibe);
+    const std::optional<Preset>& getLastGenerated() const noexcept { return lastGenerated; }
+
+    Generator::Vibe getSelectedVibe() const noexcept { return selectedVibe; }
+    void setSelectedVibe (Generator::Vibe v) noexcept { selectedVibe = v; }
+
     // Saves the current settings as a user preset (overwrites a user preset of the same name).
     std::optional<int> saveUserPreset (const juce::String& name, const juce::String& description);
     bool deleteUserPreset (int index);
@@ -58,5 +67,8 @@ private:
     juce::String currentName, currentCategory;
     juce::File userDirectory;
     juce::StringArray loadErrors;
+    std::optional<Preset> lastGenerated;
+    Generator::Vibe selectedVibe = Generator::Vibe::vintage;
+    juce::uint32 generatorSeed = static_cast<juce::uint32> (juce::Time::currentTimeMillis());
 };
 } // namespace sfx

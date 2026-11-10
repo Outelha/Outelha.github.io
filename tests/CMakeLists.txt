@@ -16,7 +16,7 @@ target_link_libraries(shobeats_dsp_tests PRIVATE shobeats_dsp Catch2::Catch2With
 catch_discover_tests(shobeats_dsp_tests DISCOVERY_MODE PRE_TEST)
 
 # Plugin tests: link the plugin's shared code (processor + parameters + editor).
-add_executable(shobeats_plugin_tests PluginTests.cpp PresetTests.cpp)
+add_executable(shobeats_plugin_tests PluginTests.cpp PresetTests.cpp GeneratorTests.cpp)
 target_link_libraries(shobeats_plugin_tests PRIVATE
     ${PRODUCT_NAME}
     Catch2::Catch2WithMain)
