@@ -18,12 +18,21 @@ MainView::MainView (ShobeatsAudioProcessor& p)
       mixKnob (p.getState(), ParamID::globalMix, "Mix", Palette::brand),
       outputKnob (p.getState(), ParamID::outputGain, "Output", Palette::text),
       pedalboard (p.getState(), p.getChainOrder()),
-      detail (p.getState())
+      detail (p.getState()),
+      presetBar (p),
+      browser (p.getPresetManager()),
+      savePanel (p.getPresetManager())
 {
     for (juce::Component* c : { (juce::Component*) &driftKnob, (juce::Component*) &unstableKnob, (juce::Component*) &inputKnob, (juce::Component*) &mixKnob, (juce::Component*) &outputKnob,
                                 (juce::Component*) &inputMeter, (juce::Component*) &outputMeter,
-                                (juce::Component*) &pedalboard, (juce::Component*) &detail })
+                                (juce::Component*) &pedalboard, (juce::Component*) &detail, (juce::Component*) &presetBar })
         addAndMakeVisible (*c);
+    addChildComponent (browser);
+    addChildComponent (savePanel);
+    presetBar.onBrowse = [this] { showBrowser (true); };
+    presetBar.onSave = [this] { showSavePanel (true); };
+    browser.onClose = [this] { showBrowser (false); };
+    savePanel.onClose = [this] { showSavePanel (false); };
 
     pedalboard.onSelectionChanged = [this] (EffectId id) { detail.showEffect (id); };
     detail.onMove = [this] (int direction) { pedalboard.nudgeSelected (direction); };
@@ -42,7 +51,7 @@ void MainView::paint (juce::Graphics& g)
 
     // Wordmark: SHOBEATS + FX badge.
     auto header = getLocalBounds().reduced (margin + 4, 0).removeFromTop (headerHeight);
-    auto brand = header.removeFromLeft (520).withSizeKeepingCentre (520, 50);
+    auto brand = header.removeFromLeft (320).withSizeKeepingCentre (320, 50);
     g.setColour (Palette::text);
     g.setFont (uiFont (34.0f, true).withExtraKerningFactor (0.06f));
     const juce::String word ("SHOBEATS");
@@ -58,20 +67,33 @@ void MainView::paint (juce::Graphics& g)
     auto sub = getLocalBounds().reduced (margin + 4, 0).removeFromTop (headerHeight).withSizeKeepingCentre (getWidth() - 2 * (margin + 4), 50);
     g.setColour (Palette::textFaint);
     g.setFont (uiFont (11.5f, true));
-    g.drawText ("ANALOG PEDALBOARD  /  8 EFFECTS  /  v" JucePlugin_VersionString, sub.withTrimmedTop (34), juce::Justification::centredLeft);
+    g.drawText ("8-PEDAL FX RACK  /  v" JucePlugin_VersionString, sub.withTrimmedTop (34), juce::Justification::centredLeft);
 
     // Host tempo readout (used by every synced effect).
-    auto tempo = juce::Rectangle<int> (540, 30, 110, 32).toFloat();
-    g.setColour (Palette::display);
-    g.fillRoundedRectangle (tempo, 6.0f);
-    g.setColour (Palette::panelEdge);
-    g.drawRoundedRectangle (tempo.reduced (0.5f), 6.0f, 1.0f);
-    g.setColour (Palette::brand);
-    g.setFont (uiFont (15.0f, true));
-    g.drawText (juce::String (shownBpm, 1), tempo.withTrimmedRight (40.0f), juce::Justification::centredRight);
+    auto tempo = juce::Rectangle<int> (346, 64, 90, 20).toFloat();
     g.setColour (Palette::textDim);
-    g.setFont (uiFont (10.5f, true));
-    g.drawText ("BPM", tempo.withTrimmedLeft (74.0f), juce::Justification::centredLeft);
+    g.setFont (uiFont (11.0f, true));
+    g.drawText ("HOST " + juce::String (shownBpm, 1) + " BPM", tempo, juce::Justification::centredLeft);
+}
+
+void MainView::showBrowser (bool show)
+{
+    if (show)
+    {
+        browser.refresh();
+        browser.toFront (true);
+    }
+    browser.setVisible (show);
+}
+
+void MainView::showSavePanel (bool show)
+{
+    savePanel.setVisible (show);
+    if (show)
+    {
+        savePanel.toFront (true);
+        savePanel.open (processor.getCurrentPresetLabel().first);
+    }
 }
 
 void MainView::resized()
@@ -92,6 +114,10 @@ void MainView::resized()
     outputKnob.setBounds (io.removeFromLeft (84));
     io.removeFromLeft (8);
     outputMeter.setBounds (io.removeFromLeft (20));
+
+    presetBar.setBounds (juce::Rectangle<int> (346, 26, 330, 34));
+    browser.setBounds (getLocalBounds());
+    savePanel.setBounds (getLocalBounds());
 
     area.removeFromBottom (margin);
     pedalboard.setBounds (area.removeFromTop (352));
@@ -115,7 +141,7 @@ void MainView::refresh()
     {
         shownBpm = bpm;
         detail.setBpm (bpm);
-        repaint (540, 30, 110, 32);
+        repaint (346, 64, 90, 20);
     }
 }
 

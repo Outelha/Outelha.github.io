@@ -2,6 +2,7 @@
 
 #include "ChainOrder.h"
 #include "Parameters.h"
+#include "presets/PresetManager.h"
 #include "dsp/Chorus.h"
 #include "dsp/Delay.h"
 #include "dsp/Resampler.h"
@@ -77,6 +78,22 @@ public:
     // For tests and hosts without a playhead.
     void setFallbackBpm (double bpm) noexcept { fallbackBpm = bpm; }
 
+    PresetManager& getPresetManager() noexcept { return *presetManager; }
+
+    // Requests a short fade-out -> (optional tail reset) -> fade-in on the audio thread.
+    // Called before applying a preset so switching while audio plays is click- and spike-free.
+    void requestTransition (bool resetTails) noexcept
+    {
+        if (resetTails)
+            resetRequested.store (true);
+        transitionRequested.store (true);
+    }
+
+    void setCurrentPresetLabel (const juce::String& name, const juce::String& category);
+    std::pair<juce::String, juce::String> getCurrentPresetLabel() const;
+
+    static constexpr double fadeOutSeconds = 0.008, fadeInSeconds = 0.04;
+
 private:
     void updateDspParameters (double bpm) noexcept;
     void processChunk (juce::dsp::AudioBlock<float> block) noexcept;
@@ -110,6 +127,25 @@ private:
     std::array<dsp::DelayLine, 2> bypassDelay;
 
     LevelMeters meters;
+
+    // Click-free transitions (preset loads, chain reordering).
+    enum class Fade
+    {
+        none,
+        out,
+        in
+    };
+    void resetEffects() noexcept;
+    Fade fade = Fade::none;
+    int fadeRemaining = 0, fadeOutLength = 1, fadeInLength = 1;
+    std::atomic<bool> transitionRequested { false }, resetRequested { false };
+    bool resetAtSwitch = false;
+    ChainOrder::Order activeOrder = ChainOrder::defaultOrder();
+
+    std::unique_ptr<PresetManager> presetManager;
+    juce::SpinLock labelLock;
+    juce::String presetName, presetCategory;
+
     std::atomic<double> currentBpm { defaultBpm };
     double fallbackBpm = defaultBpm;
 

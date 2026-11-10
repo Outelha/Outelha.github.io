@@ -8,6 +8,8 @@ namespace
 {
 constexpr auto stateTag = "ShobeatsFXState";
 constexpr auto chainOrderProperty = "chainOrder";
+constexpr auto presetNameProperty = "presetName";
+constexpr auto presetCategoryProperty = "presetCategory";
 
 float blockPeak (const juce::dsp::AudioBlock<float>& block, size_t channel) noexcept
 {
@@ -34,6 +36,20 @@ ShobeatsAudioProcessor::ShobeatsAudioProcessor()
       state (*this, nullptr, stateTag, createParameterLayout()),
       params (state)
 {
+    presetManager = std::make_unique<PresetManager> (*this);
+}
+
+void ShobeatsAudioProcessor::setCurrentPresetLabel (const juce::String& name, const juce::String& category)
+{
+    const juce::SpinLock::ScopedLockType lock (labelLock);
+    presetName = name;
+    presetCategory = category;
+}
+
+std::pair<juce::String, juce::String> ShobeatsAudioProcessor::getCurrentPresetLabel() const
+{
+    const juce::SpinLock::ScopedLockType lock (labelLock);
+    return { presetName, presetCategory };
 }
 
 bool ShobeatsAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -79,6 +95,13 @@ void ShobeatsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     for (auto& d : bypassDelay)
         d.prepare (static_cast<size_t> (latency) + 1);
 
+    fadeOutLength = std::max (1, static_cast<int> (sampleRate * fadeOutSeconds));
+    fadeInLength = std::max (1, static_cast<int> (sampleRate * fadeInSeconds));
+    fade = Fade::none;
+    activeOrder = chainOrder.get();
+    transitionRequested = false;
+    resetRequested = false;
+
     updateDspParameters (fallbackBpm);
     reset();
 }
@@ -91,6 +114,13 @@ void ShobeatsAudioProcessor::releaseResources()
 
 void ShobeatsAudioProcessor::reset()
 {
+    resetEffects();
+    for (auto& d : bypassDelay)
+        d.reset();
+}
+
+void ShobeatsAudioProcessor::resetEffects() noexcept
+{
     if (oversampling)
         oversampling->reset();
     saturation.reset();
@@ -102,8 +132,6 @@ void ShobeatsAudioProcessor::reset()
     delay.reset();
     reverb.reset();
     for (auto& d : dryDelay)
-        d.reset();
-    for (auto& d : bypassDelay)
         d.reset();
 }
 
@@ -277,16 +305,40 @@ void ShobeatsAudioProcessor::processChunk (juce::dsp::AudioBlock<float> block) n
         }
     }
 
-    // The effect chain, in the user's order. Saturation always runs through the
+    // Start a transition when a preset load was requested or the chain order changed:
+    // the old sound fades out, the switch happens in silence, the new sound fades in.
+    if (fade != Fade::out)
+    {
+        const bool requested = transitionRequested.exchange (false);
+        if (requested || chainOrder.get() != activeOrder)
+        {
+            resetAtSwitch = resetAtSwitch || resetRequested.exchange (false);
+            fade = Fade::out;
+            fadeRemaining = fadeOutLength;
+        }
+    }
+
+    // The effect chain, in the active order. Saturation always runs through the
     // oversampler (even when off) so the reported latency never changes.
-    for (auto id : chainOrder.get())
+    for (auto id : activeOrder)
         processEffect (static_cast<EffectId> (id), block);
 
-    // Global mix and output gain.
+    // Global mix, output gain and the transition fade.
     for (int i = 0; i < numSamples; ++i)
     {
         const auto m = globalMix.getNextValue();
-        const auto g = outputGain.getNextValue();
+        auto g = outputGain.getNextValue();
+        if (fade == Fade::out)
+        {
+            g *= static_cast<float> (fadeRemaining) / static_cast<float> (fadeOutLength);
+            fadeRemaining = std::max (0, fadeRemaining - 1);
+        }
+        else if (fade == Fade::in)
+        {
+            g *= 1.0f - static_cast<float> (fadeRemaining) / static_cast<float> (fadeInLength);
+            if (--fadeRemaining <= 0)
+                fade = Fade::none;
+        }
         for (int ch = 0; ch < numChannels; ++ch)
         {
             auto* wet = block.getChannelPointer (static_cast<size_t> (ch));
@@ -296,6 +348,19 @@ void ShobeatsAudioProcessor::processChunk (juce::dsp::AudioBlock<float> block) n
     }
     for (size_t ch = 0; ch < block.getNumChannels(); ++ch)
         LevelMeters::update (meters.output[ch], blockPeak (block, ch));
+
+    // Silent now: switch to the new order, clear old tails, start fading in.
+    if (fade == Fade::out && fadeRemaining == 0)
+    {
+        activeOrder = chainOrder.get();
+        if (resetAtSwitch)
+        {
+            resetEffects();
+            resetAtSwitch = false;
+        }
+        fade = Fade::in;
+        fadeRemaining = fadeInLength;
+    }
 }
 
 void ShobeatsAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
@@ -347,6 +412,9 @@ void ShobeatsAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     auto copy = state.copyState();
     copy.setProperty ("pluginVersion", JucePlugin_VersionString, nullptr);
     copy.setProperty (chainOrderProperty, chainOrder.toString(), nullptr);
+    const auto [name, category] = getCurrentPresetLabel();
+    copy.setProperty (presetNameProperty, name, nullptr);
+    copy.setProperty (presetCategoryProperty, category, nullptr);
     if (auto xml = copy.createXml())
         copyXmlToBinary (*xml, destData);
 }
@@ -358,9 +426,12 @@ void ShobeatsAudioProcessor::setStateInformation (const void* data, int sizeInBy
         return;
 
     auto tree = juce::ValueTree::fromXml (*xml);
+    requestTransition (true);
     if (! chainOrder.fromString (tree.getProperty (chainOrderProperty).toString()))
         chainOrder.set (ChainOrder::defaultOrder());
     state.replaceState (tree);
+    presetManager->setCurrentLabel (tree.getProperty (presetNameProperty).toString(),
+                                    tree.getProperty (presetCategoryProperty).toString());
 }
 } // namespace sfx
 

@@ -1,0 +1,267 @@
+{
+  "format": "shobeats-fx-presets",
+  "version": 1,
+  "category": "Space / Experimental",
+  "presets": [
+    {
+      "name": "Gravity Zero",
+      "description": "Fifth-up reversed grains thrown into wide echoes and a weightless hall. Pads and melodies.",
+      "chain": [
+        "rev",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 7,
+        "revMix": 0.4,
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.6,
+        "delayLowCut": 400,
+        "delayHighCut": 5000,
+        "delayPingPong": true,
+        "delayMix": 0.35,
+        "reverbSize": 1.0,
+        "reverbDecay": 10,
+        "reverbDamping": 0.4,
+        "reverbPredelay": 50,
+        "reverbMix": 0.55,
+        "outputGain": -2,
+        "drift": 0.4,
+        "unstable": 0.2
+      }
+    },
+    {
+      "name": "Event Horizon",
+      "description": "Deep, high-feedback chorus spiralling into an enormous tail. Drones and sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb"
+      ],
+      "params": {
+        "chorusRate": 0.1,
+        "chorusDepth": 1.0,
+        "chorusDelay": 25,
+        "chorusFeedback": 0.7,
+        "chorusMix": 0.5,
+        "reverbSize": 1.0,
+        "reverbDecay": 18,
+        "reverbDamping": 0.3,
+        "reverbMix": 0.6,
+        "outputGain": -2.5,
+        "drift": 0.5
+      }
+    },
+    {
+      "name": "Orbital Debris",
+      "description": "Jittery crushed fragments scattered by fast ping-pong into a medium hall. Percussion and FX.",
+      "chain": [
+        "rs",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "rsRate": 6000,
+        "rsBits": 7,
+        "rsJitter": 0.7,
+        "rsFilter": 5000,
+        "rsMix": 0.5,
+        "delaySync": true,
+        "delayDivision": "1/16 D",
+        "delayFeedback": 0.65,
+        "delayPingPong": true,
+        "delayHighCut": 7000,
+        "delayMix": 0.35,
+        "reverbSize": 0.7,
+        "reverbDecay": 4,
+        "reverbMix": 0.35,
+        "outputGain": -1.5,
+        "unstable": 0.5
+      }
+    },
+    {
+      "name": "Nebula Drift",
+      "description": "Slowly drifting chorus with octave-up reverse shimmer in a vast hall. Pads and textures.",
+      "chain": [
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "chorusRate": 0.2,
+        "chorusDepth": 0.7,
+        "chorusDelay": 22,
+        "chorusFeedback": 0.4,
+        "chorusMix": 0.5,
+        "revSync": true,
+        "revDivision": "1/1",
+        "revPitch": 12,
+        "revMix": 0.25,
+        "reverbSize": 0.95,
+        "reverbDecay": 9,
+        "reverbDamping": 0.35,
+        "reverbMix": 0.5,
+        "outputGain": -1.5,
+        "drift": 0.7
+      }
+    },
+    {
+      "name": "Signal Lost",
+      "description": "Broken transmission: starved sample clock, stuttering gate and triplet echoes. Glitch FX.",
+      "chain": [
+        "rs",
+        "trem",
+        "delay"
+      ],
+      "params": {
+        "rsRate": 4000,
+        "rsBits": 6,
+        "rsJitter": 0.8,
+        "rsFilter": 3000,
+        "rsMix": 0.6,
+        "tremSync": true,
+        "tremDivision": "1/32",
+        "tremShape": "Square",
+        "tremDepth": 0.5,
+        "delaySync": true,
+        "delayDivision": "1/8 T",
+        "delayFeedback": 0.55,
+        "delayPingPong": true,
+        "delayMix": 0.3,
+        "unstable": 0.7
+      }
+    },
+    {
+      "name": "Wormhole Echo",
+      "description": "Runaway dark echoes with a pitched-down reverse layer, slowly warping in time. Leads, FX.",
+      "chain": [
+        "delay",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": false,
+        "delayTime": 330,
+        "delayFeedback": 0.8,
+        "delayLowCut": 500,
+        "delayHighCut": 4000,
+        "delayPingPong": true,
+        "delayMix": 0.4,
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": -5,
+        "revMix": 0.3,
+        "reverbSize": 0.8,
+        "reverbDecay": 6,
+        "reverbDamping": 0.5,
+        "reverbMix": 0.4,
+        "outputGain": -2,
+        "drift": 0.6
+      }
+    },
+    {
+      "name": "Mirror Dimension",
+      "description": "Fast reverse fragments through a metallic, resonant chorus. Vocals, plucks, sound design.",
+      "chain": [
+        "rev",
+        "chorus",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/8",
+        "revMix": 0.5,
+        "chorusRate": 2.5,
+        "chorusDepth": 0.6,
+        "chorusDelay": 6,
+        "chorusFeedback": 0.6,
+        "chorusMix": 0.4,
+        "reverbSize": 0.6,
+        "reverbDecay": 3,
+        "reverbMix": 0.3,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Satellite Choir",
+      "description": "Folded harmonics, a vast chorus and long half-note echoes in an endless hall. Pads and vocals.",
+      "chain": [
+        "sat",
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "satMode": "Fold",
+        "satDrive": 4,
+        "satMix": 0.25,
+        "chorusRate": 0.3,
+        "chorusDepth": 0.8,
+        "chorusDelay": 25,
+        "chorusFeedback": 0.3,
+        "chorusMix": 0.5,
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.5,
+        "delayPingPong": true,
+        "delayHighCut": 4000,
+        "delayMix": 0.3,
+        "reverbSize": 1.0,
+        "reverbDecay": 12,
+        "reverbMix": 0.55,
+        "outputGain": -2.5,
+        "drift": 0.3
+      }
+    },
+    {
+      "name": "Quantum Stutter",
+      "description": "Triplet chopping, octave-up reverse slices and short ping-pong. Loops and vocal chops.",
+      "chain": [
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/16 T",
+        "tremShape": "Square",
+        "tremDepth": 0.9,
+        "tremStereo": 1.0,
+        "revSync": true,
+        "revDivision": "1/16",
+        "revPitch": 12,
+        "revMix": 0.4,
+        "delaySync": true,
+        "delayDivision": "1/16",
+        "delayFeedback": 0.4,
+        "delayPingPong": true,
+        "delayMix": 0.25,
+        "unstable": 0.3
+      }
+    },
+    {
+      "name": "Deep Field",
+      "description": "Aged tape fed into a twenty-second, slowly evolving space. Ambient textures and drones.",
+      "chain": [
+        "tape",
+        "reverb"
+      ],
+      "params": {
+        "tapeAge": 0.6,
+        "tapeWow": 0.3,
+        "tapeNoise": 0.2,
+        "tapeFlutter": 0.1,
+        "reverbSize": 1.0,
+        "reverbDecay": 20,
+        "reverbDamping": 0.6,
+        "reverbPredelay": 120,
+        "reverbMix": 0.7,
+        "globalMix": 0.9,
+        "outputGain": -3,
+        "drift": 0.5
+      }
+    }
+  ]
+}

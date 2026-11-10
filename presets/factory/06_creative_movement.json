@@ -1,0 +1,241 @@
+{
+  "format": "shobeats-fx-presets",
+  "version": 1,
+  "category": "Creative / Movement",
+  "presets": [
+    {
+      "name": "Rhythm Shifter",
+      "description": "Sixteenth-note square chopping with dotted echoes and soft drive. Chords, loops, pads.",
+      "chain": [
+        "trem",
+        "delay",
+        "sat"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 0.75,
+        "tremStereo": 0.5,
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.35,
+        "delayPingPong": true,
+        "delayMix": 0.2,
+        "satMode": "Soft",
+        "satDrive": 6,
+        "satMix": 0.4
+      }
+    },
+    {
+      "name": "Auto-Pan Carousel",
+      "description": "Deep quarter-note auto-pan with gentle chorus and room. Pads, keys, hi-hats.",
+      "chain": [
+        "trem",
+        "chorus",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/4",
+        "tremShape": "Sine",
+        "tremDepth": 0.9,
+        "tremStereo": 1.0,
+        "chorusRate": 0.5,
+        "chorusDepth": 0.3,
+        "chorusMix": 0.25,
+        "reverbSize": 0.5,
+        "reverbDecay": 2,
+        "reverbMix": 0.2
+      }
+    },
+    {
+      "name": "Helicopter Chop",
+      "description": "Full-depth 1/32 gating with bite. Sustained synths, guitars, risers.",
+      "chain": [
+        "trem",
+        "sat"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/32",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.0,
+        "satMode": "Hard",
+        "satDrive": 6,
+        "satMix": 0.3,
+        "outputGain": 1
+      }
+    },
+    {
+      "name": "Seasick Strings",
+      "description": "Heavy pitch-wobbling chorus on unsteady tape. Strings, pads, lead lines.",
+      "chain": [
+        "chorus",
+        "tape",
+        "reverb"
+      ],
+      "params": {
+        "chorusRate": 1.5,
+        "chorusDepth": 0.9,
+        "chorusDelay": 10,
+        "chorusFeedback": 0.2,
+        "chorusMix": 0.6,
+        "tapeWow": 0.8,
+        "tapeFlutter": 0.2,
+        "tapeAge": 0.3,
+        "reverbSize": 0.5,
+        "reverbDecay": 2.5,
+        "reverbMix": 0.25,
+        "drift": 0.6
+      }
+    },
+    {
+      "name": "Ping-Pong Ladder",
+      "description": "Bright dotted-eighth echoes climbing across the stereo field. Plucks, arps, guitars.",
+      "chain": [
+        "delay",
+        "sat",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.6,
+        "delayPingPong": true,
+        "delayLowCut": 300,
+        "delayHighCut": 7000,
+        "delayMix": 0.35,
+        "satMode": "Soft",
+        "satDrive": 5,
+        "satMix": 0.5,
+        "reverbSize": 0.4,
+        "reverbDecay": 1.5,
+        "reverbMix": 0.15,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Backwards Groove",
+      "description": "Quarter-note reverse slices pulsing with a triangle tremolo. Drum loops and full beats.",
+      "chain": [
+        "rev",
+        "trem",
+        "delay"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revMix": 0.5,
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Triangle",
+        "tremDepth": 0.4,
+        "delaySync": true,
+        "delayDivision": "1/4",
+        "delayFeedback": 0.3,
+        "delayMix": 0.2
+      }
+    },
+    {
+      "name": "Wobble Bass Lab",
+      "description": "Triplet amplitude wobble into thick warm saturation. Bass and growl synths.",
+      "chain": [
+        "trem",
+        "sat"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8 T",
+        "tremShape": "Sine",
+        "tremDepth": 0.8,
+        "tremStereo": 0.0,
+        "satMode": "Warm",
+        "satDrive": 14,
+        "satTone": 0.2,
+        "satMix": 0.7,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Swirl Machine",
+      "description": "Resonant fast chorus with a slow stereo sway. Guitars and synth chords.",
+      "chain": [
+        "chorus",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "chorusRate": 3.0,
+        "chorusDepth": 0.5,
+        "chorusDelay": 7,
+        "chorusFeedback": 0.7,
+        "chorusMix": 0.5,
+        "tremSync": true,
+        "tremDivision": "1/2 D",
+        "tremShape": "Triangle",
+        "tremDepth": 0.3,
+        "tremStereo": 1.0,
+        "reverbSize": 0.5,
+        "reverbDecay": 2,
+        "reverbMix": 0.2,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Gated Glitter",
+      "description": "A bright hall chopped into sixteenth-note pulses (gated reverb). Pads and vocals.",
+      "chain": [
+        "reverb",
+        "trem",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.7,
+        "reverbDecay": 3,
+        "reverbDamping": 0.2,
+        "reverbMix": 0.5,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 0.85,
+        "tremStereo": 0.3,
+        "delaySync": true,
+        "delayDivision": "1/16",
+        "delayFeedback": 0.3,
+        "delayMix": 0.15
+      }
+    },
+    {
+      "name": "Tape Stop Dreams",
+      "description": "Extreme tape warble, octave-down reverse and echoes for transitions and breakdowns.",
+      "chain": [
+        "tape",
+        "rev",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "tapeWow": 1.0,
+        "tapeFlutter": 0.3,
+        "tapeAge": 0.4,
+        "tapeDrive": 4,
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": -12,
+        "revMix": 0.3,
+        "delaySync": true,
+        "delayDivision": "1/4",
+        "delayFeedback": 0.4,
+        "delayMix": 0.2,
+        "reverbSize": 0.6,
+        "reverbDecay": 3,
+        "reverbMix": 0.3,
+        "outputGain": -1,
+        "drift": 0.8,
+        "unstable": 0.3
+      }
+    }
+  ]
+}

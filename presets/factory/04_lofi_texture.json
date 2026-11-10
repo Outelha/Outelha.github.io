@@ -1,0 +1,238 @@
+{
+  "format": "shobeats-fx-presets",
+  "version": 1,
+  "category": "Lo-Fi / Texture",
+  "presets": [
+    {
+      "name": "Broken Cassette",
+      "description": "Chewed-up tape with heavy wow, hiss and a crushed, unstable sample clock. Loops and melodies.",
+      "chain": [
+        "tape",
+        "rs"
+      ],
+      "params": {
+        "tapeDrive": 10,
+        "tapeWow": 0.7,
+        "tapeFlutter": 0.6,
+        "tapeNoise": 0.45,
+        "tapeAge": 0.8,
+        "rsRate": 16000,
+        "rsBits": 11,
+        "rsFilter": 6000,
+        "rsJitter": 0.3,
+        "rsMix": 0.6,
+        "drift": 0.35,
+        "unstable": 0.55
+      }
+    },
+    {
+      "name": "Bitcrushed Basement",
+      "description": "Gritty low-rate, low-bit crunch with hard clipping. Drums and percussion.",
+      "chain": [
+        "rs",
+        "sat"
+      ],
+      "params": {
+        "rsRate": 8000,
+        "rsBits": 6,
+        "rsFilter": 4000,
+        "rsJitter": 0.1,
+        "rsMix": 0.8,
+        "satMode": "Hard",
+        "satDrive": 8,
+        "satMix": 0.5,
+        "outputGain": -2
+      }
+    },
+    {
+      "name": "Dusty Crate Digger",
+      "description": "Vintage sampler grit, warm drive and worn tape. Drum loops and chopped samples.",
+      "chain": [
+        "rs",
+        "sat",
+        "tape"
+      ],
+      "params": {
+        "rsRate": 26000,
+        "rsBits": 12,
+        "rsFilter": 11000,
+        "rsMix": 0.7,
+        "satMode": "Warm",
+        "satDrive": 8,
+        "satTone": -0.2,
+        "satMix": 0.6,
+        "tapeAge": 0.45,
+        "tapeNoise": 0.2,
+        "tapeWow": 0.1,
+        "tapeFlutter": 0.1
+      }
+    },
+    {
+      "name": "Lo-Fi Study Desk",
+      "description": "Relaxed tape wobble, soft crush, gentle chorus and a small room. Keys and guitars.",
+      "chain": [
+        "tape",
+        "rs",
+        "chorus",
+        "reverb"
+      ],
+      "params": {
+        "tapeDrive": 5,
+        "tapeWow": 0.3,
+        "tapeFlutter": 0.15,
+        "tapeNoise": 0.25,
+        "tapeAge": 0.55,
+        "rsRate": 32000,
+        "rsBits": 13,
+        "rsFilter": 8000,
+        "rsMix": 0.5,
+        "chorusRate": 0.4,
+        "chorusDepth": 0.3,
+        "chorusMix": 0.2,
+        "reverbSize": 0.4,
+        "reverbDecay": 1.4,
+        "reverbDamping": 0.7,
+        "reverbMix": 0.2
+      }
+    },
+    {
+      "name": "Telephone Ghost",
+      "description": "Narrow phone-line voice with crunchy edge and a short echo. Vocals and lead hooks.",
+      "chain": [
+        "rs",
+        "sat",
+        "delay"
+      ],
+      "params": {
+        "rsRate": 8000,
+        "rsBits": 8,
+        "rsFilter": 2800,
+        "satMode": "Hard",
+        "satDrive": 12,
+        "satTone": 0.5,
+        "satMix": 0.8,
+        "delaySync": true,
+        "delayDivision": "1/8",
+        "delayFeedback": 0.25,
+        "delayHighCut": 2500,
+        "delayMix": 0.2,
+        "outputGain": 1
+      }
+    },
+    {
+      "name": "Crushed Velvet",
+      "description": "Soft wavefolding and mild crush under a creamy chorus. Synth leads and pads.",
+      "chain": [
+        "sat",
+        "rs",
+        "chorus"
+      ],
+      "params": {
+        "satMode": "Fold",
+        "satDrive": 6,
+        "satTone": -0.3,
+        "satMix": 0.35,
+        "rsRate": 18000,
+        "rsBits": 9,
+        "rsFilter": 7000,
+        "rsMix": 0.5,
+        "chorusRate": 0.5,
+        "chorusDepth": 0.4,
+        "chorusMix": 0.3,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Thrift Store Walkman",
+      "description": "Cheap portable player: uneven speed, scrape flutter and a bit of digital fuzz. Loops.",
+      "chain": [
+        "tape",
+        "rs"
+      ],
+      "params": {
+        "tapeDrive": 8,
+        "tapeWow": 0.45,
+        "tapeFlutter": 0.55,
+        "tapeNoise": 0.35,
+        "tapeAge": 0.65,
+        "rsRate": 22050,
+        "rsBits": 14,
+        "rsMix": 0.4,
+        "unstable": 0.4
+      }
+    },
+    {
+      "name": "Grainy Polaroid",
+      "description": "Jittery, faded lo-fi texture with a washed room. Pads, textures, ambient loops.",
+      "chain": [
+        "rs",
+        "tape",
+        "reverb"
+      ],
+      "params": {
+        "rsRate": 12000,
+        "rsBits": 12,
+        "rsJitter": 0.4,
+        "rsFilter": 5000,
+        "rsMix": 0.6,
+        "tapeAge": 0.5,
+        "tapeNoise": 0.3,
+        "tapeWow": 0.2,
+        "reverbSize": 0.5,
+        "reverbDecay": 2,
+        "reverbDamping": 0.6,
+        "reverbMix": 0.25,
+        "drift": 0.2
+      }
+    },
+    {
+      "name": "8-Bit Daydream",
+      "description": "Retro console resolution with bouncing ping-pong echoes. Chip melodies and arps.",
+      "chain": [
+        "rs",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "rsRate": 11025,
+        "rsBits": 5,
+        "rsFilter": 9000,
+        "rsMix": 0.7,
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.35,
+        "delayPingPong": true,
+        "delayHighCut": 6000,
+        "delayMix": 0.25,
+        "reverbSize": 0.4,
+        "reverbDecay": 1.5,
+        "reverbMix": 0.2,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Sandpaper Drums",
+      "description": "Parallel fuzz, sampler crunch and tape hiss for rough, punchy drums.",
+      "chain": [
+        "sat",
+        "rs",
+        "tape"
+      ],
+      "params": {
+        "satMode": "Fuzz",
+        "satDrive": 8,
+        "satTone": 0.2,
+        "satMix": 0.3,
+        "rsRate": 20000,
+        "rsBits": 10,
+        "rsFilter": 9000,
+        "rsMix": 0.4,
+        "tapeAge": 0.3,
+        "tapeNoise": 0.15,
+        "tapeWow": 0.0,
+        "tapeFlutter": 0.05,
+        "outputGain": -2
+      }
+    }
+  ]
+}

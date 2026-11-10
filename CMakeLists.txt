@@ -10,7 +10,7 @@ set(BUNDLE_ID "com.shobeats.shobeatsfx")
 set(MANUFACTURER_CODE "Shbt") # 4 chars, at least one uppercase
 set(PLUGIN_CODE "Shfx")       # 4 chars, unique per plugin
 
-project(${PRODUCT_NAME} VERSION 0.3.0 LANGUAGES C CXX)
+project(${PRODUCT_NAME} VERSION 0.4.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -88,15 +88,26 @@ juce_add_plugin(${PRODUCT_NAME}
     COPY_PLUGIN_AFTER_BUILD FALSE
     VST3_CATEGORIES Fx Distortion Modulation Delay Reverb)
 
+# Factory presets: JSON files compiled into the plugin.
+file(GLOB SHOBEATS_FACTORY_PRESETS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/presets/factory/*.json")
+juce_add_binary_data(ShobeatsPresetData
+    HEADER_NAME ShobeatsPresetData.h
+    NAMESPACE ShobeatsPresetData
+    SOURCES ${SHOBEATS_FACTORY_PRESETS})
+set_target_properties(ShobeatsPresetData PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 target_sources(${PRODUCT_NAME} PRIVATE
     source/Parameters.cpp
+    source/presets/Preset.cpp
+    source/presets/PresetManager.cpp
     source/PluginProcessor.cpp
     source/PluginEditor.cpp
     source/ui/ShobeatsLookAndFeel.cpp
     source/ui/Controls.cpp
     source/ui/EffectDisplay.cpp
     source/ui/Pedalboard.cpp
-    source/ui/DetailPanel.cpp)
+    source/ui/DetailPanel.cpp
+    source/ui/PresetBrowser.cpp)
 
 target_compile_definitions(${PRODUCT_NAME} PUBLIC
     JUCE_WEB_BROWSER=0
@@ -109,6 +120,7 @@ target_compile_definitions(${PRODUCT_NAME} PUBLIC
 target_link_libraries(${PRODUCT_NAME}
     PUBLIC
         shobeats_dsp
+        ShobeatsPresetData
     PRIVATE
         juce::juce_audio_utils
         juce::juce_dsp

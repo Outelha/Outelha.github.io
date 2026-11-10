@@ -450,6 +450,14 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor opens, resizes and closes", "[plu
             REQUIRE (out.openedOk());
             CHECK (juce::PNGImageFormat().writeImageToStream (editor->createComponentSnapshot (editor->getLocalBounds(), true, 2.0f), out));
         }
+
+        p.getPresetManager().load (p.getPresetManager().indexOf ("Lost in Clouds", "Dreamy / Ambient"));
+        view.showBrowser (true);
+        juce::File file (juce::String::fromUTF8 (prefix) + "browser.png");
+        file.deleteFile();
+        juce::FileOutputStream out (file);
+        CHECK (juce::PNGImageFormat().writeImageToStream (editor->createComponentSnapshot (editor->getLocalBounds(), true, 2.0f), out));
+        view.showBrowser (false);
     }
 
     editor.reset();

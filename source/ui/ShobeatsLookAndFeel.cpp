@@ -58,6 +58,7 @@ ShobeatsLookAndFeel::ShobeatsLookAndFeel()
     setColour (juce::TooltipWindow::textColourId, text);
     setColour (juce::BubbleComponent::backgroundColourId, display);
     setColour (juce::BubbleComponent::outlineColourId, panelEdge);
+    setColour (juce::ScrollBar::thumbColourId, track.brighter (0.3f));
 }
 
 void ShobeatsLookAndFeel::drawRotarySlider (juce::Graphics& g, int x, int y, int width, int height,

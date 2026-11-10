@@ -1,0 +1,260 @@
+{
+  "format": "shobeats-fx-presets",
+  "version": 1,
+  "category": "Dark / Trap",
+  "presets": [
+    {
+      "name": "Midnight Ritual",
+      "description": "Dark warm drive, octave-down reverse ghosts and a deep murky hall. Trap melodies and bells.",
+      "chain": [
+        "sat",
+        "rev",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "satMode": "Warm",
+        "satDrive": 10,
+        "satTone": -0.5,
+        "satMix": 0.7,
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": -12,
+        "revMix": 0.35,
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.4,
+        "delayLowCut": 200,
+        "delayHighCut": 2500,
+        "delayMix": 0.22,
+        "reverbSize": 0.8,
+        "reverbDecay": 5,
+        "reverbDamping": 0.75,
+        "reverbMix": 0.4,
+        "outputGain": -1.5
+      }
+    },
+    {
+      "name": "Shadow Bell",
+      "description": "Slightly crushed bell tone with dark ping-pong and a shadowy room. Bells, plucks, keys.",
+      "chain": [
+        "rs",
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "rsRate": 22050,
+        "rsBits": 16,
+        "rsFilter": 5000,
+        "rsMix": 0.5,
+        "chorusRate": 0.3,
+        "chorusDepth": 0.4,
+        "chorusMix": 0.3,
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.45,
+        "delayPingPong": true,
+        "delayHighCut": 3500,
+        "delayMix": 0.3,
+        "reverbSize": 0.7,
+        "reverbDecay": 4,
+        "reverbDamping": 0.7,
+        "reverbMix": 0.35,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Phantom Keys",
+      "description": "Aged tape and darkened tube tone in a distant, damped hall. Pianos and Rhodes.",
+      "chain": [
+        "tape",
+        "sat",
+        "reverb"
+      ],
+      "params": {
+        "tapeDrive": 4,
+        "tapeAge": 0.5,
+        "tapeWow": 0.2,
+        "tapeFlutter": 0.1,
+        "tapeNoise": 0.1,
+        "satMode": "Warm",
+        "satDrive": 6,
+        "satTone": -0.6,
+        "reverbSize": 0.75,
+        "reverbDecay": 4.5,
+        "reverbDamping": 0.8,
+        "reverbPredelay": 35,
+        "reverbMix": 0.45,
+        "drift": 0.3
+      }
+    },
+    {
+      "name": "Cold Concrete",
+      "description": "Hard-clipped grit with a tight, dead room. Drum loops, percussion, hard synths.",
+      "chain": [
+        "sat",
+        "reverb"
+      ],
+      "params": {
+        "satMode": "Hard",
+        "satDrive": 15,
+        "satTone": 0.1,
+        "satMix": 0.5,
+        "reverbSize": 0.25,
+        "reverbDecay": 0.9,
+        "reverbDamping": 0.5,
+        "reverbPredelay": 5,
+        "reverbMix": 0.18
+      }
+    },
+    {
+      "name": "Abyss Choir",
+      "description": "Whole-note reversed octave-down swells in an endless dark hall. Pads and vocal chops.",
+      "chain": [
+        "rev",
+        "reverb",
+        "chorus"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/1",
+        "revPitch": -12,
+        "revMix": 0.45,
+        "reverbSize": 1.0,
+        "reverbDecay": 15,
+        "reverbDamping": 0.7,
+        "reverbMix": 0.6,
+        "chorusRate": 0.2,
+        "chorusDepth": 0.6,
+        "chorusMix": 0.3,
+        "outputGain": -2,
+        "drift": 0.4
+      }
+    },
+    {
+      "name": "Smoke and Mirrors",
+      "description": "Dark resonant flange-chorus into murky ping-pong and soft drive. Melodies and arps.",
+      "chain": [
+        "chorus",
+        "delay",
+        "sat"
+      ],
+      "params": {
+        "chorusRate": 0.4,
+        "chorusDepth": 0.6,
+        "chorusDelay": 12,
+        "chorusFeedback": 0.5,
+        "chorusMix": 0.5,
+        "delaySync": true,
+        "delayDivision": "1/4",
+        "delayFeedback": 0.5,
+        "delayLowCut": 300,
+        "delayHighCut": 2000,
+        "delayPingPong": true,
+        "delayMix": 0.25,
+        "satMode": "Soft",
+        "satDrive": 6,
+        "satTone": -0.6,
+        "satMix": 0.5
+      }
+    },
+    {
+      "name": "Blackout Tape",
+      "description": "Saturated, worn-out tape with dropouts, crushed into a dark small hall. Loops and textures.",
+      "chain": [
+        "tape",
+        "rs",
+        "reverb"
+      ],
+      "params": {
+        "tapeDrive": 16,
+        "tapeWow": 0.3,
+        "tapeFlutter": 0.3,
+        "tapeNoise": 0.3,
+        "tapeAge": 0.75,
+        "rsRate": 12000,
+        "rsBits": 10,
+        "rsFilter": 3000,
+        "rsMix": 0.4,
+        "reverbSize": 0.5,
+        "reverbDecay": 2.5,
+        "reverbDamping": 0.85,
+        "reverbMix": 0.25,
+        "unstable": 0.25
+      }
+    },
+    {
+      "name": "Haunted Music Box",
+      "description": "Shaky, warped playback with ghostly reversed fragments. Music boxes, bells, toy pianos.",
+      "chain": [
+        "trem",
+        "tape",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremRate": 6,
+        "tremDepth": 0.2,
+        "tapeWow": 0.5,
+        "tapeFlutter": 0.4,
+        "tapeAge": 0.5,
+        "tapeNoise": 0.15,
+        "revSync": true,
+        "revDivision": "1/4",
+        "revMix": 0.25,
+        "reverbSize": 0.7,
+        "reverbDecay": 4,
+        "reverbDamping": 0.6,
+        "reverbMix": 0.4,
+        "drift": 0.5
+      }
+    },
+    {
+      "name": "Void Pulse",
+      "description": "Eighth-note square gating into dark echoes and a hall. Pads and held chords.",
+      "chain": [
+        "trem",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Square",
+        "tremDepth": 0.7,
+        "tremStereo": 0.5,
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.5,
+        "delayPingPong": true,
+        "delayHighCut": 2500,
+        "delayMix": 0.3,
+        "reverbSize": 0.6,
+        "reverbDecay": 3,
+        "reverbDamping": 0.7,
+        "reverbMix": 0.3
+      }
+    },
+    {
+      "name": "Night Drive 808",
+      "description": "Harmonic warmth that helps 808s and bass cut through small speakers, without smearing the low end.",
+      "chain": [
+        "sat",
+        "tape"
+      ],
+      "params": {
+        "satMode": "Warm",
+        "satDrive": 20,
+        "satTone": -0.45,
+        "satMix": 0.85,
+        "tapeDrive": 10,
+        "tapeWow": 0.02,
+        "tapeFlutter": 0.03,
+        "tapeNoise": 0.0,
+        "tapeAge": 0.35,
+        "outputGain": -3.5
+      }
+    }
+  ]
+}

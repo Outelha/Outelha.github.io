@@ -1,0 +1,251 @@
+{
+  "format": "shobeats-fx-presets",
+  "version": 1,
+  "category": "Dreamy / Ambient",
+  "presets": [
+    {
+      "name": "Lost in Clouds",
+      "description": "Lush chorus into ping-pong echoes and a huge soft hall. Pads, pianos, ambient guitar.",
+      "chain": [
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "chorusRate": 0.25,
+        "chorusDepth": 0.6,
+        "chorusDelay": 18,
+        "chorusFeedback": 0.2,
+        "chorusMix": 0.45,
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.55,
+        "delayLowCut": 300,
+        "delayHighCut": 5000,
+        "delayPingPong": true,
+        "delayMix": 0.3,
+        "reverbSize": 0.9,
+        "reverbDecay": 8,
+        "reverbDamping": 0.45,
+        "reverbPredelay": 40,
+        "reverbMix": 0.55,
+        "outputGain": -1,
+        "drift": 0.35
+      }
+    },
+    {
+      "name": "Silk Horizon",
+      "description": "Smooth, wide shimmer of chorus and a clear medium hall. Pianos and clean guitars.",
+      "chain": [
+        "chorus",
+        "reverb"
+      ],
+      "params": {
+        "chorusRate": 0.3,
+        "chorusDepth": 0.4,
+        "chorusMix": 0.35,
+        "reverbSize": 0.75,
+        "reverbDecay": 4.5,
+        "reverbDamping": 0.3,
+        "reverbPredelay": 30,
+        "reverbMix": 0.4,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Morning Haze",
+      "description": "Sleepy tape warble, soft chorus and a dark hazy room. Keys and mellow melodies.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "params": {
+        "tapeDrive": 3,
+        "tapeWow": 0.25,
+        "tapeFlutter": 0.1,
+        "tapeNoise": 0.1,
+        "tapeAge": 0.4,
+        "chorusRate": 0.4,
+        "chorusDepth": 0.45,
+        "chorusMix": 0.3,
+        "reverbSize": 0.7,
+        "reverbDecay": 5,
+        "reverbDamping": 0.55,
+        "reverbMix": 0.45,
+        "drift": 0.3
+      }
+    },
+    {
+      "name": "Floating Lanterns",
+      "description": "Half-note reversed swells drifting into echoes and a long hall. Plucks, melodies, piano.",
+      "chain": [
+        "rev",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/2",
+        "revMix": 0.35,
+        "delaySync": true,
+        "delayDivision": "1/4",
+        "delayFeedback": 0.4,
+        "delayPingPong": true,
+        "delayHighCut": 6000,
+        "delayMix": 0.25,
+        "reverbSize": 0.85,
+        "reverbDecay": 7,
+        "reverbDamping": 0.4,
+        "reverbMix": 0.5,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Glass Petals",
+      "description": "Bright, resonant chorus, sparkling ping-pong and an airy room. Bells, plucks, harp-like synths.",
+      "chain": [
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "chorusRate": 1.2,
+        "chorusDepth": 0.3,
+        "chorusDelay": 8,
+        "chorusFeedback": 0.35,
+        "chorusMix": 0.4,
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.5,
+        "delayPingPong": true,
+        "delayLowCut": 400,
+        "delayHighCut": 9000,
+        "delayMix": 0.3,
+        "reverbSize": 0.6,
+        "reverbDecay": 3.5,
+        "reverbDamping": 0.2,
+        "reverbMix": 0.35,
+        "outputGain": -1
+      }
+    },
+    {
+      "name": "Velvet Daydream",
+      "description": "Gentle half-note auto-pan, slow chorus and a soft hall. Pads and sustained chords.",
+      "chain": [
+        "trem",
+        "chorus",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/2",
+        "tremDepth": 0.25,
+        "tremStereo": 0.8,
+        "tremShape": "Sine",
+        "chorusRate": 0.35,
+        "chorusDepth": 0.5,
+        "chorusMix": 0.4,
+        "reverbSize": 0.7,
+        "reverbDecay": 4,
+        "reverbMix": 0.35
+      }
+    },
+    {
+      "name": "Underwater Lullaby",
+      "description": "Muffled, low-resolution tone with deep chorus and a dark wash. Keys, vocals, music boxes.",
+      "chain": [
+        "rs",
+        "chorus",
+        "reverb"
+      ],
+      "params": {
+        "rsRate": 16000,
+        "rsBits": 14,
+        "rsFilter": 2400,
+        "rsMix": 0.8,
+        "chorusRate": 0.2,
+        "chorusDepth": 0.8,
+        "chorusDelay": 20,
+        "chorusFeedback": 0.3,
+        "chorusMix": 0.5,
+        "reverbSize": 0.8,
+        "reverbDecay": 6,
+        "reverbDamping": 0.8,
+        "reverbMix": 0.5,
+        "drift": 0.5
+      }
+    },
+    {
+      "name": "Aurora Bloom",
+      "description": "Octave-up reversed grains into an endless bright hall with slow movement. Pads and swells.",
+      "chain": [
+        "rev",
+        "reverb",
+        "chorus"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 12,
+        "revMix": 0.3,
+        "reverbSize": 1.0,
+        "reverbDecay": 12,
+        "reverbDamping": 0.25,
+        "reverbPredelay": 60,
+        "reverbMix": 0.55,
+        "chorusRate": 0.15,
+        "chorusDepth": 0.5,
+        "chorusMix": 0.3,
+        "outputGain": -2,
+        "drift": 0.3
+      }
+    },
+    {
+      "name": "Slow Motion Sunday",
+      "description": "Lazy tape drift, long dark echoes and a mellow room. Guitars and electric pianos.",
+      "chain": [
+        "tape",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "tapeDrive": 4,
+        "tapeWow": 0.4,
+        "tapeFlutter": 0.05,
+        "tapeAge": 0.3,
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.35,
+        "delayHighCut": 3000,
+        "delayMix": 0.2,
+        "reverbSize": 0.65,
+        "reverbDecay": 3.5,
+        "reverbDamping": 0.6,
+        "reverbMix": 0.3,
+        "drift": 0.45,
+        "unstable": 0.05
+      }
+    },
+    {
+      "name": "Cathedral Mist",
+      "description": "Vast, slow-blooming stone hall with a faint chorus haze. Pads, choirs, drones.",
+      "chain": [
+        "reverb",
+        "chorus"
+      ],
+      "params": {
+        "reverbSize": 1.0,
+        "reverbDecay": 14,
+        "reverbDamping": 0.5,
+        "reverbPredelay": 80,
+        "reverbMix": 0.6,
+        "chorusRate": 0.1,
+        "chorusDepth": 0.3,
+        "chorusMix": 0.25,
+        "outputGain": -1.5,
+        "drift": 0.2
+      }
+    }
+  ]
+}

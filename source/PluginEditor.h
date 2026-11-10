@@ -4,6 +4,7 @@
 #include "ui/Controls.h"
 #include "ui/DetailPanel.h"
 #include "ui/Pedalboard.h"
+#include "ui/PresetBrowser.h"
 #include "ui/ShobeatsLookAndFeel.h"
 
 namespace sfx
@@ -24,6 +25,8 @@ public:
 
     ui::Pedalboard& getPedalboard() noexcept { return pedalboard; }
     ui::DetailPanel& getDetailPanel() noexcept { return detail; }
+    void showBrowser (bool show);
+    void showSavePanel (bool show);
 
 private:
     ShobeatsAudioProcessor& processor;
@@ -31,6 +34,9 @@ private:
     ui::LevelMeter inputMeter { "IN" }, outputMeter { "OUT" };
     ui::Pedalboard pedalboard;
     ui::DetailPanel detail;
+    ui::PresetBar presetBar;
+    ui::PresetBrowser browser;
+    ui::SavePresetPanel savePanel;
     double shownBpm = 0.0;
 };
 

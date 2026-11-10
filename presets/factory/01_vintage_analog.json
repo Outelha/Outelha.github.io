@@ -1,0 +1,249 @@
+{
+  "format": "shobeats-fx-presets",
+  "version": 1,
+  "category": "Vintage / Analog",
+  "presets": [
+    {
+      "name": "Dusty Memories",
+      "description": "Nostalgic cassette colour: gentle wow, worn highs and soft tube warmth. Rhodes, pianos, sampled loops.",
+      "chain": [
+        "tape",
+        "sat",
+        "reverb"
+      ],
+      "params": {
+        "tapeDrive": 8,
+        "tapeWow": 0.35,
+        "tapeFlutter": 0.22,
+        "tapeNoise": 0.22,
+        "tapeAge": 0.45,
+        "satMode": "Warm",
+        "satDrive": 6,
+        "satTone": -0.2,
+        "satMix": 0.6,
+        "reverbSize": 0.35,
+        "reverbDecay": 1.2,
+        "reverbDamping": 0.6,
+        "reverbPredelay": 10,
+        "reverbMix": 0.15,
+        "drift": 0.25,
+        "unstable": 0.1
+      }
+    },
+    {
+      "name": "Brass Tube Glow",
+      "description": "Thick valve-style saturation with a whisper of chorus. Bass, synth leads, guitars.",
+      "chain": [
+        "sat",
+        "chorus"
+      ],
+      "params": {
+        "satMode": "Warm",
+        "satDrive": 14,
+        "satTone": 0.1,
+        "satMix": 0.8,
+        "satOutput": -1,
+        "chorusRate": 0.35,
+        "chorusDepth": 0.25,
+        "chorusDelay": 10,
+        "chorusMix": 0.2,
+        "drift": 0.1
+      }
+    },
+    {
+      "name": "Reel to Reel 72",
+      "description": "Studio tape machine into a dotted tape-style echo and a short plate. Vocals, guitars, keys.",
+      "chain": [
+        "tape",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "tapeDrive": 12,
+        "tapeWow": 0.15,
+        "tapeFlutter": 0.2,
+        "tapeNoise": 0.12,
+        "tapeAge": 0.2,
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.3,
+        "delayLowCut": 200,
+        "delayHighCut": 4500,
+        "delayWidth": 0.6,
+        "delayMix": 0.18,
+        "reverbSize": 0.5,
+        "reverbDecay": 1.8,
+        "reverbDamping": 0.5,
+        "reverbPredelay": 20,
+        "reverbMix": 0.18,
+        "drift": 0.15
+      }
+    },
+    {
+      "name": "Velvet Console",
+      "description": "Open, slightly bright console-and-tape glue that rounds transients. Drum buses and full loops.",
+      "chain": [
+        "sat",
+        "tape"
+      ],
+      "params": {
+        "satMode": "Soft",
+        "satDrive": 13,
+        "satTone": 0.2,
+        "satMix": 0.75,
+        "tapeDrive": 8,
+        "tapeWow": 0.04,
+        "tapeFlutter": 0.06,
+        "tapeNoise": 0.0,
+        "tapeAge": 0.1,
+        "tapeMix": 0.8
+      }
+    },
+    {
+      "name": "Warped Vinyl Keys",
+      "description": "Wobbly, worn record feel with slightly crunched resolution. Pianos and melodies.",
+      "chain": [
+        "tape",
+        "rs",
+        "reverb"
+      ],
+      "params": {
+        "tapeDrive": 5,
+        "tapeWow": 0.6,
+        "tapeFlutter": 0.15,
+        "tapeNoise": 0.3,
+        "tapeAge": 0.55,
+        "rsRate": 22050,
+        "rsBits": 12,
+        "rsFilter": 9000,
+        "rsMix": 0.5,
+        "reverbSize": 0.45,
+        "reverbDecay": 1.5,
+        "reverbDamping": 0.6,
+        "reverbMix": 0.2,
+        "drift": 0.4
+      }
+    },
+    {
+      "name": "Spring Garage",
+      "description": "Overdriven amp, gentle tremolo and a bright splashy tank. Guitars and organs.",
+      "chain": [
+        "sat",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "satMode": "Hard",
+        "satDrive": 10,
+        "satTone": 0.2,
+        "satMix": 0.5,
+        "tremRate": 5.5,
+        "tremDepth": 0.35,
+        "tremShape": "Sine",
+        "reverbSize": 0.3,
+        "reverbDecay": 2.2,
+        "reverbDamping": 0.2,
+        "reverbPredelay": 8,
+        "reverbMix": 0.3
+      }
+    },
+    {
+      "name": "Analog Ensemble",
+      "description": "Wide string-machine chorus on soft tape with a warm room. Pads and strings.",
+      "chain": [
+        "chorus",
+        "tape",
+        "reverb"
+      ],
+      "params": {
+        "chorusRate": 0.55,
+        "chorusDepth": 0.7,
+        "chorusDelay": 14,
+        "chorusFeedback": 0.15,
+        "chorusMix": 0.5,
+        "tapeDrive": 4,
+        "tapeWow": 0.1,
+        "tapeFlutter": 0.1,
+        "tapeNoise": 0.05,
+        "tapeAge": 0.2,
+        "tapeMix": 0.8,
+        "reverbSize": 0.6,
+        "reverbDecay": 2.0,
+        "reverbMix": 0.2,
+        "drift": 0.2
+      }
+    },
+    {
+      "name": "Golden Hour Echo",
+      "description": "Warm tape into a dark dotted-eighth echo that drifts slightly. Guitars and vocal chops.",
+      "chain": [
+        "tape",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 6,
+        "tapeWow": 0.2,
+        "tapeFlutter": 0.15,
+        "tapeNoise": 0.08,
+        "tapeAge": 0.3,
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.45,
+        "delayLowCut": 250,
+        "delayHighCut": 3500,
+        "delayWidth": 0.6,
+        "delayMix": 0.25,
+        "drift": 0.3
+      }
+    },
+    {
+      "name": "Old Radio Session",
+      "description": "Band-limited AM-radio tone with crunchy valve drive. Melodies, samples, vocal hooks.",
+      "chain": [
+        "rs",
+        "sat",
+        "tape"
+      ],
+      "params": {
+        "rsRate": 11025,
+        "rsBits": 10,
+        "rsFilter": 3800,
+        "rsJitter": 0.1,
+        "satMode": "Warm",
+        "satDrive": 12,
+        "satTone": 0.3,
+        "tapeDrive": 4,
+        "tapeWow": 0.1,
+        "tapeFlutter": 0.15,
+        "tapeNoise": 0.3,
+        "tapeAge": 0.7,
+        "globalMix": 0.9,
+        "outputGain": 2
+      }
+    },
+    {
+      "name": "Studio A Plate",
+      "description": "Polished plate with a touch of console drive and a faint slapback. Vocals, snares, keys.",
+      "chain": [
+        "sat",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "satMode": "Soft",
+        "satDrive": 4,
+        "satMix": 0.4,
+        "delaySync": true,
+        "delayDivision": "1/16",
+        "delayFeedback": 0.15,
+        "delayHighCut": 6000,
+        "delayMix": 0.08,
+        "reverbSize": 0.55,
+        "reverbDecay": 2.6,
+        "reverbDamping": 0.35,
+        "reverbPredelay": 25,
+        "reverbMix": 0.28
+      }
+    }
+  ]
+}
