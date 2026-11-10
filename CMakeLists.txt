@@ -1,0 +1,107 @@
+cmake_minimum_required(VERSION 3.22)
+
+# ---------------------------------------------------------------------------
+# Product identity. Change these in one place.
+# ---------------------------------------------------------------------------
+set(PRODUCT_NAME "TrioFX")
+set(COMPANY_NAME "NerdyProd")
+set(BUNDLE_ID "me.nerdyprod.triofx")
+set(MANUFACTURER_CODE "Nrdy") # 4 chars, at least one uppercase
+set(PLUGIN_CODE "Trfx")       # 4 chars, unique per plugin
+
+project(${PRODUCT_NAME} VERSION 0.1.0 LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Static MSVC runtime so the VST3 has no dependency on the VC++ redistributable.
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+option(TRIOFX_BUILD_TESTS "Build the unit tests" ON)
+option(TRIOFX_BUILD_STANDALONE "Also build a standalone app (handy for UI work)" OFF)
+
+# ---------------------------------------------------------------------------
+# Dependencies: pinned git submodules (see .gitmodules / README).
+# ---------------------------------------------------------------------------
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libs/JUCE/CMakeLists.txt")
+    message(FATAL_ERROR
+        "JUCE submodule is missing. Run:\n  git submodule update --init --recursive")
+endif()
+add_subdirectory(libs/JUCE EXCLUDE_FROM_ALL)
+
+# ---------------------------------------------------------------------------
+# Pure C++ DSP library (no JUCE dependency) — easy to unit test.
+# ---------------------------------------------------------------------------
+add_library(triofx_dsp STATIC
+    source/dsp/Saturation.cpp
+    source/dsp/Chorus.cpp
+    source/dsp/Reverb.cpp)
+target_include_directories(triofx_dsp PUBLIC source)
+target_compile_features(triofx_dsp PUBLIC cxx_std_20)
+set_target_properties(triofx_dsp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+if(MSVC)
+    target_compile_options(triofx_dsp PRIVATE /W4 /permissive-)
+else()
+    target_compile_options(triofx_dsp PRIVATE -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion)
+endif()
+
+# ---------------------------------------------------------------------------
+# Plugin
+# ---------------------------------------------------------------------------
+set(TRIOFX_FORMATS VST3)
+if(TRIOFX_BUILD_STANDALONE)
+    list(APPEND TRIOFX_FORMATS Standalone)
+endif()
+
+juce_add_plugin(${PRODUCT_NAME}
+    PRODUCT_NAME "${PRODUCT_NAME}"
+    COMPANY_NAME "${COMPANY_NAME}"
+    BUNDLE_ID "${BUNDLE_ID}"
+    PLUGIN_MANUFACTURER_CODE ${MANUFACTURER_CODE}
+    PLUGIN_CODE ${PLUGIN_CODE}
+    FORMATS ${TRIOFX_FORMATS}
+    IS_SYNTH FALSE
+    NEEDS_MIDI_INPUT FALSE
+    NEEDS_MIDI_OUTPUT FALSE
+    IS_MIDI_EFFECT FALSE
+    EDITOR_WANTS_KEYBOARD_FOCUS FALSE
+    COPY_PLUGIN_AFTER_BUILD FALSE
+    VST3_CATEGORIES Fx Distortion Modulation Reverb)
+
+target_sources(${PRODUCT_NAME} PRIVATE
+    source/Parameters.cpp
+    source/PluginProcessor.cpp
+    source/PluginEditor.cpp
+    source/ui/TrioLookAndFeel.cpp
+    source/ui/Components.cpp)
+
+target_compile_definitions(${PRODUCT_NAME} PUBLIC
+    JUCE_WEB_BROWSER=0
+    JUCE_USE_CURL=0
+    JUCE_VST3_CAN_REPLACE_VST2=0
+    JUCE_DISPLAY_SPLASH_SCREEN=0)
+
+# JUCE modules are linked PRIVATE so their sources are compiled exactly once,
+# into the plugin's shared-code static library (which the tests reuse).
+target_link_libraries(${PRODUCT_NAME}
+    PUBLIC
+        triofx_dsp
+    PRIVATE
+        juce::juce_audio_utils
+        juce::juce_dsp
+    PRIVATE
+        juce::juce_recommended_warning_flags
+    PUBLIC
+        juce::juce_recommended_config_flags
+        juce::juce_recommended_lto_flags)
+
+# ---------------------------------------------------------------------------
+# Tests
+# ---------------------------------------------------------------------------
+if(TRIOFX_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(libs/Catch2 EXCLUDE_FROM_ALL)
+    add_subdirectory(tests)
+endif()

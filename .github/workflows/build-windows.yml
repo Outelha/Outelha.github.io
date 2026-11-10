@@ -1,0 +1,86 @@
+name: Windows build
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  BUILD_DIR: build
+  PLUGIN_NAME: TrioFX
+  PLUGINVAL_VERSION: v1.0.4
+
+jobs:
+  windows-x64:
+    name: Windows x64 (Release VST3)
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout (with pinned JUCE and Catch2 submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Show toolchain
+        shell: pwsh
+        run: |
+          cmake --version
+          git submodule status
+
+      - name: Configure (Visual Studio, x64)
+        shell: pwsh
+        run: cmake -S . -B $env:BUILD_DIR -A x64 -DTRIOFX_BUILD_TESTS=ON
+
+      - name: Build Release
+        shell: pwsh
+        run: cmake --build $env:BUILD_DIR --config Release --parallel
+
+      - name: Run unit tests
+        shell: pwsh
+        run: ctest --test-dir $env:BUILD_DIR -C Release --output-on-failure --no-tests=error
+
+      - name: Verify VST3 bundle layout
+        id: bundle
+        shell: pwsh
+        run: |
+          $vst3Dir = Join-Path $env:BUILD_DIR "${env:PLUGIN_NAME}_artefacts/Release/VST3"
+          $bundle  = Join-Path $vst3Dir "$env:PLUGIN_NAME.vst3"
+          $binary  = Join-Path $bundle "Contents/x86_64-win/$env:PLUGIN_NAME.vst3"
+          $module  = Join-Path $bundle "Contents/Resources/moduleinfo.json"
+          foreach ($p in @($bundle, $binary, $module)) {
+            if (-not (Test-Path $p)) { throw "Missing from VST3 bundle: $p" }
+          }
+          Get-ChildItem -Recurse $bundle | Format-Table FullName, Length -AutoSize
+          "vst3_dir=$((Resolve-Path $vst3Dir).Path)" >> $env:GITHUB_OUTPUT
+          "bundle=$((Resolve-Path $bundle).Path)"    >> $env:GITHUB_OUTPUT
+
+      - name: Validate with pluginval
+        shell: pwsh
+        run: |
+          $zip = "pluginval_Windows.zip"
+          Invoke-WebRequest -Uri "https://github.com/Tracktion/pluginval/releases/download/$env:PLUGINVAL_VERSION/pluginval_Windows.zip" -OutFile $zip
+          Expand-Archive $zip -DestinationPath pluginval
+          $exe = Get-ChildItem -Recurse pluginval -Filter pluginval.exe | Select-Object -First 1
+          & $exe.FullName --strictness-level 10 --verbose --validate "${{ steps.bundle.outputs.bundle }}"
+          if ($LASTEXITCODE -ne 0) { throw "pluginval failed with exit code $LASTEXITCODE" }
+
+      - name: Upload VST3 bundle
+        uses: actions/upload-artifact@v4
+        with:
+          # The artifact root contains the complete TrioFX.vst3 folder
+          # (Contents/x86_64-win/TrioFX.vst3 + Contents/Resources/moduleinfo.json).
+          name: ${{ env.PLUGIN_NAME }}-VST3-Windows-x64-Release
+          path: ${{ steps.bundle.outputs.vst3_dir }}
+          if-no-files-found: error
+          retention-days: 30
