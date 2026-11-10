@@ -5,6 +5,7 @@
 
 #include <cstdlib>
 #include <random>
+#include <thread>
 
 using trio::TrioAudioProcessor;
 namespace ParamID = trio::ParamID;
@@ -281,4 +282,49 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor opens, resizes and closes", "[plu
     }
 
     editor.reset();
+}
+
+TEST_CASE_METHOD (JuceFixture, "Plugin: editor survives parameter changes from a background thread", "[plugin][gui]")
+{
+#if JUCE_LINUX
+    if (std::getenv ("DISPLAY") == nullptr)
+        SKIP ("No display available");
+#endif
+    // Mirrors pluginval's "Editor Automation" test: a non-message thread hammers every
+    // parameter while the editor is open and the message loop is running.
+    TrioAudioProcessor p;
+    prepare (p);
+    std::unique_ptr<juce::AudioProcessorEditor> editor (p.createEditorAndMakeActive());
+    REQUIRE (editor != nullptr);
+    // Render the UI repeatedly on the message thread while parameters change underneath it.
+    int renders = 0;
+    juce::TimedCallback painter ([&] {
+        juce::ignoreUnused (editor->createComponentSnapshot (editor->getLocalBounds()));
+        ++renders;
+    });
+    painter.startTimer (15);
+
+    std::atomic<bool> done { false };
+    std::thread automation ([&] {
+        juce::Random r (99);
+        for (int block = 0; block < 300; ++block)
+        {
+            for (auto* param : p.getParameters())
+                param->setValueNotifyingHost (r.nextFloat());
+            juce::Thread::sleep (2);
+        }
+        done = true;
+        // Let pending async UI updates drain, then leave the message loop.
+        juce::Thread::sleep (200);
+        juce::MessageManager::getInstance()->stopDispatchLoop();
+    });
+
+    juce::MessageManager::getInstance()->runDispatchLoop();
+    automation.join();
+    painter.stopTimer();
+    CHECK (done);
+    CHECK (renders > 10);
+
+    editor.reset();
+    SUCCEED();
 }

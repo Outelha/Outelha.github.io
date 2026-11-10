@@ -18,6 +18,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Static MSVC runtime so the VST3 has no dependency on the VC++ redistributable.
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
+# Release builds still emit .pdb symbol files on MSVC so crashes can be diagnosed.
+# (/Zi and /DEBUG do not change code generation; /OPT:REF,ICF keep the usual Release linker optimisations.)
+if(MSVC)
+    string(APPEND CMAKE_C_FLAGS_RELEASE " /Zi")
+    string(APPEND CMAKE_CXX_FLAGS_RELEASE " /Zi")
+    foreach(kind SHARED MODULE EXE)
+        string(APPEND CMAKE_${kind}_LINKER_FLAGS_RELEASE " /DEBUG /OPT:REF /OPT:ICF")
+    endforeach()
+endif()
+
 option(TRIOFX_BUILD_TESTS "Build the unit tests" ON)
 option(TRIOFX_BUILD_STANDALONE "Also build a standalone app (handy for UI work)" OFF)
 
