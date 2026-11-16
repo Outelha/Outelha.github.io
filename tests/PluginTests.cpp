@@ -484,6 +484,12 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor opens, resizes and closes", "[plu
         file.deleteFile();
         juce::FileOutputStream out (file);
         CHECK (juce::PNGImageFormat().writeImageToStream (editor->createComponentSnapshot (editor->getLocalBounds(), true, 2.0f), out));
+
+        view.getBrowser().showCategory (sfx::PresetManager::labCategory);
+        juce::File labFile (juce::String::fromUTF8 (prefix) + "lab.png");
+        labFile.deleteFile();
+        juce::FileOutputStream labOut (labFile);
+        CHECK (juce::PNGImageFormat().writeImageToStream (editor->createComponentSnapshot (editor->getLocalBounds(), true, 2.0f), labOut));
         view.showBrowser (false);
     }
 

@@ -240,8 +240,8 @@ TEST_CASE_METHOD (Fixture, "Import: zip import is persistent, separate, deduplic
     auto& pm = p.getPresetManager();
     pm.setUserDirectory (userDir);
     pm.setImportDirectory (importDir);
-    const auto factory = pm.getNumFactoryPresets();
-    REQUIRE (factory == 60);
+    REQUIRE (pm.getNumFactoryPresets() == 60);
+    const auto factory = pm.getNumBuiltInPresets(); // factory + SHOBEATS Lab
 
     auto report = pm.importPresets (zip);
     CHECK (report.failed == 1);    // broken.fwd

@@ -1,0 +1,2842 @@
+{
+  "format": "shobeats-fx-lab",
+  "version": 1,
+  "category": "SHOBEATS Lab / Space & Ambient",
+  "presets": [
+    {
+      "name": "Frozen Satellite",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "reverb",
+        "rs",
+        "sat",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.8171,
+        "reverbDecay": 16.007400000000001,
+        "reverbDamping": 0.3466,
+        "reverbPredelay": 49.450800000000001,
+        "reverbMix": 0.6,
+        "rsRate": 16666.5,
+        "rsBits": 14.2948,
+        "rsFilter": 8463.299999999999272,
+        "rsJitter": 0.0857,
+        "rsMix": 0.579,
+        "drift": 0.4909,
+        "unstable": 0.1096,
+        "outputGain": -1.0
+      },
+      "lab": {
+        "id": "B1-C08-01",
+        "generatorVersion": 1,
+        "seed": 1898293330,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon/bold",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "16.0 s reverb > 16.7 kHz / 14-bit",
+        "fingerprint": "61bdd9ebe8a4cfc8",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -7.4,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -3.0,
+          "nearestCandidate": 0.209,
+          "nearestReference": 0.244
+        }
+      }
+    },
+    {
+      "name": "Celestial Drift",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "order": [
+        "tape",
+        "chorus",
+        "reverb",
+        "sat",
+        "rs",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 8.3879,
+        "tapeWow": 0.592,
+        "tapeFlutter": 0.1489,
+        "tapeNoise": 0.2811,
+        "tapeAge": 0.5515,
+        "chorusRate": 0.0569,
+        "chorusDepth": 0.6485,
+        "chorusMix": 0.2851,
+        "reverbSize": 0.7969,
+        "reverbDecay": 9.0862,
+        "reverbDamping": 0.3008,
+        "reverbPredelay": 61.159700000000001,
+        "reverbMix": 0.3186,
+        "drift": 0.6927,
+        "unstable": 0.2365,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B1-C08-02",
+        "generatorVersion": 1,
+        "seed": 1898293331,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station/subtle",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "tape (wow 59 %, age 55 %) > 0.06 Hz chorus > 9.1 s reverb",
+        "fingerprint": "8e2e1b7486caf94e",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -9.199999999999999,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -4.4,
+          "nearestCandidate": 0.081,
+          "nearestReference": 0.119
+        }
+      }
+    },
+    {
+      "name": "Vast Tundra",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "sat",
+        "delay",
+        "reverb",
+        "chorus"
+      ],
+      "order": [
+        "sat",
+        "delay",
+        "reverb",
+        "chorus",
+        "rs",
+        "tape",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.5937,
+        "delayLowCut": 287.399999999999977,
+        "delayHighCut": 3631.300000000000182,
+        "delayMix": 0.3942,
+        "delayPingPong": true,
+        "reverbSize": 0.704,
+        "reverbDecay": 11.529500000000001,
+        "reverbDamping": 0.3617,
+        "reverbPredelay": 34.813499999999998,
+        "reverbMix": 0.6,
+        "chorusRate": 0.1419,
+        "chorusDepth": 1.0,
+        "chorusMix": 0.5039,
+        "satMode": "Soft",
+        "satDrive": 7.5423,
+        "satTone": -0.1746,
+        "satMix": 0.7111,
+        "satOutput": 0.0,
+        "drift": 0.3843,
+        "unstable": 0.1263,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B1-C08-03",
+        "generatorVersion": 1,
+        "seed": 1898293332,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/bold+sat",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "Soft drive +8 dB > 1/4 D ping-pong delay > 11.5 s reverb > 0.14 Hz chorus",
+        "fingerprint": "cb35aebb7a2f8793",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -7.6,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": 0.8,
+          "nearestCandidate": 0.166,
+          "nearestReference": 0.153
+        }
+      }
+    },
+    {
+      "name": "Zenith Station",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Octave-up reverse grains in a long hall, the shimmer repeated in half notes. For pads, guitar, vocals.",
+      "chain": [
+        "rev",
+        "reverb",
+        "delay"
+      ],
+      "order": [
+        "rev",
+        "reverb",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 12.0,
+        "revMix": 0.3634,
+        "reverbSize": 0.7174,
+        "reverbDecay": 12.9244,
+        "reverbDamping": 0.6961,
+        "reverbPredelay": 63.354199999999999,
+        "reverbMix": 0.3794,
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.4596,
+        "delayLowCut": 430.899999999999977,
+        "delayHighCut": 3410.800000000000182,
+        "delayMix": 0.2693,
+        "drift": 0.3804,
+        "unstable": 0.0433,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B1-C08-04",
+        "generatorVersion": 1,
+        "seed": 1898293333,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-starlight",
+        "purpose": "Shimmering octave-up ambience",
+        "instruments": "pads, guitar, vocals",
+        "chainSummary": "1/2 reverse +12 st > 12.9 s reverb > 1/4 D delay",
+        "fingerprint": "992a4672ec3addc3",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.3,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -2.6,
+          "nearestCandidate": 0.124,
+          "nearestReference": 0.133
+        }
+      }
+    },
+    {
+      "name": "Vast Expanse",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "High-feedback chorus into a maximal reverb with a very slow swell. For drones, risers, sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "chorus",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "chorusRate": 0.1068,
+        "chorusDepth": 0.4901,
+        "chorusFeedback": 0.7938,
+        "chorusMix": 0.2472,
+        "reverbSize": 0.8515,
+        "reverbDecay": 18.325900000000001,
+        "reverbDamping": 0.598,
+        "reverbPredelay": 41.5212,
+        "reverbMix": 0.3674,
+        "tremSync": true,
+        "tremDivision": "1/2 D",
+        "tremShape": "Triangle",
+        "tremDepth": 0.1465,
+        "tremStereo": 0.8127,
+        "drift": 0.4243,
+        "unstable": 0.1451,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B1-C08-05",
+        "generatorVersion": 1,
+        "seed": 1898293334,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-deep-drone/subtle",
+        "purpose": "Drones and long transitions",
+        "instruments": "drones, risers, sustained synths",
+        "chainSummary": "0.11 Hz chorus > 18.3 s reverb > 1/2 D triangle tremolo",
+        "fingerprint": "a7de31240f980e8e",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.9,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -3.2,
+          "nearestCandidate": 0.077,
+          "nearestReference": 0.286
+        }
+      }
+    },
+    {
+      "name": "Lunar Nebula",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "reverb",
+        "rs",
+        "sat",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.7004,
+        "reverbDecay": 17.848700000000001,
+        "reverbDamping": 0.3728,
+        "reverbPredelay": 34.013800000000003,
+        "reverbMix": 0.3907,
+        "rsRate": 20434.099999999998545,
+        "rsBits": 13.587300000000001,
+        "rsFilter": 4954.0,
+        "rsJitter": 0.1416,
+        "rsMix": 0.306,
+        "drift": 0.5672,
+        "unstable": 0.1724,
+        "outputGain": -1.0
+      },
+      "lab": {
+        "id": "B1-C08-06",
+        "generatorVersion": 1,
+        "seed": 1898293335,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon/subtle",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "17.8 s reverb > 20.4 kHz / 14-bit",
+        "fingerprint": "1e11a33a100e3f74",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.6,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -5.3,
+          "nearestCandidate": 0.038,
+          "nearestReference": 0.261
+        }
+      }
+    },
+    {
+      "name": "Distant Corridor",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "order": [
+        "tape",
+        "chorus",
+        "reverb",
+        "sat",
+        "rs",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 5.6642,
+        "tapeWow": 0.4046,
+        "tapeFlutter": 0.1685,
+        "tapeNoise": 0.1969,
+        "tapeAge": 0.4681,
+        "chorusRate": 0.0759,
+        "chorusDepth": 0.9623,
+        "chorusMix": 0.5498,
+        "reverbSize": 0.8527,
+        "reverbDecay": 11.786099999999999,
+        "reverbDamping": 0.3414,
+        "reverbPredelay": 36.421999999999997,
+        "reverbMix": 0.5119,
+        "drift": 0.5971,
+        "unstable": 0.169,
+        "outputGain": 2.0
+      },
+      "lab": {
+        "id": "B1-C08-07",
+        "generatorVersion": 1,
+        "seed": 1898293336,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "tape (wow 40 %, age 47 %) > 0.08 Hz chorus > 11.8 s reverb",
+        "fingerprint": "9a984c8a39726ab5",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.800000000000001,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -4.4,
+          "nearestCandidate": 0.047,
+          "nearestReference": 0.126
+        }
+      }
+    },
+    {
+      "name": "Nebular Observatory",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "delay",
+        "reverb",
+        "chorus"
+      ],
+      "order": [
+        "delay",
+        "reverb",
+        "chorus",
+        "sat",
+        "rs",
+        "tape",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.6459,
+        "delayLowCut": 319.300000000000011,
+        "delayHighCut": 4558.600000000000364,
+        "delayMix": 0.161,
+        "delayPingPong": true,
+        "reverbSize": 0.8028,
+        "reverbDecay": 19.760899999999999,
+        "reverbDamping": 0.5842,
+        "reverbPredelay": 45.048200000000001,
+        "reverbMix": 0.3631,
+        "chorusRate": 0.0866,
+        "chorusDepth": 0.6149,
+        "chorusMix": 0.155,
+        "drift": 0.3005,
+        "unstable": 0.1245,
+        "outputGain": -1.5
+      },
+      "lab": {
+        "id": "B1-C08-08",
+        "generatorVersion": 1,
+        "seed": 1898293337,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/subtle",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "1/2 ping-pong delay > 19.8 s reverb > 0.09 Hz chorus",
+        "fingerprint": "68c4124682716ab4",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.7,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -1.4,
+          "nearestCandidate": 0.039,
+          "nearestReference": 0.159
+        }
+      }
+    },
+    {
+      "name": "Stellar Void",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Octave-up reverse grains in a long hall, the shimmer repeated in half notes. For pads, guitar, vocals.",
+      "chain": [
+        "rev",
+        "reverb",
+        "delay"
+      ],
+      "order": [
+        "rev",
+        "reverb",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 12.0,
+        "revMix": 0.4851,
+        "reverbSize": 0.9332,
+        "reverbDecay": 10.978199999999999,
+        "reverbDamping": 0.4461,
+        "reverbPredelay": 26.4618,
+        "reverbMix": 0.4357,
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.4875,
+        "delayLowCut": 177.800000000000011,
+        "delayHighCut": 3884.300000000000182,
+        "delayMix": 0.3671,
+        "drift": 0.4996,
+        "unstable": 0.102,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B1-C08-09",
+        "generatorVersion": 1,
+        "seed": 1898293338,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-starlight/bold",
+        "purpose": "Shimmering octave-up ambience",
+        "instruments": "pads, guitar, vocals",
+        "chainSummary": "1/2 reverse +12 st > 11.0 s reverb > 1/2 delay",
+        "fingerprint": "153496c6484494c0",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.9,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -0.9,
+          "nearestCandidate": 0.039,
+          "nearestReference": 0.141
+        }
+      }
+    },
+    {
+      "name": "Nebular Horizon",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "High-feedback chorus into a maximal reverb with a very slow swell. For drones, risers, sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "chorus",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "chorusRate": 0.0669,
+        "chorusDepth": 0.8461,
+        "chorusFeedback": 0.6068,
+        "chorusMix": 0.4882,
+        "reverbSize": 0.7681,
+        "reverbDecay": 15.2019,
+        "reverbDamping": 0.3297,
+        "reverbPredelay": 31.794,
+        "reverbMix": 0.5931,
+        "tremSync": true,
+        "tremDivision": "1/1",
+        "tremShape": "Triangle",
+        "tremDepth": 0.3079,
+        "tremStereo": 0.8998,
+        "drift": 0.5434,
+        "unstable": 0.0537,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B1-C08-10",
+        "generatorVersion": 1,
+        "seed": 1898293339,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-deep-drone",
+        "purpose": "Drones and long transitions",
+        "instruments": "drones, risers, sustained synths",
+        "chainSummary": "0.07 Hz chorus > 15.2 s reverb > 1/1 triangle tremolo",
+        "fingerprint": "fc3566dd48fd0761",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.300000000000001,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -0.6,
+          "nearestCandidate": 0.054,
+          "nearestReference": 0.286
+        }
+      }
+    },
+    {
+      "name": "Distant Station",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "reverb",
+        "rs",
+        "sat",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.8009,
+        "reverbDecay": 14.2737,
+        "reverbDamping": 0.5699,
+        "reverbPredelay": 32.418700000000001,
+        "reverbMix": 0.6,
+        "rsRate": 14862.700000000000728,
+        "rsBits": 13.3583,
+        "rsFilter": 3669.5,
+        "rsJitter": 0.0463,
+        "rsMix": 0.6196,
+        "drift": 0.387,
+        "unstable": 0.1106,
+        "outputGain": -2.5
+      },
+      "lab": {
+        "id": "B2-C08-01",
+        "generatorVersion": 1,
+        "seed": 2002353731,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon/bold",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "14.3 s reverb > 14.9 kHz / 13-bit",
+        "fingerprint": "1ac5993e82eccb43",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.5,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -2.6,
+          "nearestCandidate": 0.027,
+          "nearestReference": 0.235
+        }
+      }
+    },
+    {
+      "name": "Endless Expanse",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "order": [
+        "tape",
+        "chorus",
+        "reverb",
+        "sat",
+        "rs",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 8.010199999999999,
+        "tapeWow": 0.4944,
+        "tapeFlutter": 0.3164,
+        "tapeNoise": 0.1882,
+        "tapeAge": 0.5828,
+        "chorusRate": 0.1161,
+        "chorusDepth": 1.0,
+        "chorusMix": 0.6501,
+        "reverbSize": 0.7574,
+        "reverbDecay": 9.8772,
+        "reverbDamping": 0.3507,
+        "reverbPredelay": 18.348600000000001,
+        "reverbMix": 0.5751,
+        "drift": 0.5731,
+        "unstable": 0.051,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B2-C08-02",
+        "generatorVersion": 1,
+        "seed": 2002353732,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station/bold",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "tape (wow 49 %, age 58 %) > 0.12 Hz chorus > 9.9 s reverb",
+        "fingerprint": "cd03e41d72c6edf7",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.199999999999999,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -5.2,
+          "nearestCandidate": 0.03,
+          "nearestReference": 0.136
+        }
+      }
+    },
+    {
+      "name": "Distant Nebula",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "delay",
+        "reverb",
+        "chorus"
+      ],
+      "order": [
+        "delay",
+        "reverb",
+        "chorus",
+        "sat",
+        "rs",
+        "tape",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.7146,
+        "delayLowCut": 141.199999999999989,
+        "delayHighCut": 5466.0,
+        "delayMix": 0.4213,
+        "delayPingPong": true,
+        "reverbSize": 0.9485,
+        "reverbDecay": 19.188300000000002,
+        "reverbDamping": 0.4847,
+        "reverbPredelay": 27.5749,
+        "reverbMix": 0.6,
+        "chorusRate": 0.0603,
+        "chorusDepth": 1.0,
+        "chorusMix": 0.4138,
+        "drift": 0.505,
+        "unstable": 0.0946,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B2-C08-03",
+        "generatorVersion": 1,
+        "seed": 2002353733,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/bold",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "1/4 D ping-pong delay > 19.2 s reverb > 0.06 Hz chorus",
+        "fingerprint": "7d91fb3d586f7b94",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -7.0,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -4.6,
+          "nearestCandidate": 0.055,
+          "nearestReference": 0.161
+        }
+      }
+    },
+    {
+      "name": "Polar Field",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Octave-up reverse grains in a long hall, the shimmer repeated in half notes. For pads, guitar, vocals.",
+      "chain": [
+        "rev",
+        "reverb",
+        "delay"
+      ],
+      "order": [
+        "rev",
+        "reverb",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 12.0,
+        "revMix": 0.1931,
+        "reverbSize": 0.9245,
+        "reverbDecay": 13.6538,
+        "reverbDamping": 0.5659,
+        "reverbPredelay": 53.177500000000002,
+        "reverbMix": 0.2086,
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.4399,
+        "delayLowCut": 532.799999999999955,
+        "delayHighCut": 4001.699999999999818,
+        "delayMix": 0.1564,
+        "drift": 0.2608,
+        "unstable": 0.0542,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B2-C08-04",
+        "generatorVersion": 1,
+        "seed": 2002353734,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-starlight/subtle",
+        "purpose": "Shimmering octave-up ambience",
+        "instruments": "pads, guitar, vocals",
+        "chainSummary": "1/2 reverse +12 st > 13.7 s reverb > 1/2 delay",
+        "fingerprint": "a31e64b4405f9a32",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.4,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -3.3,
+          "nearestCandidate": 0.033,
+          "nearestReference": 0.139
+        }
+      }
+    },
+    {
+      "name": "Stellar Satellite",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "High-feedback chorus into a maximal reverb with a very slow swell. For drones, risers, sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "chorus",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "chorusRate": 0.1001,
+        "chorusDepth": 1.0,
+        "chorusFeedback": 0.7054,
+        "chorusMix": 0.55,
+        "reverbSize": 0.8828,
+        "reverbDecay": 16.699300000000001,
+        "reverbDamping": 0.524,
+        "reverbPredelay": 28.6449,
+        "reverbMix": 0.6,
+        "tremSync": true,
+        "tremDivision": "1/2 D",
+        "tremShape": "Triangle",
+        "tremDepth": 0.3362,
+        "tremStereo": 0.6219,
+        "drift": 0.6046,
+        "unstable": 0.006,
+        "outputGain": -1.0
+      },
+      "lab": {
+        "id": "B2-C08-05",
+        "generatorVersion": 1,
+        "seed": 2002353735,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-deep-drone/bold",
+        "purpose": "Drones and long transitions",
+        "instruments": "drones, risers, sustained synths",
+        "chainSummary": "0.10 Hz chorus > 16.7 s reverb > 1/2 D triangle tremolo",
+        "fingerprint": "644febc6bb1aa01a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.4,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -3.9,
+          "nearestCandidate": 0.033,
+          "nearestReference": 0.297
+        }
+      }
+    },
+    {
+      "name": "Cosmic Comet",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "reverb",
+        "rs",
+        "sat",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.9842,
+        "reverbDecay": 16.114999999999998,
+        "reverbDamping": 0.5961,
+        "reverbPredelay": 16.9817,
+        "reverbMix": 0.5522,
+        "rsRate": 18222.599999999998545,
+        "rsBits": 12.6509,
+        "rsFilter": 7180.300000000000182,
+        "rsJitter": 0.1021,
+        "rsMix": 0.502,
+        "drift": 0.4633,
+        "unstable": 0.1735,
+        "outputGain": -1.0
+      },
+      "lab": {
+        "id": "B2-C08-06",
+        "generatorVersion": 1,
+        "seed": 2002353736,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "16.1 s reverb > 18.2 kHz / 13-bit",
+        "fingerprint": "5b54821a6960561f",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.300000000000001,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": 4.3,
+          "nearestCandidate": 0.031,
+          "nearestReference": 0.264
+        }
+      }
+    },
+    {
+      "name": "Celestial Horizon",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "sat",
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "order": [
+        "sat",
+        "tape",
+        "chorus",
+        "reverb",
+        "rs",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 5.2865,
+        "tapeWow": 0.607,
+        "tapeFlutter": 0.336,
+        "tapeNoise": 0.104,
+        "tapeAge": 0.4994,
+        "chorusRate": 0.0645,
+        "chorusDepth": 0.5951,
+        "chorusMix": 0.2674,
+        "reverbSize": 0.8133,
+        "reverbDecay": 12.5771,
+        "reverbDamping": 0.3913,
+        "reverbPredelay": 48.610900000000001,
+        "reverbMix": 0.3017,
+        "satMode": "Warm",
+        "satDrive": 5.4298,
+        "satTone": -0.3088,
+        "satMix": 0.8164,
+        "satOutput": 0.0,
+        "drift": 0.778,
+        "unstable": 0.2223,
+        "outputGain": -1.5
+      },
+      "lab": {
+        "id": "B2-C08-07",
+        "generatorVersion": 1,
+        "seed": 2002353737,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station/subtle+sat",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "Warm drive +5 dB > tape (wow 61 %, age 50 %) > 0.06 Hz chorus > 12.6 s reverb",
+        "fingerprint": "572e34817a1eedb6",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -7.9,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -3.5,
+          "nearestCandidate": 0.104,
+          "nearestReference": 0.131
+        }
+      }
+    },
+    {
+      "name": "Frozen Drift",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "tape",
+        "delay",
+        "reverb",
+        "chorus"
+      ],
+      "order": [
+        "tape",
+        "delay",
+        "reverb",
+        "chorus",
+        "sat",
+        "rs",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/1",
+        "delayFeedback": 0.5968,
+        "delayLowCut": 156.800000000000011,
+        "delayHighCut": 3742.800000000000182,
+        "delayMix": 0.1745,
+        "delayPingPong": true,
+        "reverbSize": 0.7473,
+        "reverbDecay": 17.419699999999999,
+        "reverbDamping": 0.3072,
+        "reverbPredelay": 37.809600000000003,
+        "reverbMix": 0.3752,
+        "chorusRate": 0.1104,
+        "chorusDepth": 0.5653,
+        "chorusMix": 0.24,
+        "tapeDrive": 7.6478,
+        "tapeWow": 0.2407,
+        "tapeFlutter": 0.1439,
+        "tapeNoise": 0.3254,
+        "tapeAge": 0.3799,
+        "tapeMix": 0.7035,
+        "drift": 0.3578,
+        "unstable": 0.0817,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B2-C08-08",
+        "generatorVersion": 1,
+        "seed": 2002353738,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/subtle+tape",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "tape (wow 24 %, age 38 %) > 1/1 ping-pong delay > 17.4 s reverb > 0.11 Hz chorus",
+        "fingerprint": "95e53cffd272e7aa",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.6,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -2.3,
+          "nearestCandidate": 0.028,
+          "nearestReference": 0.182
+        }
+      }
+    },
+    {
+      "name": "Zenith Plateau",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Octave-up reverse grains in a long hall, the shimmer repeated in half notes. For pads, guitar, vocals.",
+      "chain": [
+        "rev",
+        "reverb",
+        "delay"
+      ],
+      "order": [
+        "rev",
+        "reverb",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 12.0,
+        "revMix": 0.3069,
+        "reverbSize": 0.8403,
+        "reverbDecay": 11.707700000000001,
+        "reverbDamping": 0.316,
+        "reverbPredelay": 16.285,
+        "reverbMix": 0.5267,
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.4678,
+        "delayLowCut": 219.800000000000011,
+        "delayHighCut": 4557.300000000000182,
+        "delayMix": 0.2537,
+        "drift": 0.38,
+        "unstable": 0.1129,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B2-C08-09",
+        "generatorVersion": 1,
+        "seed": 2002353739,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-starlight",
+        "purpose": "Shimmering octave-up ambience",
+        "instruments": "pads, guitar, vocals",
+        "chainSummary": "1/2 reverse +12 st > 11.7 s reverb > 1/4 D delay",
+        "fingerprint": "1e76189b8792292e",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.9,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -1.7,
+          "nearestCandidate": 0.029,
+          "nearestReference": 0.128
+        }
+      }
+    },
+    {
+      "name": "Vast Station",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "High-feedback chorus into a maximal reverb with a very slow swell. For drones, risers, sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "chorus",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "chorusRate": 0.0627,
+        "chorusDepth": 0.4936,
+        "chorusFeedback": 0.7185,
+        "chorusMix": 0.2871,
+        "reverbSize": 0.7994,
+        "reverbDecay": 18.575299999999999,
+        "reverbDamping": 0.6557,
+        "reverbPredelay": 18.9177,
+        "reverbMix": 0.3727,
+        "tremSync": true,
+        "tremDivision": "1/1",
+        "tremShape": "Triangle",
+        "tremDepth": 0.2218,
+        "tremStereo": 0.709,
+        "drift": 0.4238,
+        "unstable": 0.0646,
+        "outputGain": -1.5
+      },
+      "lab": {
+        "id": "B2-C08-10",
+        "generatorVersion": 1,
+        "seed": 2002353740,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-deep-drone/subtle",
+        "purpose": "Drones and long transitions",
+        "instruments": "drones, risers, sustained synths",
+        "chainSummary": "0.06 Hz chorus > 18.6 s reverb > 1/1 triangle tremolo",
+        "fingerprint": "86e782eb3e3fb537",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.0,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -0.4,
+          "nearestCandidate": 0.022,
+          "nearestReference": 0.29
+        }
+      }
+    },
+    {
+      "name": "Distant Field",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "reverb",
+        "rs",
+        "sat",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.7847,
+        "reverbDecay": 18.539999999999999,
+        "reverbDamping": 0.3932,
+        "reverbPredelay": 15.3866,
+        "reverbMix": 0.3882,
+        "rsRate": 24614.900000000001455,
+        "rsBits": 12.421900000000001,
+        "rsFilter": 5318.5,
+        "rsJitter": 0.0068,
+        "rsMix": 0.3301,
+        "drift": 0.3175,
+        "unstable": 0.1731,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B3-C08-01",
+        "generatorVersion": 1,
+        "seed": 2106414132,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon/subtle",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "18.5 s reverb > 24.6 kHz / 12-bit",
+        "fingerprint": "96b3916f2031cc7f",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.9,
+          "levelChangeDb": -0.0,
+          "tailGrowthDb": -4.0,
+          "nearestCandidate": 0.026,
+          "nearestReference": 0.258
+        }
+      }
+    },
+    {
+      "name": "Silent Void",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "order": [
+        "tape",
+        "chorus",
+        "reverb",
+        "sat",
+        "rs",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 7.6325,
+        "tapeWow": 0.6968,
+        "tapeFlutter": 0.1838,
+        "tapeNoise": 0.0953,
+        "tapeAge": 0.6141,
+        "chorusRate": 0.0988,
+        "chorusDepth": 0.904,
+        "chorusMix": 0.3616,
+        "reverbSize": 0.7179,
+        "reverbDecay": 10.668200000000001,
+        "reverbDamping": 0.4006,
+        "reverbPredelay": 30.537500000000001,
+        "reverbMix": 0.3947,
+        "drift": 0.7535,
+        "unstable": 0.0656,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B3-C08-02",
+        "generatorVersion": 1,
+        "seed": 2106414133,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "tape (wow 70 %, age 61 %) > 0.10 Hz chorus > 10.7 s reverb",
+        "fingerprint": "ab962ab328c8f946",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -9.1,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -5.1,
+          "nearestCandidate": 0.038,
+          "nearestReference": 0.13
+        }
+      }
+    },
+    {
+      "name": "Stellar Corridor",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "delay",
+        "reverb",
+        "chorus",
+        "rs"
+      ],
+      "order": [
+        "delay",
+        "reverb",
+        "chorus",
+        "rs",
+        "sat",
+        "tape",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.6655,
+        "delayLowCut": 346.699999999999989,
+        "delayHighCut": 4487.800000000000182,
+        "delayMix": 0.4484,
+        "delayPingPong": true,
+        "reverbSize": 0.893,
+        "reverbDecay": 16.847200000000001,
+        "reverbDamping": 0.6077,
+        "reverbPredelay": 20.336400000000001,
+        "reverbMix": 0.6,
+        "chorusRate": 0.077,
+        "chorusDepth": 0.9861,
+        "chorusMix": 0.3238,
+        "rsRate": 22241.400000000001455,
+        "rsBits": 11.1439,
+        "rsFilter": 3985.099999999999909,
+        "rsJitter": 0.1025,
+        "rsMix": 0.2283,
+        "drift": 0.304,
+        "unstable": 0.0056,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B3-C08-03",
+        "generatorVersion": 1,
+        "seed": 2106414134,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/bold+crush",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "1/2 ping-pong delay > 16.8 s reverb > 0.08 Hz chorus > 22.2 kHz / 11-bit",
+        "fingerprint": "5e52757966a40528",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.8,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": 0.5,
+          "nearestCandidate": 0.143,
+          "nearestReference": 0.27
+        }
+      }
+    },
+    {
+      "name": "Polar Drift",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "High-feedback chorus into a maximal reverb with a very slow swell. For drones, risers, sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "chorus",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "chorusRate": 0.0938,
+        "chorusDepth": 0.8807,
+        "chorusFeedback": 0.6171,
+        "chorusMix": 0.4374,
+        "reverbSize": 0.914,
+        "reverbDecay": 15.072800000000001,
+        "reverbDamping": 0.45,
+        "reverbPredelay": 15.768700000000001,
+        "reverbMix": 0.5257,
+        "tremSync": true,
+        "tremDivision": "1/2 D",
+        "tremShape": "Triangle",
+        "tremDepth": 0.2919,
+        "tremStereo": 0.4312,
+        "drift": 0.485,
+        "unstable": 0.0169,
+        "outputGain": 3.0
+      },
+      "lab": {
+        "id": "B3-C08-05",
+        "generatorVersion": 1,
+        "seed": 2106414136,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-deep-drone",
+        "purpose": "Drones and long transitions",
+        "instruments": "drones, risers, sustained synths",
+        "chainSummary": "0.09 Hz chorus > 15.1 s reverb > 1/2 D triangle tremolo",
+        "fingerprint": "a438abd0cde5af0e",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.3,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -3.5,
+          "nearestCandidate": 0.025,
+          "nearestReference": 0.287
+        }
+      }
+    },
+    {
+      "name": "Orbital Plateau",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "tape",
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "tape",
+        "reverb",
+        "rs",
+        "sat",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.968,
+        "reverbDecay": 14.3813,
+        "reverbDamping": 0.4194,
+        "reverbPredelay": 54.949599999999997,
+        "reverbMix": 0.6,
+        "rsRate": 16250.399999999999636,
+        "rsBits": 11.714399999999999,
+        "rsFilter": 10407.0,
+        "rsJitter": 0.0626,
+        "rsMix": 0.6931,
+        "tapeDrive": 4.6094,
+        "tapeWow": 0.417,
+        "tapeFlutter": 0.2872,
+        "tapeNoise": 0.1439,
+        "tapeAge": 0.1535,
+        "tapeMix": 0.637,
+        "drift": 0.3948,
+        "unstable": 0.2839,
+        "outputGain": 2.5
+      },
+      "lab": {
+        "id": "B3-C08-06",
+        "generatorVersion": 1,
+        "seed": 2106414137,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon/bold+tape",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "tape (wow 42 %, age 15 %) > 14.4 s reverb > 16.3 kHz / 12-bit",
+        "fingerprint": "94e855e98e9df0da",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.9,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -4.2,
+          "nearestCandidate": 0.062,
+          "nearestReference": 0.29
+        }
+      }
+    },
+    {
+      "name": "Celestial Station",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "order": [
+        "tape",
+        "chorus",
+        "reverb",
+        "sat",
+        "rs",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 4.9088,
+        "tapeWow": 0.5094,
+        "tapeFlutter": 0.2034,
+        "tapeNoise": 0.3111,
+        "tapeAge": 0.5307,
+        "chorusRate": 0.0549,
+        "chorusDepth": 1.0,
+        "chorusMix": 0.6147,
+        "reverbSize": 0.7738,
+        "reverbDecay": 13.368,
+        "reverbDamping": 0.4412,
+        "reverbPredelay": 60.799799999999998,
+        "reverbMix": 0.5415,
+        "drift": 0.6406,
+        "unstable": 0.1596,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B3-C08-07",
+        "generatorVersion": 1,
+        "seed": 2106414138,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station/bold",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "tape (wow 51 %, age 53 %) > 0.05 Hz chorus > 13.4 s reverb",
+        "fingerprint": "7be24e4b764a9b1c",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -9.0,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -5.8,
+          "nearestCandidate": 0.024,
+          "nearestReference": 0.143
+        }
+      }
+    },
+    {
+      "name": "Cosmic Satellite",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "delay",
+        "reverb",
+        "chorus"
+      ],
+      "order": [
+        "delay",
+        "reverb",
+        "chorus",
+        "sat",
+        "rs",
+        "tape",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/1",
+        "delayFeedback": 0.7177,
+        "delayLowCut": 385.100000000000023,
+        "delayHighCut": 3073.0,
+        "delayMix": 0.1881,
+        "delayPingPong": true,
+        "reverbSize": 0.9917,
+        "reverbDecay": 15.0786,
+        "reverbDamping": 0.4302,
+        "reverbPredelay": 30.571100000000001,
+        "reverbMix": 0.3874,
+        "chorusRate": 0.1409,
+        "chorusDepth": 0.5157,
+        "chorusMix": 0.195,
+        "drift": 0.3441,
+        "unstable": 0.1175,
+        "outputGain": -1.0
+      },
+      "lab": {
+        "id": "B3-C08-08",
+        "generatorVersion": 1,
+        "seed": 2106414139,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/subtle",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "1/1 ping-pong delay > 15.1 s reverb > 0.14 Hz chorus",
+        "fingerprint": "a13ef68eaa10341d",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.1,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -3.5,
+          "nearestCandidate": 0.026,
+          "nearestReference": 0.159
+        }
+      }
+    },
+    {
+      "name": "Zenith Nebula",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Octave-up reverse grains in a long hall, the shimmer repeated in half notes. For pads, guitar, vocals.",
+      "chain": [
+        "rev",
+        "reverb",
+        "delay"
+      ],
+      "order": [
+        "rev",
+        "reverb",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 12.0,
+        "revMix": 0.2539,
+        "reverbSize": 0.7474,
+        "reverbDecay": 12.437200000000001,
+        "reverbDamping": 0.5859,
+        "reverbPredelay": 61.1083,
+        "reverbMix": 0.3043,
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.448,
+        "delayLowCut": 271.800000000000011,
+        "delayHighCut": 5346.899999999999636,
+        "delayMix": 0.1463,
+        "drift": 0.2604,
+        "unstable": 0.1238,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B3-C08-09",
+        "generatorVersion": 1,
+        "seed": 2106414140,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-starlight/subtle",
+        "purpose": "Shimmering octave-up ambience",
+        "instruments": "pads, guitar, vocals",
+        "chainSummary": "1/4 reverse +12 st > 12.4 s reverb > 1/2 delay",
+        "fingerprint": "d4baaebf024cfbc1",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.4,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -5.5,
+          "nearestCandidate": 0.022,
+          "nearestReference": 0.132
+        }
+      }
+    },
+    {
+      "name": "Cosmic Tundra",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "High-feedback chorus into a maximal reverb with a very slow swell. For drones, risers, sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "chorus",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "chorusRate": 0.1957,
+        "chorusDepth": 1.0,
+        "chorusFeedback": 0.6301,
+        "chorusMix": 0.5139,
+        "reverbSize": 0.8306,
+        "reverbDecay": 16.948799999999999,
+        "reverbDamping": 0.5817,
+        "reverbPredelay": 61.041499999999999,
+        "reverbMix": 0.6,
+        "tremSync": true,
+        "tremDivision": "1/1",
+        "tremShape": "Triangle",
+        "tremDepth": 0.2918,
+        "tremStereo": 0.5182,
+        "drift": 0.6042,
+        "unstable": 0.0755,
+        "outputGain": 2.0
+      },
+      "lab": {
+        "id": "B3-C08-10",
+        "generatorVersion": 1,
+        "seed": 2106414141,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-deep-drone/bold",
+        "purpose": "Drones and long transitions",
+        "instruments": "drones, risers, sustained synths",
+        "chainSummary": "0.20 Hz chorus > 16.9 s reverb > 1/1 triangle tremolo",
+        "fingerprint": "4d1c96fa25638208",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -7.4,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": 0.4,
+          "nearestCandidate": 0.021,
+          "nearestReference": 0.301
+        }
+      }
+    },
+    {
+      "name": "Silent Expanse",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "sat",
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.7686,
+        "reverbDecay": 16.8063,
+        "reverbDamping": 0.6165,
+        "reverbPredelay": 53.354399999999998,
+        "reverbMix": 0.6,
+        "rsRate": 21951.0,
+        "rsBits": 11.4854,
+        "rsFilter": 7708.600000000000364,
+        "rsJitter": 0.2673,
+        "rsMix": 0.539,
+        "satMode": "Warm",
+        "satDrive": 7.8017,
+        "satTone": -0.2167,
+        "satMix": 0.5011,
+        "satOutput": 0.0,
+        "drift": 0.583,
+        "unstable": 0.1751,
+        "outputGain": -2.5
+      },
+      "lab": {
+        "id": "B4-C08-01",
+        "generatorVersion": 1,
+        "seed": 2210474533,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon+sat",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "Warm drive +8 dB > 16.8 s reverb > 22.0 kHz / 11-bit",
+        "fingerprint": "fc64ce91d8e7d6c",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -7.6,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -6.7,
+          "nearestCandidate": 0.101,
+          "nearestReference": 0.176
+        }
+      }
+    },
+    {
+      "name": "Distant Tundra",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "order": [
+        "tape",
+        "chorus",
+        "reverb",
+        "sat",
+        "rs",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 7.2548,
+        "tapeWow": 0.5992,
+        "tapeFlutter": 0.0513,
+        "tapeNoise": 0.3024,
+        "tapeAge": 0.6453,
+        "chorusRate": 0.084,
+        "chorusDepth": 0.5572,
+        "chorusMix": 0.275,
+        "reverbSize": 0.9785,
+        "reverbDecay": 11.459199999999999,
+        "reverbDamping": 0.4505,
+        "reverbPredelay": 42.726300000000002,
+        "reverbMix": 0.2256,
+        "drift": 0.6339,
+        "unstable": 0.0801,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B4-C08-02",
+        "generatorVersion": 1,
+        "seed": 2210474534,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station/subtle",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "tape (wow 60 %, age 65 %) > 0.08 Hz chorus > 11.5 s reverb",
+        "fingerprint": "383955da864231",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -7.2,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -4.6,
+          "nearestCandidate": 0.032,
+          "nearestReference": 0.122
+        }
+      }
+    },
+    {
+      "name": "Nebular Field",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "delay",
+        "reverb",
+        "chorus"
+      ],
+      "order": [
+        "delay",
+        "reverb",
+        "chorus",
+        "sat",
+        "rs",
+        "tape",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.6164,
+        "delayLowCut": 170.300000000000011,
+        "delayHighCut": 3684.699999999999818,
+        "delayMix": 0.45,
+        "delayPingPong": true,
+        "reverbSize": 0.8375,
+        "reverbDecay": 14.5061,
+        "reverbDamping": 0.3307,
+        "reverbPredelay": 68.097800000000007,
+        "reverbMix": 0.6,
+        "chorusRate": 0.0982,
+        "chorusDepth": 0.8869,
+        "chorusMix": 0.4938,
+        "drift": 0.5486,
+        "unstable": 0.0876,
+        "outputGain": 2.0
+      },
+      "lab": {
+        "id": "B4-C08-03",
+        "generatorVersion": 1,
+        "seed": 2210474535,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/bold",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "1/2 ping-pong delay > 14.5 s reverb > 0.10 Hz chorus",
+        "fingerprint": "c31bae7ae7bffb5f",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.7,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": 0.7,
+          "nearestCandidate": 0.034,
+          "nearestReference": 0.159
+        }
+      }
+    },
+    {
+      "name": "Silent Glacier",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "High-feedback chorus into a maximal reverb with a very slow swell. For drones, risers, sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "chorus",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "chorusRate": 0.0879,
+        "chorusDepth": 0.5161,
+        "chorusFeedback": 0.7287,
+        "chorusMix": 0.2541,
+        "reverbSize": 0.9453,
+        "reverbDecay": 18.446200000000001,
+        "reverbDamping": 0.376,
+        "reverbPredelay": 57.892400000000002,
+        "reverbMix": 0.3289,
+        "tremSync": true,
+        "tremDivision": "1/1",
+        "tremShape": "Triangle",
+        "tremDepth": 0.2113,
+        "tremStereo": 0.2404,
+        "drift": 0.6654,
+        "unstable": 0.0277,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B4-C08-05",
+        "generatorVersion": 1,
+        "seed": 2210474537,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-deep-drone/subtle",
+        "purpose": "Drones and long transitions",
+        "instruments": "drones, risers, sustained synths",
+        "chainSummary": "0.09 Hz chorus > 18.4 s reverb > 1/1 triangle tremolo",
+        "fingerprint": "75c331a96ba16744",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.7,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": 0.8,
+          "nearestCandidate": 0.039,
+          "nearestReference": 0.307
+        }
+      }
+    },
+    {
+      "name": "Polar Glacier",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "reverb",
+        "rs",
+        "sat",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.9518,
+        "reverbDecay": 18.647600000000001,
+        "reverbDamping": 0.6427,
+        "reverbPredelay": 37.917400000000001,
+        "reverbMix": 0.6,
+        "rsRate": 14491.700000000000728,
+        "rsBits": 14.778,
+        "rsFilter": 4512.199999999999818,
+        "rsJitter": 0.0231,
+        "rsMix": 0.7336,
+        "drift": 0.4134,
+        "unstable": 0.1728,
+        "outputGain": -3.0
+      },
+      "lab": {
+        "id": "B4-C08-06",
+        "generatorVersion": 1,
+        "seed": 2210474538,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon/bold",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "18.6 s reverb > 14.5 kHz / 15-bit",
+        "fingerprint": "9de9c6e44647fc47",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -9.300000000000001,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -1.7,
+          "nearestCandidate": 0.022,
+          "nearestReference": 0.244
+        }
+      }
+    },
+    {
+      "name": "Orbital Observatory",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "tape",
+        "chorus",
+        "reverb",
+        "rs",
+        "sat",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 4.5311,
+        "tapeWow": 0.4118,
+        "tapeFlutter": 0.0709,
+        "tapeNoise": 0.2182,
+        "tapeAge": 0.5619,
+        "chorusRate": 0.112,
+        "chorusDepth": 0.8218,
+        "chorusMix": 0.5343,
+        "reverbSize": 0.7343,
+        "reverbDecay": 14.159000000000001,
+        "reverbDamping": 0.4911,
+        "reverbPredelay": 17.988700000000001,
+        "reverbMix": 0.3688,
+        "rsRate": 21150.299999999999272,
+        "rsBits": 13.1477,
+        "rsFilter": 7716.300000000000182,
+        "rsJitter": 0.1104,
+        "rsMix": 0.3966,
+        "drift": 0.6722,
+        "unstable": 0.2407,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B4-C08-07",
+        "generatorVersion": 1,
+        "seed": 2210474539,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station+crush",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "tape (wow 41 %, age 56 %) > 0.11 Hz chorus > 14.2 s reverb > 21.2 kHz / 13-bit",
+        "fingerprint": "a957e1a9a8836cfe",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.699999999999999,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -3.1,
+          "nearestCandidate": 0.08,
+          "nearestReference": 0.186
+        }
+      }
+    },
+    {
+      "name": "Celestial Comet",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "tape",
+        "delay",
+        "reverb",
+        "chorus"
+      ],
+      "order": [
+        "tape",
+        "delay",
+        "reverb",
+        "chorus",
+        "sat",
+        "rs",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/1",
+        "delayFeedback": 0.6686,
+        "delayLowCut": 189.199999999999989,
+        "delayHighCut": 4625.600000000000364,
+        "delayMix": 0.2016,
+        "delayPingPong": true,
+        "reverbSize": 0.9362,
+        "reverbDecay": 12.737500000000001,
+        "reverbDamping": 0.5532,
+        "reverbPredelay": 23.3325,
+        "reverbMix": 0.302,
+        "chorusRate": 0.0599,
+        "chorusDepth": 0.4661,
+        "chorusMix": 0.15,
+        "tapeDrive": 7.3187,
+        "tapeWow": 0.3341,
+        "tapeFlutter": 0.3101,
+        "tapeNoise": 0.2538,
+        "tapeAge": 0.3573,
+        "tapeMix": 0.412,
+        "drift": 0.4901,
+        "unstable": 0.0439,
+        "outputGain": 3.0
+      },
+      "lab": {
+        "id": "B4-C08-08",
+        "generatorVersion": 1,
+        "seed": 2210474540,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/subtle+tape",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "tape (wow 33 %, age 36 %) > 1/1 ping-pong delay > 12.7 s reverb > 0.06 Hz chorus",
+        "fingerprint": "f30359ddf6ed1de2",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.9,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -5.8,
+          "nearestCandidate": 0.034,
+          "nearestReference": 0.187
+        }
+      }
+    },
+    {
+      "name": "Cosmic Station",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Octave-up reverse grains in a long hall, the shimmer repeated in half notes. For pads, guitar, vocals.",
+      "chain": [
+        "rev",
+        "reverb",
+        "delay"
+      ],
+      "order": [
+        "rev",
+        "reverb",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 12.0,
+        "revMix": 0.4217,
+        "reverbSize": 0.9545,
+        "reverbDecay": 13.166700000000001,
+        "reverbDamping": 0.4558,
+        "reverbPredelay": 50.931600000000003,
+        "reverbMix": 0.5325,
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.4283,
+        "delayLowCut": 336.100000000000023,
+        "delayHighCut": 6273.300000000000182,
+        "delayMix": 0.2555,
+        "drift": 0.4408,
+        "unstable": 0.1347,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B4-C08-09",
+        "generatorVersion": 1,
+        "seed": 2210474541,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-starlight/bold",
+        "purpose": "Shimmering octave-up ambience",
+        "instruments": "pads, guitar, vocals",
+        "chainSummary": "1/4 reverse +12 st > 13.2 s reverb > 1/2 delay",
+        "fingerprint": "d09589a4fde2f03a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.6,
+          "levelChangeDb": -0.0,
+          "tailGrowthDb": -3.7,
+          "nearestCandidate": 0.026,
+          "nearestReference": 0.137
+        }
+      }
+    },
+    {
+      "name": "Zenith Drift",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "High-feedback chorus into a maximal reverb with a very slow swell. For drones, risers, sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "chorus",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "chorusRate": 0.1834,
+        "chorusDepth": 0.886,
+        "chorusFeedback": 0.7418,
+        "chorusMix": 0.4988,
+        "reverbSize": 0.8619,
+        "reverbDecay": 15.3222,
+        "reverbDamping": 0.5077,
+        "reverbPredelay": 48.165199999999999,
+        "reverbMix": 0.5339,
+        "tremSync": true,
+        "tremDivision": "1/2 D",
+        "tremShape": "Triangle",
+        "tremDepth": 0.2577,
+        "tremStereo": 0.3275,
+        "drift": 0.4846,
+        "unstable": 0.0864,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B4-C08-10",
+        "generatorVersion": 1,
+        "seed": 2210474542,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-deep-drone",
+        "purpose": "Drones and long transitions",
+        "instruments": "drones, risers, sustained synths",
+        "chainSummary": "0.18 Hz chorus > 15.3 s reverb > 1/2 D triangle tremolo",
+        "fingerprint": "1d629305e5f4a0ed",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.4,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -3.6,
+          "nearestCandidate": 0.02,
+          "nearestReference": 0.296
+        }
+      }
+    },
+    {
+      "name": "Polar Comet",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "reverb",
+        "rs",
+        "sat",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.7524,
+        "reverbDecay": 15.0726,
+        "reverbDamping": 0.4398,
+        "reverbPredelay": 36.322299999999998,
+        "reverbMix": 0.6,
+        "rsRate": 19575.299999999999272,
+        "rsBits": 14.5489,
+        "rsFilter": 11172.700000000000728,
+        "rsJitter": 0.2278,
+        "rsMix": 0.5701,
+        "drift": 0.3753,
+        "unstable": 0.1138,
+        "outputGain": -3.0
+      },
+      "lab": {
+        "id": "B5-C08-01",
+        "generatorVersion": 1,
+        "seed": 2314534934,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "15.1 s reverb > 19.6 kHz / 15-bit",
+        "fingerprint": "8f0235f8f0a6aa42",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -9.300000000000001,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -4.0,
+          "nearestCandidate": 0.021,
+          "nearestReference": 0.247
+        }
+      }
+    },
+    {
+      "name": "Orbital Horizon",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "order": [
+        "tape",
+        "chorus",
+        "reverb",
+        "sat",
+        "rs",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 6.8772,
+        "tapeWow": 0.5016,
+        "tapeFlutter": 0.2188,
+        "tapeNoise": 0.2095,
+        "tapeAge": 0.3766,
+        "chorusRate": 0.0714,
+        "chorusDepth": 1.0,
+        "chorusMix": 0.63,
+        "reverbSize": 0.939,
+        "reverbDecay": 12.2502,
+        "reverbDamping": 0.5004,
+        "reverbPredelay": 54.915199999999999,
+        "reverbMix": 0.6,
+        "drift": 0.5143,
+        "unstable": 0.0946,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B5-C08-02",
+        "generatorVersion": 1,
+        "seed": 2314534935,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station/bold",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "tape (wow 50 %, age 38 %) > 0.07 Hz chorus > 12.3 s reverb",
+        "fingerprint": "9c9e59b4c5025c1c",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.4,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -4.8,
+          "nearestCandidate": 0.025,
+          "nearestReference": 0.142
+        }
+      }
+    },
+    {
+      "name": "Frozen Field",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "delay",
+        "reverb",
+        "chorus"
+      ],
+      "order": [
+        "delay",
+        "reverb",
+        "chorus",
+        "sat",
+        "rs",
+        "tape",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.5673,
+        "delayLowCut": 418.100000000000023,
+        "delayHighCut": 3025.300000000000182,
+        "delayMix": 0.2426,
+        "delayPingPong": true,
+        "reverbSize": 0.782,
+        "reverbDecay": 12.164899999999999,
+        "reverbDamping": 0.4537,
+        "reverbPredelay": 60.859200000000001,
+        "reverbMix": 0.6,
+        "chorusRate": 0.1252,
+        "chorusDepth": 0.7877,
+        "chorusMix": 0.4037,
+        "drift": 0.5703,
+        "unstable": 0.0841,
+        "outputGain": 1.5
+      },
+      "lab": {
+        "id": "B5-C08-03",
+        "generatorVersion": 1,
+        "seed": 2314534936,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/bold",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "1/2 ping-pong delay > 12.2 s reverb > 0.13 Hz chorus",
+        "fingerprint": "1fd336eb5335ec14",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.6,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -1.6,
+          "nearestCandidate": 0.023,
+          "nearestReference": 0.163
+        }
+      }
+    },
+    {
+      "name": "Zenith Satellite",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Octave-up reverse grains in a long hall, the shimmer repeated in half notes. For pads, guitar, vocals.",
+      "chain": [
+        "rev",
+        "reverb",
+        "delay"
+      ],
+      "order": [
+        "rev",
+        "reverb",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 12.0,
+        "revMix": 0.2589,
+        "reverbSize": 0.9458,
+        "reverbDecay": 15.8423,
+        "reverbDamping": 0.5756,
+        "reverbPredelay": 22.647300000000001,
+        "reverbMix": 0.2569,
+        "delaySync": true,
+        "delayDivision": "1/2",
+        "delayFeedback": 0.5307,
+        "delayLowCut": 201.400000000000006,
+        "delayHighCut": 6462.899999999999636,
+        "delayMix": 0.1006,
+        "drift": 0.202,
+        "unstable": 0.0869,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B5-C08-04",
+        "generatorVersion": 1,
+        "seed": 2314534937,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-starlight/subtle",
+        "purpose": "Shimmering octave-up ambience",
+        "instruments": "pads, guitar, vocals",
+        "chainSummary": "1/2 reverse +12 st > 15.8 s reverb > 1/2 delay",
+        "fingerprint": "7319c4a79d58bb9a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.9,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -2.2,
+          "nearestCandidate": 0.021,
+          "nearestReference": 0.135
+        }
+      }
+    },
+    {
+      "name": "Vast Corridor",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "High-feedback chorus into a maximal reverb with a very slow swell. For drones, risers, sustained synths.",
+      "chain": [
+        "chorus",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "chorus",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "chorusRate": 0.0824,
+        "chorusDepth": 0.9195,
+        "chorusFeedback": 0.6404,
+        "chorusMix": 0.55,
+        "reverbSize": 0.9766,
+        "reverbDecay": 16.819600000000001,
+        "reverbDamping": 0.302,
+        "reverbPredelay": 45.016199999999998,
+        "reverbMix": 0.6,
+        "tremSync": true,
+        "tremDivision": "1/1",
+        "tremShape": "Triangle",
+        "tremDepth": 0.2709,
+        "tremStereo": 0.0497,
+        "drift": 0.5458,
+        "unstable": 0.0386,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B5-C08-05",
+        "generatorVersion": 1,
+        "seed": 2314534938,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-deep-drone/bold",
+        "purpose": "Drones and long transitions",
+        "instruments": "drones, risers, sustained synths",
+        "chainSummary": "0.08 Hz chorus > 16.8 s reverb > 1/1 triangle tremolo",
+        "fingerprint": "21d8f0c4b88ba149",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.6,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": 0.6,
+          "nearestCandidate": 0.032,
+          "nearestReference": 0.314
+        }
+      }
+    },
+    {
+      "name": "Zenith Tundra",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "A near-endless reverb whose tail is softly crushed, like a distant transmission. For pads, piano, field recordings.",
+      "chain": [
+        "sat",
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.9356,
+        "reverbDecay": 16.913900000000002,
+        "reverbDamping": 0.4659,
+        "reverbPredelay": 20.885300000000001,
+        "reverbMix": 0.3613,
+        "rsRate": 24000.5,
+        "rsBits": 13.8415,
+        "rsFilter": 6540.0,
+        "rsJitter": 0.2836,
+        "rsMix": 0.3871,
+        "satMode": "Warm",
+        "satDrive": 7.7934,
+        "satTone": 0.0615,
+        "satMix": 0.5697,
+        "satOutput": -0.1844,
+        "drift": 0.3836,
+        "unstable": 0.1292,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B5-C08-06",
+        "generatorVersion": 1,
+        "seed": 2314534939,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-frozen-horizon/subtle+sat",
+        "purpose": "A degraded, frozen ambient tail",
+        "instruments": "pads, piano, field recordings",
+        "chainSummary": "Warm drive +8 dB > 16.9 s reverb > 24.0 kHz / 14-bit",
+        "fingerprint": "66051c835f7b35e9",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.4,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -3.6,
+          "nearestCandidate": 0.036,
+          "nearestReference": 0.164
+        }
+      }
+    },
+    {
+      "name": "Zenith Corridor",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Wobbling tape, a very slow deep chorus and a long, soft hall. For synths, keys, drones.",
+      "chain": [
+        "tape",
+        "chorus",
+        "reverb"
+      ],
+      "order": [
+        "tape",
+        "chorus",
+        "reverb",
+        "sat",
+        "rs",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "tapeDrive": 4.1535,
+        "tapeWow": 0.6142,
+        "tapeFlutter": 0.2384,
+        "tapeNoise": 0.1253,
+        "tapeAge": 0.5932,
+        "chorusRate": 0.0953,
+        "chorusDepth": 0.6338,
+        "chorusMix": 0.2573,
+        "reverbSize": 0.9948,
+        "reverbDecay": 14.949999999999999,
+        "reverbDamping": 0.541,
+        "reverbPredelay": 30.177499999999998,
+        "reverbMix": 0.2087,
+        "drift": 0.6842,
+        "unstable": 0.1502,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B5-C08-07",
+        "generatorVersion": 1,
+        "seed": 2314534940,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-drifting-station/subtle",
+        "purpose": "Slowly drifting, warbling space",
+        "instruments": "synths, keys, drones",
+        "chainSummary": "tape (wow 61 %, age 59 %) > 0.10 Hz chorus > 14.9 s reverb",
+        "fingerprint": "a76a20a6c3e389f1",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -8.0,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -3.1,
+          "nearestCandidate": 0.028,
+          "nearestReference": 0.122
+        }
+      }
+    },
+    {
+      "name": "Lunar Expanse",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Long ping-pong feedback into a huge reverb, slowly orbiting with chorus. For pads, guitar, drones.",
+      "chain": [
+        "delay",
+        "reverb",
+        "chorus"
+      ],
+      "order": [
+        "delay",
+        "reverb",
+        "chorus",
+        "sat",
+        "rs",
+        "tape",
+        "trem",
+        "rev"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/1",
+        "delayFeedback": 0.6194,
+        "delayLowCut": 464.5,
+        "delayHighCut": 3797.800000000000182,
+        "delayMix": 0.2152,
+        "delayPingPong": true,
+        "reverbSize": 0.8807,
+        "reverbDecay": 10.3963,
+        "reverbDamping": 0.6762,
+        "reverbPredelay": 16.094000000000001,
+        "reverbMix": 0.3142,
+        "chorusRate": 0.0764,
+        "chorusDepth": 0.4165,
+        "chorusMix": 0.235,
+        "drift": 0.3876,
+        "unstable": 0.1104,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B5-C08-08",
+        "generatorVersion": 1,
+        "seed": 2314534941,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-orbit-field/subtle",
+        "purpose": "Endless ambient fields",
+        "instruments": "pads, guitar, drones",
+        "chainSummary": "1/1 ping-pong delay > 10.4 s reverb > 0.08 Hz chorus",
+        "fingerprint": "ca87118593f70ddb",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.9,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -3.7,
+          "nearestCandidate": 0.027,
+          "nearestReference": 0.152
+        }
+      }
+    },
+    {
+      "name": "Silent Observatory",
+      "category": "SHOBEATS Lab / Space & Ambient",
+      "description": "Octave-up reverse grains in a long hall, the shimmer repeated in half notes. For pads, guitar, vocals.",
+      "chain": [
+        "rev",
+        "reverb",
+        "delay"
+      ],
+      "order": [
+        "rev",
+        "reverb",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 12.0,
+        "revMix": 0.2581,
+        "reverbSize": 0.8616,
+        "reverbDecay": 13.8962,
+        "reverbDamping": 0.3256,
+        "reverbPredelay": 40.754899999999999,
+        "reverbMix": 0.3511,
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.4086,
+        "delayLowCut": 415.5,
+        "delayHighCut": 7360.199999999999818,
+        "delayMix": 0.1679,
+        "drift": 0.3212,
+        "unstable": 0.1456,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B5-C08-09",
+        "generatorVersion": 1,
+        "seed": 2314534942,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Space & Ambient",
+        "architecture": "space-starlight",
+        "purpose": "Shimmering octave-up ambience",
+        "instruments": "pads, guitar, vocals",
+        "chainSummary": "1/4 reverse +12 st > 13.9 s reverb > 1/4 D delay",
+        "fingerprint": "8b6288c17a431e9e",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.3,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -3.5,
+          "nearestCandidate": 0.028,
+          "nearestReference": 0.12
+        }
+      }
+    }
+  ]
+}

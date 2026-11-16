@@ -365,7 +365,7 @@ TEST_CASE_METHOD (Fixture, "Presets: user presets save, list, load and delete se
     const auto dir = userDir.getFile();
     dir.deleteRecursively();
     pm.setUserDirectory (dir);
-    const auto factoryCount = pm.getNumFactoryPresets();
+    const auto factoryCount = pm.getNumBuiltInPresets(); // factory + SHOBEATS Lab
     REQUIRE (pm.getPresets().size() == static_cast<size_t> (factoryCount));
 
     // Shape a sound and save it.

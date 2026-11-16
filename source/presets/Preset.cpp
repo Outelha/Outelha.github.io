@@ -67,6 +67,11 @@ std::optional<Preset> Preset::fromVar (const juce::var& v, const juce::String& d
         p.params = obj->getProperties();
 
     p.creator = v["creator"].toString();
+    if (v["lab"].isObject())
+    {
+        p.isLab = true;
+        p.lab = v["lab"];
+    }
     if (auto* imp = v["import"].getDynamicObject())
     {
         p.isImported = true;
@@ -104,6 +109,8 @@ juce::var Preset::toVar() const
 
     if (creator.isNotEmpty())
         root->setProperty ("creator", creator);
+    if (lab.isObject())
+        root->setProperty ("lab", lab);
     if (isImported)
     {
         auto* imp = new juce::DynamicObject();

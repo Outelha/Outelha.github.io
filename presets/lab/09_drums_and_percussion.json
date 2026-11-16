@@ -1,0 +1,1041 @@
+{
+  "format": "shobeats-fx-lab",
+  "version": 1,
+  "category": "SHOBEATS Lab / Drums & Percussion",
+  "presets": [
+    {
+      "name": "Cracked Backbeat",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Parallel hard drive with a short, tight room. For drum loops, snares, percussion.",
+      "chain": [
+        "sat",
+        "reverb"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "satMode": "Hard",
+        "satDrive": 7.1812,
+        "satTone": 0.1941,
+        "satMix": 0.581,
+        "reverbSize": 0.2495,
+        "reverbDecay": 0.5028,
+        "reverbDamping": 0.3145,
+        "reverbPredelay": 9.264699999999999,
+        "reverbMix": 0.1969,
+        "satOutput": -0.5823,
+        "drift": 0.0031,
+        "unstable": 0.0148,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B1-C09-01",
+        "generatorVersion": 1,
+        "seed": 1898303531,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-crushed-room/bold",
+        "purpose": "Punchy, gritty drum ambience",
+        "instruments": "drum loops, snares, percussion",
+        "chainSummary": "Hard drive +7 dB > 0.5 s reverb",
+        "fingerprint": "a2b15eacca7bbd5b",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.8,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -71.200000000000003,
+          "nearestCandidate": 0.182,
+          "nearestReference": 0.067
+        }
+      }
+    },
+    {
+      "name": "Slammed Room",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Short free-time ping-pong slaps with a touch of drive. For percussion, hi-hats, claps.",
+      "chain": [
+        "delay",
+        "sat"
+      ],
+      "order": [
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": false,
+        "delayTime": 101.900000000000006,
+        "delayFeedback": 0.1603,
+        "delayPingPong": true,
+        "delayLowCut": 566.399999999999977,
+        "delayHighCut": 6743.699999999999818,
+        "delayMix": 0.2841,
+        "satMode": "Soft",
+        "satDrive": 5.1895,
+        "satTone": -0.2832,
+        "satMix": 1.0,
+        "satOutput": 0.0,
+        "drift": 0.0341,
+        "unstable": 0.0203,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B1-C09-02",
+        "generatorVersion": 1,
+        "seed": 1898303532,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-slap-bounce/bold",
+        "purpose": "Wide slapback for percussion",
+        "instruments": "percussion, hi-hats, claps",
+        "chainSummary": "102 ms ping-pong delay > Soft drive +5 dB",
+        "fingerprint": "785fc658fc443414",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.4,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -76.599999999999994,
+          "nearestCandidate": 0.241,
+          "nearestReference": 0.235
+        }
+      }
+    },
+    {
+      "name": "Knocking Loop",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "A small amount of fuzz blended under the drums with a short room. For kicks, snares, drum bus.",
+      "chain": [
+        "sat",
+        "reverb",
+        "rs"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "satMode": "Fuzz",
+        "satDrive": 5.152,
+        "satTone": 0.2289,
+        "satMix": 0.1821,
+        "reverbSize": 0.3214,
+        "reverbDecay": 0.8014,
+        "reverbDamping": 0.4195,
+        "reverbPredelay": 6.045,
+        "reverbMix": 0.2041,
+        "rsRate": 17636.0,
+        "rsBits": 13.0992,
+        "rsFilter": 6112.699999999999818,
+        "rsJitter": 0.2649,
+        "rsMix": 0.2182,
+        "satOutput": -0.6867,
+        "drift": 0.0482,
+        "unstable": 0.0413,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B1-C09-03",
+        "generatorVersion": 1,
+        "seed": 1898303533,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-transient-fuzz+crush",
+        "purpose": "Aggressive parallel fuzz for drums",
+        "instruments": "kicks, snares, drum bus",
+        "chainSummary": "Fuzz drive +5 dB > 0.8 s reverb > 17.6 kHz / 13-bit",
+        "fingerprint": "f127e7f53bb9cea0",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.2,
+          "levelChangeDb": -0.0,
+          "tailGrowthDb": -58.0,
+          "nearestCandidate": 0.152,
+          "nearestReference": 0.137
+        }
+      }
+    },
+    {
+      "name": "Slammed Backbeat",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Classic 12-bit sampler resolution, warm drive and tape weight. For drum breaks, kicks, snares.",
+      "chain": [
+        "rs",
+        "sat",
+        "tape"
+      ],
+      "order": [
+        "rs",
+        "sat",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "rsRate": 24678.299999999999272,
+        "rsBits": 10.6732,
+        "rsFilter": 6611.699999999999818,
+        "rsJitter": 0.0059,
+        "rsMix": 0.6109,
+        "satMode": "Soft",
+        "satDrive": 6.8305,
+        "satTone": -0.4698,
+        "satMix": 0.7403,
+        "tapeDrive": 8.5395,
+        "tapeWow": 0.0313,
+        "tapeFlutter": 0.0215,
+        "tapeNoise": 0.0801,
+        "tapeAge": 0.4435,
+        "satOutput": 0.0,
+        "drift": 0.0061,
+        "unstable": 0.0713,
+        "outputGain": -2.0
+      },
+      "lab": {
+        "id": "B1-C09-04",
+        "generatorVersion": 1,
+        "seed": 1898303534,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-sampler-grit",
+        "purpose": "Vintage sampler crunch for drums",
+        "instruments": "drum breaks, kicks, snares",
+        "chainSummary": "24.7 kHz / 11-bit > Soft drive +7 dB > tape (wow 3 %, age 44 %)",
+        "fingerprint": "91eac6239eb41cb8",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -10.0,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -2.3,
+          "nearestCandidate": 0.278,
+          "nearestReference": 0.128
+        }
+      }
+    },
+    {
+      "name": "Fat Groove",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Parallel hard drive with a short, tight room. For drum loops, snares, percussion.",
+      "chain": [
+        "sat",
+        "reverb"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "satMode": "Hard",
+        "satDrive": 12.0684,
+        "satTone": -0.0485,
+        "satMix": 0.299,
+        "reverbSize": 0.4293,
+        "reverbDecay": 0.8366,
+        "reverbDamping": 0.427,
+        "reverbPredelay": 1.2154,
+        "reverbMix": 0.0801,
+        "satOutput": -0.0171,
+        "drift": 0.0423,
+        "unstable": 0.0233,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B1-C09-06",
+        "generatorVersion": 1,
+        "seed": 1898303536,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-crushed-room/subtle",
+        "purpose": "Punchy, gritty drum ambience",
+        "instruments": "drum loops, snares, percussion",
+        "chainSummary": "Hard drive +12 dB > 0.8 s reverb",
+        "fingerprint": "e3321e9a05f067bd",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.5,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -54.299999999999997,
+          "nearestCandidate": 0.041,
+          "nearestReference": 0.067
+        }
+      }
+    },
+    {
+      "name": "Punchy Kit",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Short free-time ping-pong slaps with a touch of drive. For percussion, hi-hats, claps.",
+      "chain": [
+        "delay",
+        "sat",
+        "rs"
+      ],
+      "order": [
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": false,
+        "delayTime": 68.861599999999996,
+        "delayFeedback": 0.2217,
+        "delayPingPong": true,
+        "delayLowCut": 202.900000000000006,
+        "delayHighCut": 5274.5,
+        "delayMix": 0.1149,
+        "satMode": "Warm",
+        "satDrive": 6.8356,
+        "satTone": -0.3893,
+        "satMix": 0.4209,
+        "rsRate": 29026.400000000001455,
+        "rsBits": 12.8963,
+        "rsFilter": 6750.199999999999818,
+        "rsJitter": 0.1688,
+        "rsMix": 0.3693,
+        "satOutput": 0.0,
+        "drift": 0.0383,
+        "unstable": 0.0267,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B1-C09-07",
+        "generatorVersion": 1,
+        "seed": 1898303537,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-slap-bounce/subtle+crush",
+        "purpose": "Wide slapback for percussion",
+        "instruments": "percussion, hi-hats, claps",
+        "chainSummary": "69 ms ping-pong delay > Warm drive +7 dB > 29.0 kHz / 13-bit",
+        "fingerprint": "c9d4c9fa252bd7ce",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.3,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -66.5,
+          "nearestCandidate": 0.192,
+          "nearestReference": 0.214
+        }
+      }
+    },
+    {
+      "name": "Snappy Shaker",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Low-rate, low-bit crush with heavily aged tape. For drum loops, full beats.",
+      "chain": [
+        "rs",
+        "tape"
+      ],
+      "order": [
+        "rs",
+        "tape",
+        "sat",
+        "chorus",
+        "trem",
+        "rev",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "rsRate": 11827.200000000000728,
+        "rsBits": 9.978,
+        "rsFilter": 3844.599999999999909,
+        "rsJitter": 0.0185,
+        "rsMix": 0.4549,
+        "tapeDrive": 5.9527,
+        "tapeWow": 0.0645,
+        "tapeFlutter": 0.0287,
+        "tapeNoise": 0.1321,
+        "tapeAge": 0.7955,
+        "drift": 0.0644,
+        "unstable": 0.1568,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B1-C09-10",
+        "generatorVersion": 1,
+        "seed": 1898303540,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-lofi-kit",
+        "purpose": "Dusty, worn drum kits",
+        "instruments": "drum loops, full beats",
+        "chainSummary": "11.8 kHz / 10-bit > tape (wow 6 %, age 80 %)",
+        "fingerprint": "306ee7af68c118a1",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -7.4,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -0.7,
+          "nearestCandidate": 0.19,
+          "nearestReference": 0.087
+        }
+      }
+    },
+    {
+      "name": "Fat Kit",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Parallel hard drive with a short, tight room. For drum loops, snares, percussion.",
+      "chain": [
+        "sat",
+        "reverb"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "satMode": "Hard",
+        "satDrive": 6.7495,
+        "satTone": 0.093,
+        "satMix": 0.4661,
+        "reverbSize": 0.422,
+        "reverbDecay": 0.6873,
+        "reverbDamping": 0.5169,
+        "reverbPredelay": 7.0443,
+        "reverbMix": 0.3562,
+        "satOutput": -0.2789,
+        "drift": 0.0259,
+        "unstable": 0.0094,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B2-C09-01",
+        "generatorVersion": 1,
+        "seed": 2002363932,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-crushed-room/bold",
+        "purpose": "Punchy, gritty drum ambience",
+        "instruments": "drum loops, snares, percussion",
+        "chainSummary": "Hard drive +7 dB > 0.7 s reverb",
+        "fingerprint": "9db600e7fcb96777",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.3,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -64.400000000000006,
+          "nearestCandidate": 0.027,
+          "nearestReference": 0.076
+        }
+      }
+    },
+    {
+      "name": "Fat Tom",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "A small amount of fuzz blended under the drums with a short room. For kicks, snares, drum bus.",
+      "chain": [
+        "sat",
+        "reverb"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "satMode": "Fuzz",
+        "satDrive": 4.8283,
+        "satTone": 0.1422,
+        "satMix": 0.3819,
+        "reverbSize": 0.244,
+        "reverbDecay": 0.9056,
+        "reverbDamping": 0.3219,
+        "reverbPredelay": 3.8246,
+        "reverbMix": 0.2167,
+        "satOutput": -0.4267,
+        "drift": 0.0444,
+        "unstable": 0.0214,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B2-C09-03",
+        "generatorVersion": 1,
+        "seed": 2002363934,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-transient-fuzz/bold",
+        "purpose": "Aggressive parallel fuzz for drums",
+        "instruments": "kicks, snares, drum bus",
+        "chainSummary": "Fuzz drive +5 dB > 0.9 s reverb",
+        "fingerprint": "1fba21ff06974a75",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.5,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -49.700000000000003,
+          "nearestCandidate": 0.026,
+          "nearestReference": 0.085
+        }
+      }
+    },
+    {
+      "name": "Punchy Stomp",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Classic 12-bit sampler resolution, warm drive and tape weight. For drum breaks, kicks, snares.",
+      "chain": [
+        "rs",
+        "sat",
+        "tape"
+      ],
+      "order": [
+        "rs",
+        "sat",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "rsRate": 24096.900000000001455,
+        "rsBits": 12.8064,
+        "rsFilter": 11747.200000000000728,
+        "rsJitter": 0.0598,
+        "rsMix": 0.361,
+        "satMode": "Warm",
+        "satDrive": 8.675700000000001,
+        "satTone": 0.0512,
+        "satMix": 0.5198,
+        "tapeDrive": 3.2879,
+        "tapeWow": 0.0424,
+        "tapeFlutter": 0.012,
+        "tapeNoise": 0.0281,
+        "tapeAge": 0.4448,
+        "satOutput": -0.1537,
+        "drift": 0.0038,
+        "unstable": 0.0346,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B2-C09-04",
+        "generatorVersion": 1,
+        "seed": 2002363935,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-sampler-grit/subtle",
+        "purpose": "Vintage sampler crunch for drums",
+        "instruments": "drum breaks, kicks, snares",
+        "chainSummary": "24.1 kHz / 13-bit > Warm drive +9 dB > tape (wow 4 %, age 44 %)",
+        "fingerprint": "dcd85cf7af441539",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.6,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -6.3,
+          "nearestCandidate": 0.04,
+          "nearestReference": 0.14
+        }
+      }
+    },
+    {
+      "name": "Heavy Bus",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Low-rate, low-bit crush with heavily aged tape. For drum loops, full beats.",
+      "chain": [
+        "rs",
+        "tape"
+      ],
+      "order": [
+        "rs",
+        "tape",
+        "sat",
+        "chorus",
+        "trem",
+        "rev",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "rsRate": 7836.800000000000182,
+        "rsBits": 8.1905,
+        "rsFilter": 2084.699999999999818,
+        "rsJitter": 0.0635,
+        "rsMix": 0.395,
+        "tapeDrive": 2.3528,
+        "tapeWow": 0.0668,
+        "tapeFlutter": 0.0958,
+        "tapeNoise": 0.3368,
+        "tapeAge": 0.7001,
+        "drift": 0.1263,
+        "unstable": 0.145,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B2-C09-05",
+        "generatorVersion": 1,
+        "seed": 2002363936,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-lofi-kit/subtle",
+        "purpose": "Dusty, worn drum kits",
+        "instruments": "drum loops, full beats",
+        "chainSummary": "7.8 kHz / 8-bit > tape (wow 7 %, age 70 %)",
+        "fingerprint": "83d357f42130202f",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.0,
+          "levelChangeDb": -0.0,
+          "tailGrowthDb": -0.3,
+          "nearestCandidate": 0.033,
+          "nearestReference": 0.096
+        }
+      }
+    },
+    {
+      "name": "Snappy Rimshot",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "A medium room cut off by a sixteenth-note gate. For snares, toms, claps.",
+      "chain": [
+        "sat",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "trem",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.6872,
+        "reverbDecay": 2.2152,
+        "reverbDamping": 0.3961,
+        "reverbPredelay": 8.952400000000001,
+        "reverbMix": 0.2172,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 0.2787,
+        "tremStereo": 0.4576,
+        "satMode": "Warm",
+        "satDrive": 3.8563,
+        "satTone": -0.0253,
+        "satMix": 0.6439,
+        "satOutput": 0.0,
+        "drift": 0.0036,
+        "unstable": 0.0214,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B2-C09-08",
+        "generatorVersion": 1,
+        "seed": 2002363939,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-gated-snare/subtle+sat",
+        "purpose": "Eighties-style gated snare space",
+        "instruments": "snares, toms, claps",
+        "chainSummary": "Warm drive +4 dB > 2.2 s reverb > 1/16 square tremolo",
+        "fingerprint": "ebd0e12013a75e8d",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.4,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -21.0,
+          "nearestCandidate": 0.132,
+          "nearestReference": 0.131
+        }
+      }
+    },
+    {
+      "name": "Raw Kick",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Short free-time ping-pong slaps with a touch of drive. For percussion, hi-hats, claps.",
+      "chain": [
+        "delay",
+        "sat",
+        "rs"
+      ],
+      "order": [
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": false,
+        "delayTime": 92.763099999999994,
+        "delayFeedback": 0.2447,
+        "delayPingPong": true,
+        "delayLowCut": 214.599999999999994,
+        "delayHighCut": 9410.799999999999272,
+        "delayMix": 0.3248,
+        "satMode": "Warm",
+        "satDrive": 3.3392,
+        "satTone": 0.0358,
+        "satMix": 0.8761,
+        "rsRate": 26753.400000000001455,
+        "rsBits": 10.084899999999999,
+        "rsFilter": 7249.0,
+        "rsJitter": 0.0776,
+        "rsMix": 0.3078,
+        "satOutput": -0.1075,
+        "drift": 0.0272,
+        "unstable": 0.0049,
+        "outputGain": 1.5
+      },
+      "lab": {
+        "id": "B3-C09-02",
+        "generatorVersion": 1,
+        "seed": 2106424334,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-slap-bounce/bold+crush",
+        "purpose": "Wide slapback for percussion",
+        "instruments": "percussion, hi-hats, claps",
+        "chainSummary": "93 ms ping-pong delay > Warm drive +3 dB > 26.8 kHz / 10-bit",
+        "fingerprint": "24ad11af396762e7",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.0,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -77.599999999999994,
+          "nearestCandidate": 0.034,
+          "nearestReference": 0.211
+        }
+      }
+    },
+    {
+      "name": "Slammed Snare",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "A small amount of fuzz blended under the drums with a short room. For kicks, snares, drum bus.",
+      "chain": [
+        "sat",
+        "reverb"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "satMode": "Fuzz",
+        "satDrive": 4.5046,
+        "satTone": 0.0555,
+        "satMix": 0.1335,
+        "reverbSize": 0.4166,
+        "reverbDecay": 1.0098,
+        "reverbDamping": 0.5243,
+        "reverbPredelay": 1.6042,
+        "reverbMix": 0.084,
+        "satOutput": -0.1666,
+        "drift": 0.0009,
+        "unstable": 0.0276,
+        "outputGain": -0.5
+      },
+      "lab": {
+        "id": "B3-C09-03",
+        "generatorVersion": 1,
+        "seed": 2106424335,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-transient-fuzz/subtle",
+        "purpose": "Aggressive parallel fuzz for drums",
+        "instruments": "kicks, snares, drum bus",
+        "chainSummary": "Fuzz drive +5 dB > 1.0 s reverb",
+        "fingerprint": "d9272a17b27895e7",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.4,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -45.299999999999997,
+          "nearestCandidate": 0.029,
+          "nearestReference": 0.083
+        }
+      }
+    },
+    {
+      "name": "Fat Clap",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "Short free-time ping-pong slaps with a touch of drive. For percussion, hi-hats, claps.",
+      "chain": [
+        "delay",
+        "sat"
+      ],
+      "order": [
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": false,
+        "delayTime": 59.689599999999999,
+        "delayFeedback": 0.1061,
+        "delayPingPong": true,
+        "delayLowCut": 230.599999999999994,
+        "delayHighCut": 7360.600000000000364,
+        "delayMix": 0.2705,
+        "satMode": "Warm",
+        "satDrive": 4.9853,
+        "satTone": -0.0703,
+        "satMix": 0.6165,
+        "satOutput": 0.0,
+        "drift": 0.0017,
+        "unstable": 0.02,
+        "outputGain": 0.0
+      },
+      "lab": {
+        "id": "B3-C09-07",
+        "generatorVersion": 1,
+        "seed": 2106424339,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-slap-bounce/bold",
+        "purpose": "Wide slapback for percussion",
+        "instruments": "percussion, hi-hats, claps",
+        "chainSummary": "60 ms ping-pong delay > Warm drive +5 dB",
+        "fingerprint": "6478aa308494ced8",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.0,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -72.700000000000003,
+          "nearestCandidate": 0.031,
+          "nearestReference": 0.266
+        }
+      }
+    },
+    {
+      "name": "Tight Clap",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "A medium room cut off by a sixteenth-note gate. For snares, toms, claps.",
+      "chain": [
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.6737,
+        "reverbDecay": 1.8396,
+        "reverbDamping": 0.2856,
+        "reverbPredelay": 5.8557,
+        "reverbMix": 0.4547,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 0.8063,
+        "tremStereo": 0.7651,
+        "drift": 0.0327,
+        "unstable": 0.0255,
+        "outputGain": 2.5
+      },
+      "lab": {
+        "id": "B3-C09-08",
+        "generatorVersion": 1,
+        "seed": 2106424340,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-gated-snare/bold",
+        "purpose": "Eighties-style gated snare space",
+        "instruments": "snares, toms, claps",
+        "chainSummary": "1.8 s reverb > 1/16 square tremolo",
+        "fingerprint": "cf7e5707c17656e4",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.4,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -24.199999999999999,
+          "nearestCandidate": 0.034,
+          "nearestReference": 0.26
+        }
+      }
+    },
+    {
+      "name": "Heavy Rimshot",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "A medium room cut off by a sixteenth-note gate. For snares, toms, claps.",
+      "chain": [
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.6603,
+        "reverbDecay": 1.464,
+        "reverbDamping": 0.4252,
+        "reverbPredelay": 2.7589,
+        "reverbMix": 0.475,
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Square",
+        "tremDepth": 0.7302,
+        "tremStereo": 0.0727,
+        "drift": 0.0389,
+        "unstable": 0.0366,
+        "outputGain": 2.5
+      },
+      "lab": {
+        "id": "B4-C09-08",
+        "generatorVersion": 1,
+        "seed": 2210484741,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-gated-snare/bold",
+        "purpose": "Eighties-style gated snare space",
+        "instruments": "snares, toms, claps",
+        "chainSummary": "1.5 s reverb > 1/8 square tremolo",
+        "fingerprint": "e72d17190373b3bc",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.4,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -25.300000000000001,
+          "nearestCandidate": 0.043,
+          "nearestReference": 0.265
+        }
+      }
+    },
+    {
+      "name": "Raw Shaker",
+      "category": "SHOBEATS Lab / Drums & Percussion",
+      "description": "A medium room cut off by a sixteenth-note gate. For snares, toms, claps.",
+      "chain": [
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.6468,
+        "reverbDecay": 2.3884,
+        "reverbDamping": 0.3147,
+        "reverbPredelay": 9.6622,
+        "reverbMix": 0.4953,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 0.6541,
+        "tremStereo": 0.3802,
+        "drift": 0.0452,
+        "unstable": 0.0477,
+        "outputGain": 2.5
+      },
+      "lab": {
+        "id": "B5-C09-08",
+        "generatorVersion": 1,
+        "seed": 2314545142,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Drums & Percussion",
+        "architecture": "drums-gated-snare/bold",
+        "purpose": "Eighties-style gated snare space",
+        "instruments": "snares, toms, claps",
+        "chainSummary": "2.4 s reverb > 1/16 square tremolo",
+        "fingerprint": "9f9961ce40b00f09",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.0,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -20.100000000000001,
+          "nearestCandidate": 0.025,
+          "nearestReference": 0.263
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,2800 @@
+{
+  "format": "shobeats-fx-lab",
+  "version": 1,
+  "category": "SHOBEATS Lab / Rhythmic & Reverse",
+  "presets": [
+    {
+      "name": "Gated Bounce",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Ping-pong echoes fed into the reverser, so every repeat plays backwards. For vocals, guitar, synth leads.",
+      "chain": [
+        "sat",
+        "delay",
+        "rev"
+      ],
+      "order": [
+        "sat",
+        "delay",
+        "rev",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.6158,
+        "delayLowCut": 267.699999999999989,
+        "delayHighCut": 2682.099999999999909,
+        "delayMix": 0.45,
+        "delayPingPong": true,
+        "revSync": true,
+        "revDivision": "1/8",
+        "revPitch": 0.0,
+        "revMix": 0.4084,
+        "satMode": "Warm",
+        "satDrive": 2.6469,
+        "satTone": -0.0852,
+        "satMix": 0.7696,
+        "satOutput": 0.0,
+        "drift": 0.0424,
+        "unstable": 0.0901,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B1-C07-01",
+        "generatorVersion": 1,
+        "seed": 1898283129,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-reverse-ladder+sat",
+        "purpose": "Echoes that come back reversed",
+        "instruments": "vocals, guitar, synth leads",
+        "chainSummary": "Warm drive +3 dB > 1/8 D ping-pong delay > 1/8 reverse",
+        "fingerprint": "6201ac7e6a654c6b",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.3,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -14.6,
+          "nearestCandidate": 0.194,
+          "nearestReference": 0.132
+        }
+      }
+    },
+    {
+      "name": "Ducking Pulse",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A saw-shaped duck on every beat, soft drive and short echoes. For pads, chords, bass synths.",
+      "chain": [
+        "trem",
+        "sat",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "sat",
+        "delay",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/4",
+        "tremShape": "Saw",
+        "tremDepth": 0.7635,
+        "tremStereo": 0.1773,
+        "satMode": "Soft",
+        "satDrive": 6.2853,
+        "satTone": -0.1308,
+        "satMix": 0.4514,
+        "delaySync": true,
+        "delayDivision": "1/16 D",
+        "delayFeedback": 0.1745,
+        "delayLowCut": 201.199999999999989,
+        "delayHighCut": 3542.300000000000182,
+        "delayMix": 0.1342,
+        "satOutput": 0.0,
+        "drift": 0.0579,
+        "unstable": 0.0124,
+        "outputGain": 2.0
+      },
+      "lab": {
+        "id": "B1-C07-02",
+        "generatorVersion": 1,
+        "seed": 1898283130,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-saw-ducker",
+        "purpose": "Sidechain-style pumping without a sidechain",
+        "instruments": "pads, chords, bass synths",
+        "chainSummary": "1/4 saw tremolo > Soft drive +6 dB > 1/16 D delay",
+        "fingerprint": "347f16cd8f29b01a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.8,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -62.5,
+          "nearestCandidate": 0.101,
+          "nearestReference": 0.25
+        }
+      }
+    },
+    {
+      "name": "Rolling Rewind",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "trem",
+        "delay",
+        "reverb"
+      ],
+      "order": [
+        "trem",
+        "delay",
+        "reverb",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/4 T",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.3426,
+        "delaySync": true,
+        "delayDivision": "1/4 T",
+        "delayFeedback": 0.2964,
+        "delayLowCut": 278.399999999999977,
+        "delayHighCut": 6789.5,
+        "delayMix": 0.4198,
+        "reverbSize": 0.2955,
+        "reverbDecay": 0.5426,
+        "reverbDamping": 0.5979,
+        "reverbPredelay": 5.2311,
+        "reverbMix": 0.1474,
+        "drift": 0.0257,
+        "unstable": 0.0483,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B1-C07-03",
+        "generatorVersion": 1,
+        "seed": 1898283131,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate/bold+room",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "1/4 T square tremolo > 1/4 T delay > 0.5 s reverb",
+        "fingerprint": "894c63ec8c85649a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.0,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -28.300000000000001,
+          "nearestCandidate": 0.171,
+          "nearestReference": 0.205
+        }
+      }
+    },
+    {
+      "name": "Strobing Motor",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.7599,
+        "reverbDecay": 3.0325,
+        "reverbDamping": 0.3267,
+        "reverbPredelay": 41.757100000000001,
+        "reverbMix": 0.5277,
+        "tremSync": true,
+        "tremDivision": "1/16 T",
+        "tremShape": "Square",
+        "tremDepth": 0.8989,
+        "tremStereo": 0.9435,
+        "drift": 0.016,
+        "unstable": 0.0644,
+        "outputGain": 3.0
+      },
+      "lab": {
+        "id": "B1-C07-04",
+        "generatorVersion": 1,
+        "seed": 1898283132,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "3.0 s reverb > 1/16 T square tremolo",
+        "fingerprint": "944066075bdd3de7",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.6,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -9.800000000000001,
+          "nearestCandidate": 0.25,
+          "nearestReference": 0.257
+        }
+      }
+    },
+    {
+      "name": "Rolling Strut",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "rev",
+        "trem",
+        "reverb"
+      ],
+      "order": [
+        "rev",
+        "trem",
+        "reverb",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "delay"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4 D",
+        "revPitch": 0.0,
+        "revMix": 0.382,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Triangle",
+        "tremDepth": 0.4574,
+        "tremStereo": 0.2546,
+        "reverbSize": 0.4084,
+        "reverbDecay": 0.5821,
+        "reverbDamping": 0.4807,
+        "reverbPredelay": 2.1296,
+        "reverbMix": 0.1672,
+        "drift": 0.0243,
+        "unstable": 0.013,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B1-C07-05",
+        "generatorVersion": 1,
+        "seed": 1898283133,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse/subtle+room",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "1/4 D reverse > 1/16 triangle tremolo > 0.6 s reverb",
+        "fingerprint": "d62e8260ef516174",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.8,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -8.6,
+          "nearestCandidate": 0.223,
+          "nearestReference": 0.119
+        }
+      }
+    },
+    {
+      "name": "Clipped Stepper",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Ping-pong echoes fed into the reverser, so every repeat plays backwards. For vocals, guitar, synth leads.",
+      "chain": [
+        "delay",
+        "rev"
+      ],
+      "order": [
+        "delay",
+        "rev",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.4771,
+        "delayLowCut": 297.399999999999977,
+        "delayHighCut": 6739.699999999999818,
+        "delayMix": 0.5218,
+        "delayPingPong": true,
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 0.0,
+        "revMix": 0.6755,
+        "drift": 0.1605,
+        "unstable": 0.0712,
+        "outputGain": 2.5
+      },
+      "lab": {
+        "id": "B1-C07-06",
+        "generatorVersion": 1,
+        "seed": 1898283134,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-reverse-ladder/bold",
+        "purpose": "Echoes that come back reversed",
+        "instruments": "vocals, guitar, synth leads",
+        "chainSummary": "1/4 D ping-pong delay > 1/4 reverse",
+        "fingerprint": "5e4742d6b830b2b8",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.0,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -7.0,
+          "nearestCandidate": 0.192,
+          "nearestReference": 0.083
+        }
+      }
+    },
+    {
+      "name": "Offbeat Engine",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A saw-shaped duck on every beat, soft drive and short echoes. For pads, chords, bass synths.",
+      "chain": [
+        "trem",
+        "sat",
+        "delay",
+        "reverb"
+      ],
+      "order": [
+        "trem",
+        "sat",
+        "delay",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "rev"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Saw",
+        "tremDepth": 1.0,
+        "tremStereo": 0.1217,
+        "satMode": "Soft",
+        "satDrive": 7.9314,
+        "satTone": -0.2369,
+        "satMix": 0.9123,
+        "delaySync": true,
+        "delayDivision": "1/16 D",
+        "delayFeedback": 0.242,
+        "delayLowCut": 236.900000000000006,
+        "delayHighCut": 7167.600000000000364,
+        "delayMix": 0.2076,
+        "reverbSize": 0.3059,
+        "reverbDecay": 1.2367,
+        "reverbDamping": 0.4928,
+        "reverbPredelay": 3.4596,
+        "reverbMix": 0.1864,
+        "satOutput": 0.0,
+        "drift": 0.0064,
+        "unstable": 0.0059,
+        "outputGain": 2.0
+      },
+      "lab": {
+        "id": "B1-C07-07",
+        "generatorVersion": 1,
+        "seed": 1898283135,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-saw-ducker/bold+room",
+        "purpose": "Sidechain-style pumping without a sidechain",
+        "instruments": "pads, chords, bass synths",
+        "chainSummary": "1/8 saw tremolo > Soft drive +8 dB > 1/16 D delay > 1.2 s reverb",
+        "fingerprint": "2d2d8213d5b6b4ed",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.1,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -37.200000000000003,
+          "nearestCandidate": 0.07,
+          "nearestReference": 0.121
+        }
+      }
+    },
+    {
+      "name": "Bouncing Ladder",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "trem",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8 T",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.062,
+        "delaySync": true,
+        "delayDivision": "1/16 D",
+        "delayFeedback": 0.3714,
+        "delayLowCut": 472.899999999999977,
+        "delayHighCut": 5413.199999999999818,
+        "delayMix": 0.3044,
+        "drift": 0.0043,
+        "unstable": 0.0932,
+        "outputGain": 2.5
+      },
+      "lab": {
+        "id": "B1-C07-08",
+        "generatorVersion": 1,
+        "seed": 1898283136,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate/bold",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "1/8 T square tremolo > 1/16 D delay",
+        "fingerprint": "c41bae4bf4c1d3bc",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.1,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -45.799999999999997,
+          "nearestCandidate": 0.17,
+          "nearestReference": 0.106
+        }
+      }
+    },
+    {
+      "name": "Chopped Pendulum",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "tape",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "tape",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.9432,
+        "reverbDecay": 3.7997,
+        "reverbDamping": 0.1705,
+        "reverbPredelay": 26.3201,
+        "reverbMix": 0.5936,
+        "tremSync": true,
+        "tremDivision": "1/16 T",
+        "tremShape": "Square",
+        "tremDepth": 0.9361,
+        "tremStereo": 0.3935,
+        "tapeDrive": 8.2904,
+        "tapeWow": 0.3646,
+        "tapeFlutter": 0.0643,
+        "tapeNoise": 0.1479,
+        "tapeAge": 0.4182,
+        "tapeMix": 0.687,
+        "drift": 0.064,
+        "unstable": 0.0271,
+        "outputGain": 5.0
+      },
+      "lab": {
+        "id": "B1-C07-09",
+        "generatorVersion": 1,
+        "seed": 1898283137,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall+tape",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "tape (wow 36 %, age 42 %) > 3.8 s reverb > 1/16 T square tremolo",
+        "fingerprint": "bd7ae38e03dd9490",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.7,
+          "levelChangeDb": -0.0,
+          "tailGrowthDb": -11.4,
+          "nearestCandidate": 0.19,
+          "nearestReference": 0.222
+        }
+      }
+    },
+    {
+      "name": "Bouncing Bounce",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "rev",
+        "trem"
+      ],
+      "order": [
+        "rev",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 0.0,
+        "revMix": 0.7853,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.5838,
+        "drift": 0.1452,
+        "unstable": 0.0284,
+        "outputGain": 1.5
+      },
+      "lab": {
+        "id": "B1-C07-10",
+        "generatorVersion": 1,
+        "seed": 1898283138,
+        "baseSeed": 2026,
+        "batch": 1,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse/bold",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "1/4 reverse > 1/16 square tremolo",
+        "fingerprint": "82ce4ccccaa7bc67",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -1.9,
+          "levelChangeDb": -3.9,
+          "tailGrowthDb": -93.700000000000003,
+          "nearestCandidate": 0.216,
+          "nearestReference": 0.241
+        }
+      }
+    },
+    {
+      "name": "Shuffled Motor",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Ping-pong echoes fed into the reverser, so every repeat plays backwards. For vocals, guitar, synth leads.",
+      "chain": [
+        "delay",
+        "rev",
+        "reverb"
+      ],
+      "order": [
+        "delay",
+        "rev",
+        "reverb",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.558,
+        "delayLowCut": 131.5,
+        "delayHighCut": 6493.899999999999636,
+        "delayMix": 0.4613,
+        "delayPingPong": true,
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 0.0,
+        "revMix": 0.4699,
+        "reverbSize": 0.2959,
+        "reverbDecay": 1.3171,
+        "reverbDamping": 0.4035,
+        "reverbPredelay": 8.585100000000001,
+        "reverbMix": 0.2501,
+        "drift": 0.1947,
+        "unstable": 0.0989,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B2-C07-01",
+        "generatorVersion": 1,
+        "seed": 2002343530,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-reverse-ladder+room",
+        "purpose": "Echoes that come back reversed",
+        "instruments": "vocals, guitar, synth leads",
+        "chainSummary": "1/8 D ping-pong delay > 1/2 reverse > 1.3 s reverb",
+        "fingerprint": "e8d3b4a2cdacd99f",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.7,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -4.2,
+          "nearestCandidate": 0.083,
+          "nearestReference": 0.128
+        }
+      }
+    },
+    {
+      "name": "Bouncing Stepper",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "tape",
+        "trem",
+        "delay"
+      ],
+      "order": [
+        "tape",
+        "trem",
+        "delay",
+        "sat",
+        "rs",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/16 T",
+        "tremShape": "Square",
+        "tremDepth": 0.8207,
+        "tremStereo": 0.033,
+        "delaySync": true,
+        "delayDivision": "1/4 T",
+        "delayFeedback": 0.4313,
+        "delayLowCut": 206.699999999999989,
+        "delayHighCut": 5030.399999999999636,
+        "delayMix": 0.1844,
+        "tapeDrive": 6.2259,
+        "tapeWow": 0.4832,
+        "tapeFlutter": 0.2441,
+        "tapeNoise": 0.1824,
+        "tapeAge": 0.3817,
+        "tapeMix": 0.5319,
+        "drift": 0.0459,
+        "unstable": 0.0709,
+        "outputGain": 5.5
+      },
+      "lab": {
+        "id": "B2-C07-03",
+        "generatorVersion": 1,
+        "seed": 2002343532,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate+tape",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "tape (wow 48 %, age 38 %) > 1/16 T square tremolo > 1/4 T delay",
+        "fingerprint": "73d6e136f4d92d77",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.9,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -17.0,
+          "nearestCandidate": 0.188,
+          "nearestReference": 0.199
+        }
+      }
+    },
+    {
+      "name": "Pumping Engine",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.7437,
+        "reverbDecay": 4.8101,
+        "reverbDamping": 0.2454,
+        "reverbPredelay": 24.725000000000001,
+        "reverbMix": 0.638,
+        "tremSync": true,
+        "tremDivision": "1/16 T",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.0754,
+        "drift": 0.0969,
+        "unstable": 0.0298,
+        "outputGain": 2.0
+      },
+      "lab": {
+        "id": "B2-C07-04",
+        "generatorVersion": 1,
+        "seed": 2002343533,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall/bold",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "4.8 s reverb > 1/16 T square tremolo",
+        "fingerprint": "67ed4ea972ffd094",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.4,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -8.199999999999999,
+          "nearestCandidate": 0.049,
+          "nearestReference": 0.262
+        }
+      }
+    },
+    {
+      "name": "Rewound Shuffle",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "sat",
+        "rev",
+        "trem"
+      ],
+      "order": [
+        "sat",
+        "rev",
+        "trem",
+        "rs",
+        "tape",
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4 D",
+        "revPitch": 0.0,
+        "revMix": 0.9455,
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Triangle",
+        "tremDepth": 0.7668,
+        "tremStereo": 0.0696,
+        "satMode": "Soft",
+        "satDrive": 3.841,
+        "satTone": -0.0057,
+        "satMix": 0.894,
+        "satOutput": 0.0,
+        "drift": 0.1423,
+        "unstable": 0.0167,
+        "outputGain": 6.0
+      },
+      "lab": {
+        "id": "B2-C07-05",
+        "generatorVersion": 1,
+        "seed": 2002343534,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse/bold+sat",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "Soft drive +4 dB > 1/4 D reverse > 1/8 triangle tremolo",
+        "fingerprint": "9087f4044927f54a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.4,
+          "levelChangeDb": -0.6,
+          "tailGrowthDb": -8.4,
+          "nearestCandidate": 0.205,
+          "nearestReference": 0.119
+        }
+      }
+    },
+    {
+      "name": "Pumping Pulse",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Ping-pong echoes fed into the reverser, so every repeat plays backwards. For vocals, guitar, synth leads.",
+      "chain": [
+        "delay",
+        "rev"
+      ],
+      "order": [
+        "delay",
+        "rev",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.6194,
+        "delayLowCut": 146.099999999999994,
+        "delayHighCut": 4532.800000000000182,
+        "delayMix": 0.45,
+        "delayPingPong": true,
+        "revSync": true,
+        "revDivision": "1/8",
+        "revPitch": 0.0,
+        "revMix": 0.4955,
+        "drift": 0.1854,
+        "unstable": 0.0934,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B2-C07-06",
+        "generatorVersion": 1,
+        "seed": 2002343535,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-reverse-ladder/bold",
+        "purpose": "Echoes that come back reversed",
+        "instruments": "vocals, guitar, synth leads",
+        "chainSummary": "1/4 D ping-pong delay > 1/8 reverse",
+        "fingerprint": "92f3b47382a97586",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.3,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -4.7,
+          "nearestCandidate": 0.028,
+          "nearestReference": 0.101
+        }
+      }
+    },
+    {
+      "name": "Ducking Bounce",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A saw-shaped duck on every beat, soft drive and short echoes. For pads, chords, bass synths.",
+      "chain": [
+        "trem",
+        "sat",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "sat",
+        "delay",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Saw",
+        "tremDepth": 0.8458,
+        "tremStereo": 0.1426,
+        "satMode": "Soft",
+        "satDrive": 7.0062,
+        "satTone": -0.3774,
+        "satMix": 1.0,
+        "delaySync": true,
+        "delayDivision": "1/16 D",
+        "delayFeedback": 0.2618,
+        "delayLowCut": 289.600000000000023,
+        "delayHighCut": 2644.599999999999909,
+        "delayMix": 0.1626,
+        "satOutput": 0.0,
+        "drift": 0.0043,
+        "unstable": 0.02,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B2-C07-07",
+        "generatorVersion": 1,
+        "seed": 2002343536,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-saw-ducker/bold",
+        "purpose": "Sidechain-style pumping without a sidechain",
+        "instruments": "pads, chords, bass synths",
+        "chainSummary": "1/8 saw tremolo > Soft drive +7 dB > 1/16 D delay",
+        "fingerprint": "354358174e60b387",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.9,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -53.0,
+          "nearestCandidate": 0.03,
+          "nearestReference": 0.26
+        }
+      }
+    },
+    {
+      "name": "Gated Gate",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "trem",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8 T",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.7523,
+        "delaySync": true,
+        "delayDivision": "1/16 D",
+        "delayFeedback": 0.3064,
+        "delayLowCut": 351.100000000000023,
+        "delayHighCut": 4010.599999999999909,
+        "delayMix": 0.3843,
+        "drift": 0.0168,
+        "unstable": 0.0154,
+        "outputGain": 3.0
+      },
+      "lab": {
+        "id": "B2-C07-08",
+        "generatorVersion": 1,
+        "seed": 2002343537,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate/bold",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "1/8 T square tremolo > 1/16 D delay",
+        "fingerprint": "740c3f155dbac68b",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.9,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -49.299999999999997,
+          "nearestCandidate": 0.033,
+          "nearestReference": 0.085
+        }
+      }
+    },
+    {
+      "name": "Ducking Rewind",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "tape",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "tape",
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.927,
+        "reverbDecay": 3.0773,
+        "reverbDamping": 0.3392,
+        "reverbPredelay": 64.287999999999997,
+        "reverbMix": 0.7236,
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.5254,
+        "tapeDrive": 5.8662,
+        "tapeWow": 0.3665,
+        "tapeFlutter": 0.2447,
+        "tapeNoise": 0.1697,
+        "tapeAge": 0.4112,
+        "tapeMix": 0.5404,
+        "drift": 0.0917,
+        "unstable": 0.0652,
+        "outputGain": 6.0
+      },
+      "lab": {
+        "id": "B2-C07-09",
+        "generatorVersion": 1,
+        "seed": 2002343538,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall/bold+tape",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "tape (wow 37 %, age 41 %) > 3.1 s reverb > 1/8 square tremolo",
+        "fingerprint": "36927f2fc0d0792a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -7.6,
+          "levelChangeDb": -3.1,
+          "tailGrowthDb": -14.800000000000001,
+          "nearestCandidate": 0.036,
+          "nearestReference": 0.219
+        }
+      }
+    },
+    {
+      "name": "Rolling Clockwork",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "rev",
+        "trem",
+        "reverb"
+      ],
+      "order": [
+        "rev",
+        "trem",
+        "reverb",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "delay"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 0.0,
+        "revMix": 0.9667,
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Triangle",
+        "tremDepth": 0.9375,
+        "tremStereo": 0.3988,
+        "reverbSize": 0.3038,
+        "reverbDecay": 0.8083,
+        "reverbDamping": 0.4122,
+        "reverbPredelay": 0.8854,
+        "reverbMix": 0.1525,
+        "drift": 0.0722,
+        "unstable": 0.0129,
+        "outputGain": 6.0
+      },
+      "lab": {
+        "id": "B2-C07-10",
+        "generatorVersion": 1,
+        "seed": 2002343539,
+        "baseSeed": 2026,
+        "batch": 2,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse/bold+room",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "1/4 reverse > 1/8 triangle tremolo > 0.8 s reverb",
+        "fingerprint": "226dbe6ebb576df7",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.8,
+          "levelChangeDb": -2.4,
+          "tailGrowthDb": -29.5,
+          "nearestCandidate": 0.046,
+          "nearestReference": 0.114
+        }
+      }
+    },
+    {
+      "name": "Syncopated Engine",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Ping-pong echoes fed into the reverser, so every repeat plays backwards. For vocals, guitar, synth leads.",
+      "chain": [
+        "delay",
+        "rev"
+      ],
+      "order": [
+        "delay",
+        "rev",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.5002,
+        "delayLowCut": 322.899999999999977,
+        "delayHighCut": 4367.5,
+        "delayMix": 0.3962,
+        "delayPingPong": true,
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 12.0,
+        "revMix": 0.5314,
+        "drift": 0.1901,
+        "unstable": 0.0605,
+        "outputGain": 3.0
+      },
+      "lab": {
+        "id": "B3-C07-01",
+        "generatorVersion": 1,
+        "seed": 2106403931,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-reverse-ladder",
+        "purpose": "Echoes that come back reversed",
+        "instruments": "vocals, guitar, synth leads",
+        "chainSummary": "1/8 D ping-pong delay > 1/2 reverse +12 st",
+        "fingerprint": "dc60210d7a0869a6",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -5.4,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -2.3,
+          "nearestCandidate": 0.044,
+          "nearestReference": 0.1
+        }
+      }
+    },
+    {
+      "name": "Shuffled Shuffle",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A saw-shaped duck on every beat, soft drive and short echoes. For pads, chords, bass synths.",
+      "chain": [
+        "trem",
+        "sat",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "sat",
+        "delay",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/4",
+        "tremShape": "Saw",
+        "tremDepth": 0.7984,
+        "tremStereo": 0.019,
+        "satMode": "Soft",
+        "satDrive": 4.435,
+        "satTone": -0.4117,
+        "satMix": 0.7282,
+        "delaySync": true,
+        "delayDivision": "1/8",
+        "delayFeedback": 0.2141,
+        "delayLowCut": 300.600000000000023,
+        "delayHighCut": 6249.600000000000364,
+        "delayMix": 0.165,
+        "satOutput": 0.0,
+        "drift": 0.0724,
+        "unstable": 0.01,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B3-C07-02",
+        "generatorVersion": 1,
+        "seed": 2106403932,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-saw-ducker",
+        "purpose": "Sidechain-style pumping without a sidechain",
+        "instruments": "pads, chords, bass synths",
+        "chainSummary": "1/4 saw tremolo > Soft drive +4 dB > 1/8 delay",
+        "fingerprint": "833a33e3e4b9424d",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.0,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -45.100000000000001,
+          "nearestCandidate": 0.029,
+          "nearestReference": 0.244
+        }
+      }
+    },
+    {
+      "name": "Syncopated Pulse",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "tape",
+        "trem",
+        "delay"
+      ],
+      "order": [
+        "tape",
+        "trem",
+        "delay",
+        "sat",
+        "rs",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/16 T",
+        "tremShape": "Square",
+        "tremDepth": 0.7103,
+        "tremStereo": 0.7233,
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.3663,
+        "delayLowCut": 153.5,
+        "delayHighCut": 3727.0,
+        "delayMix": 0.2459,
+        "tapeDrive": 7.7773,
+        "tapeWow": 0.4164,
+        "tapeFlutter": 0.1402,
+        "tapeNoise": 0.1839,
+        "tapeAge": 0.2621,
+        "tapeMix": 0.5609,
+        "drift": 0.0436,
+        "unstable": 0.0342,
+        "outputGain": 5.5
+      },
+      "lab": {
+        "id": "B3-C07-03",
+        "generatorVersion": 1,
+        "seed": 2106403933,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate+tape",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "tape (wow 42 %, age 26 %) > 1/16 T square tremolo > 1/8 D delay",
+        "fingerprint": "4a33a92df1fcb0a5",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.2,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -18.399999999999999,
+          "nearestCandidate": 0.035,
+          "nearestReference": 0.217
+        }
+      }
+    },
+    {
+      "name": "Shuffled Groove",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.7275,
+        "reverbDecay": 4.0877,
+        "reverbDamping": 0.1641,
+        "reverbPredelay": 62.692799999999998,
+        "reverbMix": 0.5899,
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.2072,
+        "drift": 0.0779,
+        "unstable": 0.0951,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B3-C07-04",
+        "generatorVersion": 1,
+        "seed": 2106403934,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall/bold",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "4.1 s reverb > 1/8 square tremolo",
+        "fingerprint": "31854f5b8d7695c7",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.7,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -10.6,
+          "nearestCandidate": 0.032,
+          "nearestReference": 0.263
+        }
+      }
+    },
+    {
+      "name": "Chopped Motor",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "rev",
+        "trem"
+      ],
+      "order": [
+        "rev",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/8",
+        "revPitch": 0.0,
+        "revMix": 0.6168,
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Triangle",
+        "tremDepth": 0.826,
+        "tremStereo": 0.8845,
+        "drift": 0.0778,
+        "unstable": 0.0097,
+        "outputGain": 4.0
+      },
+      "lab": {
+        "id": "B3-C07-05",
+        "generatorVersion": 1,
+        "seed": 2106403935,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "1/8 reverse > 1/8 triangle tremolo",
+        "fingerprint": "54fef485ddb7a8be",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -1.7,
+          "levelChangeDb": -1.7,
+          "tailGrowthDb": -87.799999999999997,
+          "nearestCandidate": 0.055,
+          "nearestReference": 0.233
+        }
+      }
+    },
+    {
+      "name": "Swung Pendulum",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Ping-pong echoes fed into the reverser, so every repeat plays backwards. For vocals, guitar, synth leads.",
+      "chain": [
+        "delay",
+        "rev"
+      ],
+      "order": [
+        "delay",
+        "rev",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.5616,
+        "delayLowCut": 358.800000000000011,
+        "delayHighCut": 3048.599999999999909,
+        "delayMix": 0.4713,
+        "delayPingPong": true,
+        "revSync": true,
+        "revDivision": "1/8",
+        "revPitch": 12.0,
+        "revMix": 0.4427,
+        "drift": 0.0104,
+        "unstable": 0.0155,
+        "outputGain": 1.5
+      },
+      "lab": {
+        "id": "B3-C07-06",
+        "generatorVersion": 1,
+        "seed": 2106403936,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-reverse-ladder",
+        "purpose": "Echoes that come back reversed",
+        "instruments": "vocals, guitar, synth leads",
+        "chainSummary": "1/4 D ping-pong delay > 1/8 reverse +12 st",
+        "fingerprint": "d75246f95e556b00",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.6,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -8.1,
+          "nearestCandidate": 0.035,
+          "nearestReference": 0.116
+        }
+      }
+    },
+    {
+      "name": "Rewound Clockwork",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A saw-shaped duck on every beat, soft drive and short echoes. For pads, chords, bass synths.",
+      "chain": [
+        "tape",
+        "trem",
+        "sat",
+        "delay"
+      ],
+      "order": [
+        "tape",
+        "trem",
+        "sat",
+        "delay",
+        "rs",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Saw",
+        "tremDepth": 1.0,
+        "tremStereo": 0.1634,
+        "satMode": "Warm",
+        "satDrive": 6.0811,
+        "satTone": 0.0822,
+        "satMix": 0.6871,
+        "delaySync": true,
+        "delayDivision": "1/16 D",
+        "delayFeedback": 0.2816,
+        "delayLowCut": 354.0,
+        "delayHighCut": 3512.699999999999818,
+        "delayMix": 0.2475,
+        "tapeDrive": 4.6367,
+        "tapeWow": 0.1863,
+        "tapeFlutter": 0.1089,
+        "tapeNoise": 0.0649,
+        "tapeAge": 0.2519,
+        "tapeMix": 0.534,
+        "satOutput": -0.2465,
+        "drift": 0.056,
+        "unstable": 0.041,
+        "outputGain": 6.0
+      },
+      "lab": {
+        "id": "B3-C07-07",
+        "generatorVersion": 1,
+        "seed": 2106403937,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-saw-ducker/bold+tape",
+        "purpose": "Sidechain-style pumping without a sidechain",
+        "instruments": "pads, chords, bass synths",
+        "chainSummary": "tape (wow 19 %, age 25 %) > 1/8 saw tremolo > Warm drive +6 dB > 1/16 D delay",
+        "fingerprint": "ca90bbd24f270664",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.5,
+          "levelChangeDb": -1.0,
+          "tailGrowthDb": -23.300000000000001,
+          "nearestCandidate": 0.061,
+          "nearestReference": 0.216
+        }
+      }
+    },
+    {
+      "name": "Backward Gate",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "trem",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8 T",
+        "tremShape": "Square",
+        "tremDepth": 0.7267,
+        "tremStereo": 0.4426,
+        "delaySync": true,
+        "delayDivision": "1/4 T",
+        "delayFeedback": 0.4413,
+        "delayLowCut": 260.699999999999989,
+        "delayHighCut": 2971.5,
+        "delayMix": 0.3572,
+        "drift": 0.0292,
+        "unstable": 0.0376,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B3-C07-08",
+        "generatorVersion": 1,
+        "seed": 2106403938,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "1/8 T square tremolo > 1/4 T delay",
+        "fingerprint": "ec3ef371f1b9baec",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -1.9,
+          "levelChangeDb": -0.1,
+          "tailGrowthDb": -21.800000000000001,
+          "nearestCandidate": 0.04,
+          "nearestReference": 0.084
+        }
+      }
+    },
+    {
+      "name": "Gated Ladder",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.9108,
+        "reverbDecay": 4.8549,
+        "reverbDamping": 0.2579,
+        "reverbPredelay": 47.255800000000001,
+        "reverbMix": 0.6755,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.6572,
+        "drift": 0.0866,
+        "unstable": 0.0206,
+        "outputGain": 5.0
+      },
+      "lab": {
+        "id": "B3-C07-09",
+        "generatorVersion": 1,
+        "seed": 2106403939,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall/bold",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "4.9 s reverb > 1/16 square tremolo",
+        "fingerprint": "1cbefca1f31cdf62",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.9,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -10.300000000000001,
+          "nearestCandidate": 0.036,
+          "nearestReference": 0.265
+        }
+      }
+    },
+    {
+      "name": "Ducking Engine",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "sat",
+        "rev",
+        "trem"
+      ],
+      "order": [
+        "sat",
+        "rev",
+        "trem",
+        "rs",
+        "tape",
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 0.0,
+        "revMix": 0.6332,
+        "tremSync": true,
+        "tremDivision": "1/8 T",
+        "tremShape": "Triangle",
+        "tremDepth": 0.6073,
+        "tremStereo": 0.2138,
+        "satMode": "Soft",
+        "satDrive": 5.1984,
+        "satTone": -0.1426,
+        "satMix": 0.8474,
+        "satOutput": 0.0,
+        "drift": 0.1285,
+        "unstable": 0.0487,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B3-C07-10",
+        "generatorVersion": 1,
+        "seed": 2106403940,
+        "baseSeed": 2026,
+        "batch": 3,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse+sat",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "Soft drive +5 dB > 1/4 reverse > 1/8 T triangle tremolo",
+        "fingerprint": "b4c2e111e121e82c",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.0,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -88.299999999999997,
+          "nearestCandidate": 0.026,
+          "nearestReference": 0.125
+        }
+      }
+    },
+    {
+      "name": "Clipped Pulse",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Ping-pong echoes fed into the reverser, so every repeat plays backwards. For vocals, guitar, synth leads.",
+      "chain": [
+        "delay",
+        "rev"
+      ],
+      "order": [
+        "delay",
+        "rev",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.6424,
+        "delayLowCut": 158.599999999999994,
+        "delayHighCut": 2937.400000000000091,
+        "delayMix": 0.3453,
+        "delayPingPong": true,
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 12.0,
+        "revMix": 0.2554,
+        "drift": 0.015,
+        "unstable": 0.0827,
+        "outputGain": 0.5
+      },
+      "lab": {
+        "id": "B4-C07-01",
+        "generatorVersion": 1,
+        "seed": 2210464332,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-reverse-ladder/subtle",
+        "purpose": "Echoes that come back reversed",
+        "instruments": "vocals, guitar, synth leads",
+        "chainSummary": "1/8 D ping-pong delay > 1/4 reverse +12 st",
+        "fingerprint": "e63196ca7a130f52",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.6,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -7.3,
+          "nearestCandidate": 0.033,
+          "nearestReference": 0.117
+        }
+      }
+    },
+    {
+      "name": "Syncopated Rewind",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A saw-shaped duck on every beat, soft drive and short echoes. For pads, chords, bass synths.",
+      "chain": [
+        "trem",
+        "sat",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "sat",
+        "delay",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Saw",
+        "tremDepth": 0.6659,
+        "tremStereo": 0.0399,
+        "satMode": "Soft",
+        "satDrive": 3.5098,
+        "satTone": 0.0478,
+        "satMix": 0.8666,
+        "delaySync": true,
+        "delayDivision": "1/8",
+        "delayFeedback": 0.2339,
+        "delayLowCut": 367.5,
+        "delayHighCut": 8301.100000000000364,
+        "delayMix": 0.1303,
+        "satOutput": -0.1434,
+        "drift": 0.0797,
+        "unstable": 0.0089,
+        "outputGain": 1.5
+      },
+      "lab": {
+        "id": "B4-C07-02",
+        "generatorVersion": 1,
+        "seed": 2210464333,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-saw-ducker",
+        "purpose": "Sidechain-style pumping without a sidechain",
+        "instruments": "pads, chords, bass synths",
+        "chainSummary": "1/8 saw tremolo > Soft drive +4 dB > 1/8 delay",
+        "fingerprint": "f3564ee58722dd61",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.4,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -43.799999999999997,
+          "nearestCandidate": 0.022,
+          "nearestReference": 0.25
+        }
+      }
+    },
+    {
+      "name": "Offbeat Pulse",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "trem",
+        "chorus",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "chorus",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/16 T",
+        "tremShape": "Square",
+        "tremDepth": 0.5524,
+        "tremStereo": 0.4136,
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.3012,
+        "delayLowCut": 569.700000000000045,
+        "delayHighCut": 2761.400000000000091,
+        "delayMix": 0.1998,
+        "chorusRate": 0.0879,
+        "chorusDepth": 0.7567,
+        "chorusDelay": 23.359000000000002,
+        "chorusFeedback": 0.1807,
+        "chorusWidth": 0.9925,
+        "chorusMix": 0.4187,
+        "drift": 0.0412,
+        "unstable": 0.0976,
+        "outputGain": 2.5
+      },
+      "lab": {
+        "id": "B4-C07-03",
+        "generatorVersion": 1,
+        "seed": 2210464334,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate/subtle+chorus",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "1/16 T square tremolo > 0.09 Hz chorus > 1/8 D delay",
+        "fingerprint": "1dfc3d880fc8f089",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.3,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -31.600000000000001,
+          "nearestCandidate": 0.185,
+          "nearestReference": 0.249
+        }
+      }
+    },
+    {
+      "name": "Syncopated Strut",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "sat",
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "sat",
+        "reverb",
+        "trem",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.7113,
+        "reverbDecay": 3.3654,
+        "reverbDamping": 0.3328,
+        "reverbPredelay": 45.660699999999999,
+        "reverbMix": 0.8017,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 1.0,
+        "tremStereo": 0.339,
+        "satMode": "Soft",
+        "satDrive": 3.888,
+        "satTone": -0.2274,
+        "satMix": 0.5189,
+        "satOutput": 0.0,
+        "drift": 0.0648,
+        "unstable": 0.0916,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B4-C07-04",
+        "generatorVersion": 1,
+        "seed": 2210464335,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall/bold+sat",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "Soft drive +4 dB > 3.4 s reverb > 1/16 square tremolo",
+        "fingerprint": "dc769d2086713756",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.2,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -14.199999999999999,
+          "nearestCandidate": 0.057,
+          "nearestReference": 0.164
+        }
+      }
+    },
+    {
+      "name": "Pumping Shuffle",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "rev",
+        "chorus",
+        "trem"
+      ],
+      "order": [
+        "rev",
+        "chorus",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/8",
+        "revPitch": 0.0,
+        "revMix": 0.5064,
+        "tremSync": true,
+        "tremDivision": "1/8 T",
+        "tremShape": "Square",
+        "tremDepth": 0.7121,
+        "tremStereo": 0.6995,
+        "chorusRate": 0.1269,
+        "chorusDepth": 0.7503,
+        "chorusDelay": 13.7384,
+        "chorusFeedback": 0.2421,
+        "chorusWidth": 0.7768,
+        "chorusMix": 0.3444,
+        "drift": 0.1401,
+        "unstable": 0.0831,
+        "outputGain": 4.0
+      },
+      "lab": {
+        "id": "B4-C07-05",
+        "generatorVersion": 1,
+        "seed": 2210464336,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse+chorus",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "1/8 reverse > 0.13 Hz chorus > 1/8 T square tremolo",
+        "fingerprint": "8eadd60318d425e4",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.1,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -87.5,
+          "nearestCandidate": 0.188,
+          "nearestReference": 0.201
+        }
+      }
+    },
+    {
+      "name": "Bouncing Metronome",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Ping-pong echoes fed into the reverser, so every repeat plays backwards. For vocals, guitar, synth leads.",
+      "chain": [
+        "tape",
+        "delay",
+        "rev"
+      ],
+      "order": [
+        "tape",
+        "delay",
+        "rev",
+        "sat",
+        "rs",
+        "chorus",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.5038,
+        "delayLowCut": 176.199999999999989,
+        "delayHighCut": 7381.199999999999818,
+        "delayMix": 0.4062,
+        "delayPingPong": true,
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 12.0,
+        "revMix": 0.5042,
+        "tapeDrive": 4.6395,
+        "tapeWow": 0.3679,
+        "tapeFlutter": 0.3221,
+        "tapeNoise": 0.0621,
+        "tapeAge": 0.274,
+        "tapeMix": 0.6038,
+        "drift": 0.0236,
+        "unstable": 0.0797,
+        "outputGain": 6.0
+      },
+      "lab": {
+        "id": "B4-C07-06",
+        "generatorVersion": 1,
+        "seed": 2210464337,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-reverse-ladder+tape",
+        "purpose": "Echoes that come back reversed",
+        "instruments": "vocals, guitar, synth leads",
+        "chainSummary": "tape (wow 37 %, age 27 %) > 1/4 D ping-pong delay > 1/2 reverse +12 st",
+        "fingerprint": "a2805fecd9428c68",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.5,
+          "levelChangeDb": -0.7,
+          "tailGrowthDb": -3.0,
+          "nearestCandidate": 0.129,
+          "nearestReference": 0.204
+        }
+      }
+    },
+    {
+      "name": "Swung Groove",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A saw-shaped duck on every beat, soft drive and short echoes. For pads, chords, bass synths.",
+      "chain": [
+        "trem",
+        "sat",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "sat",
+        "delay",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Saw",
+        "tremDepth": 0.8912,
+        "tremStereo": 0.1843,
+        "satMode": "Soft",
+        "satDrive": 5.1559,
+        "satTone": -0.0583,
+        "satMix": 0.867,
+        "delaySync": true,
+        "delayDivision": "1/8",
+        "delayFeedback": 0.1514,
+        "delayLowCut": 432.699999999999989,
+        "delayHighCut": 4665.800000000000182,
+        "delayMix": 0.2025,
+        "satOutput": 0.0,
+        "drift": 0.0188,
+        "unstable": 0.0177,
+        "outputGain": 2.0
+      },
+      "lab": {
+        "id": "B4-C07-07",
+        "generatorVersion": 1,
+        "seed": 2210464338,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-saw-ducker/bold",
+        "purpose": "Sidechain-style pumping without a sidechain",
+        "instruments": "pads, chords, bass synths",
+        "chainSummary": "1/8 saw tremolo > Soft drive +5 dB > 1/8 delay",
+        "fingerprint": "5a19e645c963f42a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.6,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -57.899999999999999,
+          "nearestCandidate": 0.02,
+          "nearestReference": 0.242
+        }
+      }
+    },
+    {
+      "name": "Rewound Pendulum",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "trem",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8 T",
+        "tremShape": "Square",
+        "tremDepth": 0.8662,
+        "tremStereo": 0.1329,
+        "delaySync": true,
+        "delayDivision": "1/4 T",
+        "delayFeedback": 0.3762,
+        "delayLowCut": 193.599999999999994,
+        "delayHighCut": 7925.699999999999818,
+        "delayMix": 0.2187,
+        "drift": 0.0417,
+        "unstable": 0.0597,
+        "outputGain": 3.0
+      },
+      "lab": {
+        "id": "B4-C07-08",
+        "generatorVersion": 1,
+        "seed": 2210464339,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "1/8 T square tremolo > 1/4 T delay",
+        "fingerprint": "8b31f2eab0219b8",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -1.8,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -22.300000000000001,
+          "nearestCandidate": 0.031,
+          "nearestReference": 0.1
+        }
+      }
+    },
+    {
+      "name": "Backward Metronome",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.8946,
+        "reverbDecay": 4.1326,
+        "reverbDamping": 0.1766,
+        "reverbPredelay": 30.223700000000001,
+        "reverbMix": 0.3137,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 0.5572,
+        "tremStereo": 0.789,
+        "drift": 0.0675,
+        "unstable": 0.086,
+        "outputGain": 2.0
+      },
+      "lab": {
+        "id": "B4-C07-09",
+        "generatorVersion": 1,
+        "seed": 2210464340,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall/subtle",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "4.1 s reverb > 1/16 square tremolo",
+        "fingerprint": "e961868cd73ab766",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.3,
+          "levelChangeDb": -0.5,
+          "tailGrowthDb": -9.5,
+          "nearestCandidate": 0.04,
+          "nearestReference": 0.26
+        }
+      }
+    },
+    {
+      "name": "Pumping Pendulum",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "rev",
+        "trem"
+      ],
+      "order": [
+        "rev",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 0.0,
+        "revMix": 0.3398,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Triangle",
+        "tremDepth": 0.5482,
+        "tremStereo": 0.0287,
+        "drift": 0.086,
+        "unstable": 0.0679,
+        "outputGain": 4.0
+      },
+      "lab": {
+        "id": "B4-C07-10",
+        "generatorVersion": 1,
+        "seed": 2210464341,
+        "baseSeed": 2026,
+        "batch": 4,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse/subtle",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "1/4 reverse > 1/16 triangle tremolo",
+        "fingerprint": "20a684e121ad2b61",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -6.4,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -89.400000000000006,
+          "nearestCandidate": 0.069,
+          "nearestReference": 0.223
+        }
+      }
+    },
+    {
+      "name": "Pumping Ladder",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A saw-shaped duck on every beat, soft drive and short echoes. For pads, chords, bass synths.",
+      "chain": [
+        "trem",
+        "sat",
+        "delay",
+        "reverb"
+      ],
+      "order": [
+        "trem",
+        "sat",
+        "delay",
+        "reverb",
+        "rs",
+        "tape",
+        "chorus",
+        "rev"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Saw",
+        "tremDepth": 0.8334,
+        "tremStereo": 0.0607,
+        "satMode": "Warm",
+        "satDrive": 7.5846,
+        "satTone": -0.0927,
+        "satMix": 0.555,
+        "delaySync": true,
+        "delayDivision": "1/8",
+        "delayFeedback": 0.2536,
+        "delayLowCut": 449.199999999999989,
+        "delayHighCut": 3062.800000000000182,
+        "delayMix": 0.1957,
+        "reverbSize": 0.2384,
+        "reverbDecay": 1.0687,
+        "reverbDamping": 0.3769,
+        "reverbPredelay": 10.2516,
+        "reverbMix": 0.2387,
+        "satOutput": 0.0,
+        "drift": 0.0326,
+        "unstable": 0.03,
+        "outputGain": 2.0
+      },
+      "lab": {
+        "id": "B5-C07-02",
+        "generatorVersion": 1,
+        "seed": 2314524734,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-saw-ducker+room",
+        "purpose": "Sidechain-style pumping without a sidechain",
+        "instruments": "pads, chords, bass synths",
+        "chainSummary": "1/8 saw tremolo > Warm drive +8 dB > 1/8 delay > 1.1 s reverb",
+        "fingerprint": "a330537a6d9e51c2",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.5,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -39.700000000000003,
+          "nearestCandidate": 0.035,
+          "nearestReference": 0.122
+        }
+      }
+    },
+    {
+      "name": "Bouncing Rewind",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "trem",
+        "delay"
+      ],
+      "order": [
+        "trem",
+        "delay",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/16 T",
+        "tremShape": "Square",
+        "tremDepth": 0.4806,
+        "tremStereo": 0.1039,
+        "delaySync": true,
+        "delayDivision": "1/8 D",
+        "delayFeedback": 0.4361,
+        "delayLowCut": 423.0,
+        "delayHighCut": 7365.300000000000182,
+        "delayMix": 0.2398,
+        "drift": 0.044,
+        "unstable": 0.0269,
+        "outputGain": 1.0
+      },
+      "lab": {
+        "id": "B5-C07-03",
+        "generatorVersion": 1,
+        "seed": 2314524735,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate/subtle",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "1/16 T square tremolo > 1/8 D delay",
+        "fingerprint": "9e232582f1e32091",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.1,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -20.600000000000001,
+          "nearestCandidate": 0.033,
+          "nearestReference": 0.11
+        }
+      }
+    },
+    {
+      "name": "Backward Rewind",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "reverb",
+        "chorus",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "chorus",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.9951,
+        "reverbDecay": 2.643,
+        "reverbDamping": 0.2514,
+        "reverbPredelay": 28.628599999999999,
+        "reverbMix": 0.3768,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 0.5159,
+        "tremStereo": 0.4709,
+        "chorusRate": 0.1348,
+        "chorusDepth": 0.644,
+        "chorusDelay": 10.7798,
+        "chorusFeedback": 0.0903,
+        "chorusWidth": 0.8872,
+        "chorusMix": 0.4374,
+        "drift": 0.0254,
+        "unstable": 0.0837,
+        "outputGain": 2.5
+      },
+      "lab": {
+        "id": "B5-C07-04",
+        "generatorVersion": 1,
+        "seed": 2314524736,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall/subtle+chorus",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "2.6 s reverb > 0.13 Hz chorus > 1/16 square tremolo",
+        "fingerprint": "8d6bbc3d6f363dd7",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.6,
+          "levelChangeDb": -0.4,
+          "tailGrowthDb": -16.899999999999999,
+          "nearestCandidate": 0.11,
+          "nearestReference": 0.283
+        }
+      }
+    },
+    {
+      "name": "Rewound Engine",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "rev",
+        "chorus",
+        "trem"
+      ],
+      "order": [
+        "rev",
+        "chorus",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/8",
+        "revPitch": 0.0,
+        "revMix": 0.4199,
+        "tremSync": true,
+        "tremDivision": "1/16",
+        "tremShape": "Square",
+        "tremDepth": 0.3889,
+        "tremStereo": 0.5145,
+        "chorusRate": 0.1655,
+        "chorusDepth": 0.8065,
+        "chorusDelay": 16.841000000000001,
+        "chorusFeedback": 0.1658,
+        "chorusWidth": 0.9729,
+        "chorusMix": 0.3457,
+        "drift": 0.0803,
+        "unstable": 0.0904,
+        "outputGain": 2.5
+      },
+      "lab": {
+        "id": "B5-C07-05",
+        "generatorVersion": 1,
+        "seed": 2314524737,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse/subtle+chorus",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "1/8 reverse > 0.17 Hz chorus > 1/16 square tremolo",
+        "fingerprint": "a50b3106d128089b",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -3.7,
+          "levelChangeDb": -0.2,
+          "tailGrowthDb": -86.099999999999994,
+          "nearestCandidate": 0.029,
+          "nearestReference": 0.212
+        }
+      }
+    },
+    {
+      "name": "Backward Strut",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Ping-pong echoes fed into the reverser, so every repeat plays backwards. For vocals, guitar, synth leads.",
+      "chain": [
+        "delay",
+        "chorus",
+        "rev"
+      ],
+      "order": [
+        "delay",
+        "chorus",
+        "rev",
+        "sat",
+        "rs",
+        "tape",
+        "trem",
+        "reverb"
+      ],
+      "params": {
+        "delaySync": true,
+        "delayDivision": "1/4 D",
+        "delayFeedback": 0.646,
+        "delayLowCut": 432.699999999999989,
+        "delayHighCut": 4964.199999999999818,
+        "delayMix": 0.3518,
+        "delayPingPong": true,
+        "revSync": true,
+        "revDivision": "1/2",
+        "revPitch": 0.0,
+        "revMix": 0.2377,
+        "chorusRate": 0.2673,
+        "chorusDepth": 0.6943,
+        "chorusDelay": 17.8489,
+        "chorusFeedback": 0.0183,
+        "chorusWidth": 0.7044,
+        "chorusMix": 0.4455,
+        "drift": 0.0189,
+        "unstable": 0.043,
+        "outputGain": 1.5
+      },
+      "lab": {
+        "id": "B5-C07-06",
+        "generatorVersion": 1,
+        "seed": 2314524738,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-reverse-ladder/subtle+chorus",
+        "purpose": "Echoes that come back reversed",
+        "instruments": "vocals, guitar, synth leads",
+        "chainSummary": "1/4 D ping-pong delay > 0.27 Hz chorus > 1/2 reverse",
+        "fingerprint": "2e9f4b69a39f998a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -4.6,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -4.3,
+          "nearestCandidate": 0.189,
+          "nearestReference": 0.178
+        }
+      }
+    },
+    {
+      "name": "Ducking Groove",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Triplet square chopping answered by dotted echoes for a swung feel. For pads, chords, guitar.",
+      "chain": [
+        "sat",
+        "trem",
+        "delay"
+      ],
+      "order": [
+        "sat",
+        "trem",
+        "delay",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "reverb"
+      ],
+      "params": {
+        "tremSync": true,
+        "tremDivision": "1/8 T",
+        "tremShape": "Square",
+        "tremDepth": 0.7558,
+        "tremStereo": 0.8233,
+        "delaySync": true,
+        "delayDivision": "1/4 T",
+        "delayFeedback": 0.3112,
+        "delayLowCut": 143.699999999999989,
+        "delayHighCut": 5872.199999999999818,
+        "delayMix": 0.2802,
+        "satMode": "Soft",
+        "satDrive": 4.8002,
+        "satTone": 0.0175,
+        "satMix": 0.7972,
+        "satOutput": -0.0524,
+        "drift": 0.0974,
+        "unstable": 0.0939,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B5-C07-08",
+        "generatorVersion": 1,
+        "seed": 2314524740,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-swing-gate+sat",
+        "purpose": "Triplet-feel gating and echoes",
+        "instruments": "pads, chords, guitar",
+        "chainSummary": "Soft drive +5 dB > 1/8 T square tremolo > 1/4 T delay",
+        "fingerprint": "b4314f2a80bb6e4d",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -2.0,
+          "levelChangeDb": -0.0,
+          "tailGrowthDb": -23.699999999999999,
+          "nearestCandidate": 0.097,
+          "nearestReference": 0.196
+        }
+      }
+    },
+    {
+      "name": "Rolling Motor",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "A bright hall chopped by a fast square gate into rhythmic bursts. For snares, vocals, pads.",
+      "chain": [
+        "reverb",
+        "trem"
+      ],
+      "order": [
+        "reverb",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "rev",
+        "delay"
+      ],
+      "params": {
+        "reverbSize": 0.8784,
+        "reverbDecay": 3.4102,
+        "reverbDamping": 0.3452,
+        "reverbPredelay": 68.191599999999994,
+        "reverbMix": 0.4196,
+        "tremSync": true,
+        "tremDivision": "1/16 T",
+        "tremShape": "Square",
+        "tremDepth": 0.5401,
+        "tremStereo": 0.9209,
+        "drift": 0.0484,
+        "unstable": 0.0513,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B5-C07-09",
+        "generatorVersion": 1,
+        "seed": 2314524741,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-gated-hall/subtle",
+        "purpose": "Gated reverb pulses",
+        "instruments": "snares, vocals, pads",
+        "chainSummary": "3.4 s reverb > 1/16 T square tremolo",
+        "fingerprint": "be0aef2a7b48242a",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -1.6,
+          "levelChangeDb": -0.3,
+          "tailGrowthDb": -12.1,
+          "nearestCandidate": 0.027,
+          "nearestReference": 0.257
+        }
+      }
+    },
+    {
+      "name": "Strobing Metronome",
+      "category": "SHOBEATS Lab / Rhythmic & Reverse",
+      "description": "Quarter-note reverse slices pulsing on a square gate. For drum loops, chords, full beats.",
+      "chain": [
+        "rev",
+        "trem"
+      ],
+      "order": [
+        "rev",
+        "trem",
+        "sat",
+        "rs",
+        "tape",
+        "chorus",
+        "delay",
+        "reverb"
+      ],
+      "params": {
+        "revSync": true,
+        "revDivision": "1/4",
+        "revPitch": 0.0,
+        "revMix": 0.861,
+        "tremSync": true,
+        "tremDivision": "1/8",
+        "tremShape": "Triangle",
+        "tremDepth": 0.9484,
+        "tremStereo": 0.8437,
+        "drift": 0.0662,
+        "unstable": 0.0811,
+        "outputGain": 3.5
+      },
+      "lab": {
+        "id": "B5-C07-10",
+        "generatorVersion": 1,
+        "seed": 2314524742,
+        "baseSeed": 2026,
+        "batch": 5,
+        "labCategory": "Rhythmic & Reverse",
+        "architecture": "rhythm-backward-pulse/bold",
+        "purpose": "Reverse loops that still groove",
+        "instruments": "drum loops, chords, full beats",
+        "chainSummary": "1/4 reverse > 1/8 triangle tremolo",
+        "fingerprint": "a51646a32cf3a0c9",
+        "status": "technically validated, not artistically approved",
+        "qc": {
+          "peakDbfs": -1.5,
+          "levelChangeDb": -3.1,
+          "tailGrowthDb": -89.299999999999997,
+          "nearestCandidate": 0.026,
+          "nearestReference": 0.229
+        }
+      }
+    }
+  ]
+}

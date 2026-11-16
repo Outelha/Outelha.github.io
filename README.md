@@ -40,6 +40,11 @@ and two analog-movement controls that act on every active pedal:
 - **Import presets from TONEFLX / FFWD FX** (`.zip`, `.fwd`, `.fmod`): PRESETS → IMPORT…. They are converted
   to SHOBEATS presets, stored separately and listed under *Imported* with their original folders and creators.
   Conversions approximate the original sound; see [docs/IMPORT.md](docs/IMPORT.md).
+- **SHOBEATS LAB**: 409 original candidates in ten categories, generated offline by a rule-based engine and
+  checked automatically (clipping, silence, loudness, parameter ranges, stability, CPU, duplicates). They are
+  *technically validated, not artistically approved*: rate them (1–5 stars), mark favourites, hide the ones you
+  don't like, export a selection as a collection (.zip) or **Approve** it into your own *Approved* collection.
+  See [docs/SOUND_LAB.md](docs/SOUND_LAB.md).
 - Loading a preset or generating fades out, swaps and clears old tails in silence, then fades in – no clicks
   or level spikes while audio plays. The DAW project stores parameters, pedal order and the preset name.
 
@@ -110,6 +115,9 @@ Set `SHOBEATS_SNAPSHOT=path/prefix` when running the `[gui]` plugin tests to sav
 source/dsp/       Plain C++ DSP for the eight effects (no JUCE, no allocation while processing)
 source/ui/        Look-and-feel, pedals, pedalboard, advanced panel, displays
 source/           Processor, parameters, chain order, editor
+source/presets/   Preset format, manager, generator, importer, Sound Lab rules and audio QC
+presets/factory/  60 factory presets (JSON)       presets/lab/  Sound Lab banks + manifest (all 500 candidates)
+tools/            lifecycle_host, preset_import, sound_lab (offline generator)
 tests/            Catch2 tests: DSP behaviour, bypass, state recall, automation, editor
 libs/JUCE         JUCE 8.0.17-security, pinned submodule (commit dabd5ad)
 libs/Catch2       Catch2 v3.8.1, pinned submodule (commit 2b60af8)

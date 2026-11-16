@@ -97,12 +97,23 @@ juce_add_binary_data(ShobeatsPresetData
     SOURCES ${SHOBEATS_FACTORY_PRESETS})
 set_target_properties(ShobeatsPresetData PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
+# SHOBEATS Lab candidates: original presets generated offline by tools/sound_lab
+# (technically validated, not artistically approved). Kept separate from the factory set.
+file(GLOB SHOBEATS_LAB_PRESETS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/presets/lab/[0-9]*.json")
+juce_add_binary_data(ShobeatsLabData
+    HEADER_NAME ShobeatsLabData.h
+    NAMESPACE ShobeatsLabData
+    SOURCES ${SHOBEATS_LAB_PRESETS})
+set_target_properties(ShobeatsLabData PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 target_sources(${PRODUCT_NAME} PRIVATE
     source/Parameters.cpp
     source/presets/Preset.cpp
     source/presets/PresetManager.cpp
     source/presets/Generator.cpp
     source/presets/PresetImporter.cpp
+    source/presets/PresetAudit.cpp
+    source/presets/SoundLab.cpp
     source/PluginProcessor.cpp
     source/PluginEditor.cpp
     source/ui/ShobeatsLookAndFeel.cpp
@@ -127,6 +138,7 @@ target_link_libraries(${PRODUCT_NAME}
     PUBLIC
         shobeats_dsp
         ShobeatsPresetData
+        ShobeatsLabData
     PRIVATE
         juce::juce_audio_utils
         juce::juce_dsp
@@ -140,6 +152,7 @@ if(SHOBEATS_BUILD_LIFECYCLE_HOST)
     add_subdirectory(tools/lifecycle_host)
 endif()
 add_subdirectory(tools/preset_import)
+add_subdirectory(tools/sound_lab)
 
 # ---------------------------------------------------------------------------
 # Tests

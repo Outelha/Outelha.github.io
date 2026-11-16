@@ -31,6 +31,11 @@ struct Preset
     juce::String conversionStatus; // "converted" or "partial"
     juce::StringArray conversionNotes;
 
+    // SHOBEATS Lab presets: generation metadata (id, seed, generator version, architecture,
+    // purpose, instruments, QC metrics). Kept as an object so it round-trips unchanged.
+    bool isLab = false;
+    juce::var lab;
+
     std::vector<int> chain;      // effect ids, processing order of the active pedals
     ChainOrder::Order order {};  // full order to apply
     juce::NamedValueSet params;  // id -> value (number, bool or choice name)
