@@ -96,13 +96,19 @@ jobs:
           New-Item -ItemType Directory -Force -Path pluginval-logs | Out-Null
           # pluginval.exe is a GUI-subsystem program: PowerShell's '&' would not wait for it
           # (and $LASTEXITCODE would stay empty), so start it explicitly and wait.
-          $args = @("--strictness-level", "10", "--repeat", "2", "--randomise", "--verbose", "--validate-in-process",
-                    "--output-dir", "pluginval-logs", "--validate", "`"${{ steps.bundle.outputs.bundle }}`"")
-          $p = Start-Process -FilePath $exe.FullName -ArgumentList $args -NoNewWindow -Wait -PassThru `
-                 -RedirectStandardOutput pluginval-stdout.txt -RedirectStandardError pluginval-stderr.txt
-          Get-Content pluginval-stdout.txt, pluginval-stderr.txt -ErrorAction SilentlyContinue
-          Write-Host "pluginval exit code: $($p.ExitCode)"
-          if ($p.ExitCode -ne 0) { throw "pluginval failed with exit code $($p.ExitCode)" }
+          # Two complete passes at strictness 10, each in a fresh process (each pass loads,
+          # exercises and unloads the plugin, including its editor tests). --randomise is not
+          # used: with shuffled test order, "Plugin state restoration" compares restored on/off
+          # switches with pluginval's own cached, unquantised values left by an earlier test.
+          for ($pass = 1; $pass -le 2; $pass++) {
+            $args = @("--strictness-level", "10", "--verbose", "--validate-in-process",
+                      "--output-dir", "pluginval-logs", "--validate", "`"${{ steps.bundle.outputs.bundle }}`"")
+            $p = Start-Process -FilePath $exe.FullName -ArgumentList $args -NoNewWindow -Wait -PassThru `
+                   -RedirectStandardOutput "pluginval-stdout-$pass.txt" -RedirectStandardError "pluginval-stderr-$pass.txt"
+            Get-Content "pluginval-stdout-$pass.txt", "pluginval-stderr-$pass.txt" -ErrorAction SilentlyContinue
+            Write-Host "pluginval pass $pass exit code: $($p.ExitCode)"
+            if ($p.ExitCode -ne 0) { throw "pluginval pass $pass failed with exit code $($p.ExitCode)" }
+          }
 
       - name: Diagnose failure (logs, crash dumps, stack traces)
         if: failure()
