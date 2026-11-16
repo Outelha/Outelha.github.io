@@ -30,6 +30,7 @@ if(MSVC)
 endif()
 
 option(SHOBEATS_BUILD_TESTS "Build the unit tests" ON)
+option(SHOBEATS_BUILD_LIFECYCLE_HOST "Build the VST3 lifecycle stress host" ON)
 option(SHOBEATS_BUILD_STANDALONE "Also build a standalone app (handy for UI work)" OFF)
 
 # ---------------------------------------------------------------------------
@@ -132,6 +133,10 @@ target_link_libraries(${PRODUCT_NAME}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags)
+
+if(SHOBEATS_BUILD_LIFECYCLE_HOST)
+    add_subdirectory(tools/lifecycle_host)
+endif()
 
 # ---------------------------------------------------------------------------
 # Tests

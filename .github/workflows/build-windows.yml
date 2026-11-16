@@ -76,6 +76,16 @@ jobs:
           New-ItemProperty -Path $key -Name DumpType -Value 2 -PropertyType DWord -Force | Out-Null
           "DUMP_DIR=$dumps" >> $env:GITHUB_ENV
 
+      - name: Plugin lifecycle stress test (load, process, editor, remove, unload x many)
+        shell: pwsh
+        run: |
+          $hostExe = Get-ChildItem -Recurse $env:BUILD_DIR -Filter shobeats_lifecycle_host.exe | Where-Object { $_.FullName -match "Release" } | Select-Object -First 1
+          if (-not $hostExe) { throw "lifecycle host was not built" }
+          & $hostExe.FullName "${{ steps.bundle.outputs.bundle }}" 1 2>&1 | Tee-Object -FilePath lifecycle-log.txt
+          $code = $LASTEXITCODE
+          Write-Host "lifecycle host exit code: $code"
+          if ($code -ne 0) { throw "lifecycle stress test failed with exit code $code" }
+
       - name: Validate with pluginval
         shell: pwsh
         run: |
@@ -94,7 +104,7 @@ jobs:
           Write-Host "pluginval exit code: $($p.ExitCode)"
           if ($p.ExitCode -ne 0) { throw "pluginval failed with exit code $($p.ExitCode)" }
 
-      - name: Diagnose pluginval failure
+      - name: Diagnose failure (logs, crash dumps, stack traces)
         if: failure()
         shell: pwsh
         run: |
@@ -118,6 +128,7 @@ jobs:
           path: |
             pluginval-logs
             pluginval-std*.txt
+            lifecycle-log.txt
             ${{ env.DUMP_DIR }}
             ${{ env.BUILD_DIR }}/**/*.pdb
           if-no-files-found: ignore
