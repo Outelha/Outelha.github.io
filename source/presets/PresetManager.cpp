@@ -75,7 +75,7 @@ void PresetManager::rescanUserPresets()
     presets.erase (presets.begin() + numFactory, presets.end());
 
     std::vector<Preset> user;
-    for (const auto& file : userDirectory.findChildFiles (juce::File::findFiles, false, "*" + fileExtension))
+    for (const auto& file : userDirectory.findChildFiles (juce::File::findFiles, false, juce::String ("*") + fileExtension))
     {
         if (auto preset = Preset::fromVar (juce::JSON::parse (file), userCategory))
         {

@@ -45,6 +45,6 @@ inline juce::Colour accentColour (EffectId id) { return pedalColour (id).brighte
 juce::Font uiFont (float height, bool bold = false);
 
 // Fine grain noise tile used to give enclosures and panels a physical texture.
-const juce::Image& noiseTexture();
+juce::Image noiseTexture();
 void fillWithTexture (juce::Graphics&, const juce::Path& area, float opacity);
 } // namespace sfx::ui

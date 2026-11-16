@@ -15,8 +15,8 @@ inline const juce::Colour amberDim { 0xff7a5222 };
 inline const juce::Colour glass { 0xff0d0b09 };
 inline const juce::Colour engraving { 0xffc9c3b8 };
 
-// Horizontal brushed-metal streak texture (tiled, 256 x 256).
-const juce::Image& brushedTexture();
+// Horizontal brushed-metal streak texture (tiled, 512 x 512).
+juce::Image brushedTexture();
 
 // A brushed metal plate with bevelled edges.
 void drawBrushedPlate (juce::Graphics&, juce::Rectangle<float>, juce::Colour top, juce::Colour bottom, float corner, float textureOpacity = 0.5f);

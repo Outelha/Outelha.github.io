@@ -1,41 +1,15 @@
 #include "Hardware.h"
 
+#include "Textures.h"
+
 namespace sfx::ui::hw
 {
 using namespace juce;
 
-const Image& brushedTexture()
+Image brushedTexture()
 {
-    static const Image tile = [] {
-        constexpr int w = 512, h = 512, blend = 96;
-        Image img (Image::ARGB, w, h, true);
-        Random rng (0xb2b5);
-        std::vector<float> row (static_cast<size_t> (w));
-        for (int y = 0; y < h; ++y)
-        {
-            // Each row: a slowly varying brightness (the streak) plus fine grain.
-            float walk = rng.nextFloat() * 2.0f - 1.0f;
-            for (int x = 0; x < w; ++x)
-            {
-                walk = walk * 0.985f + (rng.nextFloat() * 2.0f - 1.0f) * 0.06f;
-                row[static_cast<size_t> (x)] = walk + (rng.nextFloat() - 0.5f) * 0.25f;
-            }
-            // Crossfade the row's end into its start so the tile wraps without a seam.
-            for (int x = 0; x < blend; ++x)
-            {
-                const auto t = static_cast<float> (x) / blend;
-                auto& end = row[static_cast<size_t> (w - blend + x)];
-                end = end * (1.0f - t) + row[static_cast<size_t> (x)] * t;
-            }
-            for (int x = 0; x < w; ++x)
-            {
-                const auto v = row[static_cast<size_t> (x)];
-                img.setPixelAt (x, y, (v > 0.0f ? Colours::white : Colours::black).withAlpha (jlimit (0.0f, 1.0f, std::abs (v) * 0.3f)));
-            }
-        }
-        return img;
-    }();
-    return tile;
+    // Returns a counted handle; the pixels are owned by the open editors (see Textures.h).
+    return SharedResourcePointer<Textures>()->brushed;
 }
 
 void drawBrushedPlate (Graphics& g, Rectangle<float> r, Colour top, Colour bottom, float corner, float textureOpacity)

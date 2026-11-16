@@ -113,6 +113,11 @@ private:
     dsp::Delay delay;
     dsp::Reverb reverb;
 
+    // True once prepareToPlay() has allocated every DSP resource. Hosts may call process()
+    // before that (FL Studio does: see juce_audio_plugin_client_VST3.cpp); until then
+    // audio passes through untouched. Resources stay allocated after releaseResources().
+    std::atomic<bool> prepared { false };
+
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
     int maxChunkSize = 512;
     int preparedChannels = 0;

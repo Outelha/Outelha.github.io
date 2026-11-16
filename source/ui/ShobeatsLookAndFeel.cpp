@@ -1,6 +1,7 @@
 #include "ShobeatsLookAndFeel.h"
 
 #include "Hardware.h"
+#include "Textures.h"
 
 namespace sfx::ui
 {
@@ -12,21 +13,10 @@ juce::Font uiFont (float height, bool bold)
     return juce::Font (options);
 }
 
-const juce::Image& noiseTexture()
+juce::Image noiseTexture()
 {
-    static const juce::Image tile = [] {
-        juce::Image img (juce::Image::ARGB, 128, 128, true);
-        juce::Random rng (0x5b0b);
-        for (int y = 0; y < img.getHeight(); ++y)
-            for (int x = 0; x < img.getWidth(); ++x)
-            {
-                const auto v = rng.nextFloat();
-                const auto c = v > 0.5f ? juce::Colours::white : juce::Colours::black;
-                img.setPixelAt (x, y, c.withAlpha (std::abs (v - 0.5f) * 0.5f));
-            }
-        return img;
-    }();
-    return tile;
+    // Returns a counted handle; the pixels are owned by the open editors (see Textures.h).
+    return juce::SharedResourcePointer<Textures>()->noise;
 }
 
 void fillWithTexture (juce::Graphics& g, const juce::Path& area, float opacity)

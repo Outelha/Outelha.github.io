@@ -11,8 +11,9 @@ class ShobeatsAudioProcessor;
 class PresetManager
 {
 public:
-    static inline const juce::String userCategory { "User" };
-    static inline const juce::String fileExtension { ".sfxpreset" };
+    // Plain literals: no static JUCE objects that would be destroyed at DLL unload.
+    static constexpr const char* userCategory = "User";
+    static constexpr const char* fileExtension = ".sfxpreset";
 
     explicit PresetManager (ShobeatsAudioProcessor& processor);
 

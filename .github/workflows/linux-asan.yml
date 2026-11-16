@@ -1,0 +1,58 @@
+name: Linux AddressSanitizer
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  asan:
+    name: Tests + lifecycle host under AddressSanitizer
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+
+    steps:
+      - name: Checkout (with pinned JUCE and Catch2 submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q ninja-build xvfb libasound2-dev libfreetype-dev libfontconfig1-dev \
+            libxrandr-dev libxinerama-dev libxcursor-dev libxext-dev libgl1-mesa-dev
+
+      - name: Configure (RelWithDebInfo + AddressSanitizer)
+        run: |
+          cmake -S . -B build-asan -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_C_FLAGS="-fsanitize=address -fno-omit-frame-pointer" \
+            -DCMAKE_CXX_FLAGS="-fsanitize=address -fno-omit-frame-pointer" \
+            -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
+            -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address" \
+            -DCMAKE_MODULE_LINKER_FLAGS="-fsanitize=address"
+
+      - name: Build
+        run: cmake --build build-asan --parallel
+
+      - name: Unit tests (incl. lifecycle tests) under ASan
+        env:
+          ASAN_OPTIONS: detect_leaks=0:abort_on_error=1
+        run: xvfb-run -a ctest --test-dir build-asan --output-on-failure --no-tests=error --timeout 900
+
+      - name: VST3 lifecycle host under ASan
+        env:
+          ASAN_OPTIONS: detect_leaks=0:abort_on_error=1
+        run: |
+          hostExe=$(find build-asan/tools -type f -perm -u+x -name shobeats_lifecycle_host | head -1)
+          bundle=$(find build-asan -type d -name ShobeatsFX.vst3 -path "*VST3*" | head -1)
+          xvfb-run -a "$hostExe" "$bundle" 1 --offscreen

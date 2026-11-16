@@ -515,7 +515,7 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor survives parameter changes from a
     std::unique_ptr<juce::AudioProcessorEditor> editor (p.createEditorAndMakeActive());
     REQUIRE (editor != nullptr);
     // Render the UI repeatedly on the message thread while parameters change underneath it.
-    int renders = 0;
+    std::atomic<int> renders { 0 };
     juce::TimedCallback painter ([&] {
         juce::ignoreUnused (editor->createComponentSnapshot (editor->getLocalBounds()));
         ++renders;
@@ -525,7 +525,9 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor survives parameter changes from a
     std::atomic<bool> done { false };
     std::thread automation ([&] {
         juce::Random r (99);
-        for (int block = 0; block < 300; ++block)
+        // At least 300 rounds, and keep going until the UI has rendered at least 10 times
+        // under the changing parameters (independent of how busy the machine is).
+        for (int block = 0; block < 300 || renders.load() < 10; ++block)
         {
             for (auto* param : p.getParameters())
                 param->setValueNotifyingHost (r.nextFloat());
@@ -541,7 +543,7 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor survives parameter changes from a
     automation.join();
     painter.stopTimer();
     CHECK (done);
-    CHECK (renders > 10);
+    CHECK (renders.load() >= 10);
 
     editor.reset();
     SUCCEED();

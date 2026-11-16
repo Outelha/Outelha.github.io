@@ -104,6 +104,7 @@ void ShobeatsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
 
     updateDspParameters (fallbackBpm);
     reset();
+    prepared.store (true, std::memory_order_release);
 }
 
 void ShobeatsAudioProcessor::releaseResources()
@@ -370,6 +371,10 @@ void ShobeatsAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
     for (auto i = getTotalNumInputChannels(); i < getTotalNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+    // Not prepared yet: no DSP state exists, so pass the audio through unchanged.
+    if (! prepared.load (std::memory_order_acquire))
+        return;
+
     const auto bpm = readHostBpm();
     currentBpm.store (bpm, std::memory_order_relaxed);
     updateDspParameters (bpm);
@@ -387,6 +392,9 @@ void ShobeatsAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 
 void ShobeatsAudioProcessor::processBlockBypassed (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
+    if (! prepared.load (std::memory_order_acquire))
+        return; // the latency-compensation delay is not allocated yet; dry audio passes through
+
     // Delay the dry signal by the reported latency so bypassing does not shift timing.
     const auto latency = static_cast<size_t> (getLatencySamples());
     const auto channels = std::min (buffer.getNumChannels(), 2);

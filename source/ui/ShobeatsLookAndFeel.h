@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Textures.h"
 #include "Theme.h"
 
 namespace sfx::ui
@@ -25,6 +26,9 @@ public:
     int getSliderPopupPlacement (juce::Slider&) override;
 
 private:
+    // Keeps the shared texture images alive for as long as this editor exists.
+    juce::SharedResourcePointer<Textures> textures;
+
     void drawPedalKnob (juce::Graphics&, juce::Rectangle<float>, float angle, float startAngle, float endAngle, juce::Slider&);
     void drawArcKnob (juce::Graphics&, juce::Rectangle<float>, float angle, float startAngle, float endAngle, juce::Slider&);
 };

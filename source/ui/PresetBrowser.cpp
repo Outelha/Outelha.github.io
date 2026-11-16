@@ -118,13 +118,16 @@ PresetBrowser::PresetBrowser (PresetManager& m) : manager (m)
         {
             const auto index = filtered[static_cast<size_t> (row)];
             const auto& preset = manager.getPresets()[static_cast<size_t> (index)];
+            // The dialog is asynchronous: the editor may be closed (and this browser destroyed)
+            // before the user answers, so only act if the browser still exists.
+            juce::Component::SafePointer<PresetBrowser> safeThis (this);
             juce::NativeMessageBox::showOkCancelBox (juce::MessageBoxIconType::WarningIcon, "Delete preset",
                                                      "Delete the user preset \"" + preset.name + "\"?", this,
-                                                     juce::ModalCallbackFunction::create ([this, index] (int result) {
-                                                         if (result != 0)
+                                                     juce::ModalCallbackFunction::create ([safeThis, index] (int result) {
+                                                         if (result != 0 && safeThis != nullptr)
                                                          {
-                                                             manager.deleteUserPreset (index);
-                                                             refresh();
+                                                             safeThis->manager.deleteUserPreset (index);
+                                                             safeThis->refresh();
                                                          }
                                                      }));
         }

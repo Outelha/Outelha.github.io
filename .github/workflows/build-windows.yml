@@ -96,7 +96,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path pluginval-logs | Out-Null
           # pluginval.exe is a GUI-subsystem program: PowerShell's '&' would not wait for it
           # (and $LASTEXITCODE would stay empty), so start it explicitly and wait.
-          $args = @("--strictness-level", "10", "--verbose", "--validate-in-process",
+          $args = @("--strictness-level", "10", "--repeat", "2", "--randomise", "--verbose", "--validate-in-process",
                     "--output-dir", "pluginval-logs", "--validate", "`"${{ steps.bundle.outputs.bundle }}`"")
           $p = Start-Process -FilePath $exe.FullName -ArgumentList $args -NoNewWindow -Wait -PassThru `
                  -RedirectStandardOutput pluginval-stdout.txt -RedirectStandardError pluginval-stderr.txt
@@ -133,6 +133,14 @@ jobs:
             ${{ env.BUILD_DIR }}/**/*.pdb
           if-no-files-found: ignore
           retention-days: 7
+
+      - name: Upload debug symbols (to decode crash dumps from a DAW)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PLUGIN_NAME }}-PDB-Windows-x64-Release
+          path: ${{ env.BUILD_DIR }}/**/${{ env.PLUGIN_NAME }}.pdb
+          if-no-files-found: warn
+          retention-days: 30
 
       - name: Upload VST3 bundle
         uses: actions/upload-artifact@v4
