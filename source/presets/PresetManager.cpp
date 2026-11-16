@@ -9,6 +9,7 @@ PresetManager::PresetManager (ShobeatsAudioProcessor& p) : processor (p)
 {
     loadFactoryPresets();
     userDirectory = defaultUserDirectory();
+    importDirectory = defaultImportDirectory();
     rescanUserPresets();
 }
 
@@ -23,6 +24,35 @@ juce::File PresetManager::defaultUserDirectory()
         .getChildFile ("SHOBEATS")
         .getChildFile ("SHOBEATS FX")
         .getChildFile ("Presets");
+}
+
+juce::File PresetManager::defaultImportDirectory()
+{
+    return defaultUserDirectory().getParentDirectory().getChildFile ("Imported");
+}
+
+void PresetManager::setImportDirectory (const juce::File& dir)
+{
+    importDirectory = dir;
+    rescanUserPresets();
+}
+
+PresetImporter::BatchReport PresetManager::importPresets (const juce::File& source)
+{
+    auto report = PresetImporter::importInto (source, importDirectory);
+    rescanUserPresets();
+    return report;
+}
+
+juce::StringArray PresetManager::importedFolders() const
+{
+    juce::StringArray folders;
+    for (const auto& p : presets)
+        if (p.isImported)
+            folders.addIfNotAlreadyThere (p.category.fromFirstOccurrenceOf ("Imported / ", false, false));
+    folders.removeEmptyStrings();
+    folders.sort (true);
+    return folders;
 }
 
 void PresetManager::loadFactoryPresets()
@@ -87,6 +117,27 @@ void PresetManager::rescanUserPresets()
     }
     std::sort (user.begin(), user.end(), [] (const Preset& a, const Preset& b) { return a.name.compareIgnoreCase (b.name) < 0; });
     for (auto& p : user)
+        presets.push_back (std::move (p));
+
+    // Imported presets (converted from other plugins), kept separate from user presets.
+    std::vector<Preset> imported;
+    for (const auto& file : importDirectory.findChildFiles (juce::File::findFiles, true, juce::String ("*") + fileExtension))
+    {
+        if (auto preset = Preset::fromVar (juce::JSON::parse (file), importedCategory))
+        {
+            preset->isFactory = false;
+            preset->isImported = true;
+            if (! preset->category.startsWith (importedCategory))
+                preset->category = importedCategory;
+            preset->file = file;
+            imported.push_back (std::move (*preset));
+        }
+    }
+    std::sort (imported.begin(), imported.end(), [] (const Preset& a, const Preset& b) {
+        const auto c = a.category.compareIgnoreCase (b.category);
+        return c != 0 ? c < 0 : a.name.compareIgnoreCase (b.name) < 0;
+    });
+    for (auto& p : imported)
         presets.push_back (std::move (p));
 
     currentIndex = indexOf (currentKey.first, currentKey.second);

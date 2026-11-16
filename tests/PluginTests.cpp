@@ -464,6 +464,22 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor opens, resizes and closes", "[plu
 
         p.getPresetManager().load (p.getPresetManager().indexOf ("Lost in Clouds", "Dreamy / Ambient"));
         view.showBrowser (true);
+
+        // Optional: SHOBEATS_SNAPSHOT_IMPORT=<zip> renders the browser's IMPORTED view (local check only).
+        if (const auto* archive = std::getenv ("SHOBEATS_SNAPSHOT_IMPORT"))
+        {
+            juce::TemporaryFile importDir;
+            p.getPresetManager().setImportDirectory (importDir.getFile());
+            p.getPresetManager().importPresets (juce::File (juce::String::fromUTF8 (archive)));
+            view.showBrowser (false);
+            view.showBrowser (true);
+            view.getBrowser().showCategory (sfx::PresetManager::importedCategory);
+            juce::File imported (juce::String::fromUTF8 (prefix) + "imported.png");
+            imported.deleteFile();
+            juce::FileOutputStream importedOut (imported);
+            CHECK (juce::PNGImageFormat().writeImageToStream (editor->createComponentSnapshot (editor->getLocalBounds(), true, 2.0f), importedOut));
+            importDir.getFile().deleteRecursively();
+        }
         juce::File file (juce::String::fromUTF8 (prefix) + "browser.png");
         file.deleteFile();
         juce::FileOutputStream out (file);

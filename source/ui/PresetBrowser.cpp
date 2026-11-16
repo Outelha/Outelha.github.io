@@ -91,6 +91,7 @@ PresetBrowser::PresetBrowser (PresetManager& m) : manager (m)
     juce::StringArray categories { "All" };
     categories.addArray (PresetManager::factoryCategories());
     categories.add (PresetManager::userCategory);
+    categories.add (PresetManager::importedCategory);
     for (const auto& c : categories)
     {
         auto* b = categoryButtons.add (new juce::TextButton (c));
@@ -99,7 +100,7 @@ PresetBrowser::PresetBrowser (PresetManager& m) : manager (m)
         addAndMakeVisible (b);
     }
 
-    styleEditor (search, "Search presets, descriptions or instruments...");
+    styleEditor (search, "Search names, creators, categories or instruments...");
     search.onTextChange = [this] { refresh(); };
     search.onEscapeKey = [this] { if (onClose) onClose(); };
     addAndMakeVisible (search);
@@ -135,6 +136,26 @@ PresetBrowser::PresetBrowser (PresetManager& m) : manager (m)
     addAndMakeVisible (close);
     addAndMakeVisible (remove);
 
+    // Imported presets keep the source archive's folder organisation.
+    importedFolder.setColour (juce::ComboBox::backgroundColourId, Palette::display);
+    importedFolder.setColour (juce::ComboBox::outlineColourId, Palette::panelEdge);
+    importedFolder.setColour (juce::ComboBox::textColourId, Palette::text);
+    importedFolder.onChange = [this] { refresh(); };
+    addChildComponent (importedFolder);
+
+    import.setTooltip ("Convert presets from another plugin (.zip, .fwd or .fmod) into SHOBEATS presets");
+    import.onClick = [this] {
+        chooser = std::make_unique<juce::FileChooser> ("Import presets (.zip, .fwd, .fmod)", juce::File::getSpecialLocation (juce::File::userHomeDirectory),
+                                                       "*.zip;*.fwd;*.fmod");
+        juce::Component::SafePointer<PresetBrowser> safeThis (this);
+        chooser->launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                              [safeThis] (const juce::FileChooser& fc) {
+                                  if (safeThis != nullptr && fc.getResult().existsAsFile())
+                                      safeThis->importFrom (fc.getResult());
+                              });
+    };
+    addAndMakeVisible (import);
+
     selectCategory ("All");
 }
 
@@ -143,7 +164,38 @@ void PresetBrowser::selectCategory (const juce::String& c)
     category = c;
     for (auto* b : categoryButtons)
         b->setToggleState (b->getButtonText() == c, juce::dontSendNotification);
+
+    const bool imported = c == PresetManager::importedCategory;
+    if (imported)
+    {
+        const auto previous = importedFolder.getText();
+        importedFolder.clear (juce::dontSendNotification);
+        importedFolder.addItem ("All imported folders", 1);
+        const auto folders = manager.importedFolders();
+        for (int i = 0; i < folders.size(); ++i)
+            importedFolder.addItem (folders[i], i + 2);
+        const auto index = folders.indexOf (previous);
+        importedFolder.setSelectedId (index >= 0 ? index + 2 : 1, juce::dontSendNotification);
+    }
+    importedFolder.setVisible (imported);
+    resized();
     refresh();
+}
+
+void PresetBrowser::importFrom (const juce::File& source)
+{
+    const auto report = manager.importPresets (source);
+    selectCategory (PresetManager::importedCategory);
+
+    juce::String message;
+    message << "Converted: " << report.converted << "\n"
+            << "Partially converted: " << report.partial << "\n"
+            << "Failed: " << report.failed << "\n"
+            << "Already imported (skipped): " << report.duplicates << "\n\n"
+            << "Converted presets approximate the original sounds with SHOBEATS effects. "
+            << "Partially converted presets use source features SHOBEATS does not have; each preset lists them.\n\n"
+            << "Full report:\n" << report.reportFile.getFullPathName();
+    juce::AlertWindow::showMessageBoxAsync (juce::MessageBoxIconType::InfoIcon, "Preset import", message, "OK", this);
 }
 
 void PresetBrowser::refresh()
@@ -154,11 +206,21 @@ void PresetBrowser::refresh()
     for (size_t i = 0; i < presets.size(); ++i)
     {
         const auto& p = presets[i];
-        if (category != "All" && p.category != category)
+        if (category == PresetManager::importedCategory)
+        {
+            if (! p.isImported)
+                continue;
+            if (importedFolder.getSelectedId() > 1 && p.category != "Imported / " + importedFolder.getText())
+                continue;
+        }
+        else if (category != "All" && p.category != category)
+        {
             continue;
+        }
         bool match = true;
         for (const auto& t : terms)
-            match = match && (p.name.containsIgnoreCase (t) || p.description.containsIgnoreCase (t) || p.category.containsIgnoreCase (t));
+            match = match && (p.name.containsIgnoreCase (t) || p.description.containsIgnoreCase (t) || p.category.containsIgnoreCase (t)
+                              || p.creator.containsIgnoreCase (t));
         if (match)
             filtered.push_back (static_cast<int> (i));
     }
@@ -170,7 +232,7 @@ void PresetBrowser::refresh()
             list.selectRow (static_cast<int> (r));
             break;
         }
-    remove.setEnabled (category == PresetManager::userCategory || category == "All");
+    remove.setEnabled (category == PresetManager::userCategory || category == PresetManager::importedCategory || category == "All");
     repaint();
 }
 
@@ -200,10 +262,22 @@ void PresetBrowser::paintListBoxItem (int row, juce::Graphics& g, int width, int
     g.drawText (p.name, top, juce::Justification::centredLeft);
     g.setColour (Palette::textDim);
     g.setFont (uiFont (10.5f, true));
-    g.drawText (p.category.toUpperCase(), top, juce::Justification::centredRight);
+    auto tag = top.removeFromRight (juce::jmin (top.getWidth() / 2, 360));
+    if (p.isImported && p.conversionStatus == "partial")
+    {
+        auto badge = tag.removeFromRight (62).reduced (0, 3).toFloat();
+        g.setColour (Palette::brand.withAlpha (0.25f));
+        g.fillRoundedRectangle (badge, 3.0f);
+        g.setColour (Palette::brand);
+        g.drawText ("PARTIAL", badge, juce::Justification::centred);
+        tag.removeFromRight (8);
+        g.setColour (Palette::textDim);
+    }
+    g.drawText (p.category.toUpperCase(), tag, juce::Justification::centredRight);
     g.setFont (uiFont (12.0f));
     g.setColour (Palette::textDim);
-    g.drawText (p.description, area, juce::Justification::centredLeft, true);
+    const auto line = p.creator.isNotEmpty() ? "by " + p.creator + "  -  " + p.description : p.description;
+    g.drawText (line, area, juce::Justification::centredLeft, true);
 }
 
 void PresetBrowser::listBoxItemClicked (int row, const juce::MouseEvent&)
@@ -271,16 +345,23 @@ void PresetBrowser::resized()
     close.setBounds (bottom.removeFromRight (110));
     bottom.removeFromRight (10);
     remove.setBounds (bottom.removeFromRight (110));
+    import.setBounds (bottom.removeFromLeft (150));
     panel.removeFromBottom (12);
 
     auto left = panel.removeFromLeft (210);
     for (auto* b : categoryButtons)
     {
         b->setBounds (left.removeFromTop (34));
-        left.removeFromTop (6);
+        left.removeFromTop (4);
     }
     panel.removeFromLeft (18);
-    search.setBounds (panel.removeFromTop (36));
+    auto searchRow = panel.removeFromTop (36);
+    if (importedFolder.isVisible())
+    {
+        importedFolder.setBounds (searchRow.removeFromRight (320));
+        searchRow.removeFromRight (10);
+    }
+    search.setBounds (searchRow);
     panel.removeFromTop (10);
     list.setBounds (panel);
 }

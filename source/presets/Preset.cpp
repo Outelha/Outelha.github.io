@@ -66,6 +66,19 @@ std::optional<Preset> Preset::fromVar (const juce::var& v, const juce::String& d
     if (auto* obj = v["params"].getDynamicObject())
         p.params = obj->getProperties();
 
+    p.creator = v["creator"].toString();
+    if (auto* imp = v["import"].getDynamicObject())
+    {
+        p.isImported = true;
+        p.sourceProduct = imp->getProperty ("product").toString();
+        p.sourceFile = imp->getProperty ("file").toString();
+        p.sourceHash = imp->getProperty ("hash").toString();
+        p.conversionStatus = imp->getProperty ("status").toString();
+        if (auto* notes = imp->getProperty ("notes").getArray())
+            for (auto& n : *notes)
+                p.conversionNotes.add (n.toString());
+    }
+
     return p;
 }
 
@@ -88,6 +101,22 @@ juce::var Preset::toVar() const
     for (const auto& nv : params)
         paramObj->setProperty (nv.name, nv.value);
     root->setProperty ("params", juce::var (paramObj));
+
+    if (creator.isNotEmpty())
+        root->setProperty ("creator", creator);
+    if (isImported)
+    {
+        auto* imp = new juce::DynamicObject();
+        imp->setProperty ("product", sourceProduct);
+        imp->setProperty ("file", sourceFile);
+        imp->setProperty ("hash", sourceHash);
+        imp->setProperty ("status", conversionStatus);
+        juce::Array<juce::var> notes;
+        for (const auto& n : conversionNotes)
+            notes.add (n);
+        imp->setProperty ("notes", notes);
+        root->setProperty ("import", juce::var (imp));
+    }
 
     return juce::var (root);
 }

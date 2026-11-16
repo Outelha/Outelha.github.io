@@ -35,6 +35,11 @@ public:
     std::function<void()> onClose;
     void refresh();
 
+    // Converts presets from another plugin (zip / folder / file); shows a summary.
+    void importFrom (const juce::File& source);
+    void showCategory (const juce::String& c) { selectCategory (c); }
+    int getNumShown() const noexcept { return static_cast<int> (filtered.size()); }
+
     void paint (juce::Graphics&) override;
     void resized() override;
     bool keyPressed (const juce::KeyPress&) override;
@@ -52,9 +57,11 @@ private:
     juce::OwnedArray<juce::TextButton> categoryButtons;
     juce::TextEditor search;
     juce::ListBox list { "Presets", this };
-    juce::TextButton close { "Close" }, remove { "Delete" };
+    juce::TextButton close { "Close" }, remove { "Delete" }, import { "Import..." };
+    juce::ComboBox importedFolder;
     juce::String category { "All" };
     std::vector<int> filtered;
+    std::unique_ptr<juce::FileChooser> chooser;
 };
 
 // Small modal-style panel to name and save a user preset.

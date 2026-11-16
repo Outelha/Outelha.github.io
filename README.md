@@ -37,6 +37,9 @@ and two analog-movement controls that act on every active pedal:
 - **FX Generator**: pick a vibe (Vintage, Dreamy, Dark, Lo-Fi, Space, Experimental) and press **GENERATE**.
   Each vibe is a curated recipe (signature pedal, likely pedals, safe parameter ranges, order template,
   movement ranges, loudness trim). Every press gives a new idea; press **Save** to keep it.
+- **Import presets from TONEFLX / FFWD FX** (`.zip`, `.fwd`, `.fmod`): PRESETS → IMPORT…. They are converted
+  to SHOBEATS presets, stored separately and listed under *Imported* with their original folders and creators.
+  Conversions approximate the original sound; see [docs/IMPORT.md](docs/IMPORT.md).
 - Loading a preset or generating fades out, swaps and clears old tails in silence, then fades in – no clicks
   or level spikes while audio plays. The DAW project stores parameters, pedal order and the preset name.
 

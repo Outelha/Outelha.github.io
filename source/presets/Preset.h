@@ -20,7 +20,16 @@ struct Preset
 {
     juce::String name, category, description;
     bool isFactory = true;
-    juce::File file; // user presets only
+    juce::File file; // user and imported presets
+
+    // Imported presets only (converted from another plugin's preset files).
+    bool isImported = false;
+    juce::String creator;          // original author, when the source names one
+    juce::String sourceProduct;    // e.g. "TONEFLX 1.5.1"
+    juce::String sourceFile;       // path inside the imported archive / folder
+    juce::String sourceHash;       // fingerprint of the source file, used to skip duplicates
+    juce::String conversionStatus; // "converted" or "partial"
+    juce::StringArray conversionNotes;
 
     std::vector<int> chain;      // effect ids, processing order of the active pedals
     ChainOrder::Order order {};  // full order to apply

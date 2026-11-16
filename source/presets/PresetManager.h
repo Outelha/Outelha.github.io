@@ -2,6 +2,7 @@
 
 #include "Generator.h"
 #include "Preset.h"
+#include "PresetImporter.h"
 
 namespace sfx
 {
@@ -13,16 +14,27 @@ class PresetManager
 public:
     // Plain literals: no static JUCE objects that would be destroyed at DLL unload.
     static constexpr const char* userCategory = "User";
+    static constexpr const char* importedCategory = "Imported";
     static constexpr const char* fileExtension = ".sfxpreset";
 
     explicit PresetManager (ShobeatsAudioProcessor& processor);
 
     static juce::StringArray factoryCategories();
     static juce::File defaultUserDirectory();
+    static juce::File defaultImportDirectory();
 
     void setUserDirectory (const juce::File& dir);
     const juce::File& getUserDirectory() const noexcept { return userDirectory; }
+    void setImportDirectory (const juce::File& dir);
+    const juce::File& getImportDirectory() const noexcept { return importDirectory; }
     void rescanUserPresets();
+
+    // Converts presets from another plugin (a .zip, a folder or a single .fwd/.fmod file)
+    // into native presets stored in the import directory, then rescans.
+    PresetImporter::BatchReport importPresets (const juce::File& source);
+
+    // Distinct imported sub-categories, e.g. "Creative FX / Ambient".
+    juce::StringArray importedFolders() const;
 
     const std::vector<Preset>& getPresets() const noexcept { return presets; }
     int getNumFactoryPresets() const noexcept { return numFactory; }
@@ -66,7 +78,7 @@ private:
     int numFactory = 0;
     int currentIndex = -1;
     juce::String currentName, currentCategory;
-    juce::File userDirectory;
+    juce::File userDirectory, importDirectory;
     juce::StringArray loadErrors;
     std::optional<Preset> lastGenerated;
     Generator::Vibe selectedVibe = Generator::Vibe::vintage;

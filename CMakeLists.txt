@@ -10,7 +10,7 @@ set(BUNDLE_ID "com.shobeats.shobeatsfx")
 set(MANUFACTURER_CODE "Shbt") # 4 chars, at least one uppercase
 set(PLUGIN_CODE "Shfx")       # 4 chars, unique per plugin
 
-project(${PRODUCT_NAME} VERSION 0.6.1 LANGUAGES C CXX)
+project(${PRODUCT_NAME} VERSION 0.7.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -102,6 +102,7 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/presets/Preset.cpp
     source/presets/PresetManager.cpp
     source/presets/Generator.cpp
+    source/presets/PresetImporter.cpp
     source/PluginProcessor.cpp
     source/PluginEditor.cpp
     source/ui/ShobeatsLookAndFeel.cpp
@@ -138,6 +139,7 @@ target_link_libraries(${PRODUCT_NAME}
 if(SHOBEATS_BUILD_LIFECYCLE_HOST)
     add_subdirectory(tools/lifecycle_host)
 endif()
+add_subdirectory(tools/preset_import)
 
 # ---------------------------------------------------------------------------
 # Tests

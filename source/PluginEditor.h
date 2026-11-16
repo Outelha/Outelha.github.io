@@ -35,6 +35,7 @@ public:
     ui::DetailPanel& getDetailPanel() noexcept { return detail; }
     ui::MainPanel& getMainPanel() noexcept { return mainPanel; }
     void showBrowser (bool show);
+    ui::PresetBrowser& getBrowser() noexcept { return browser; }
     void showSavePanel (bool show);
 
 private:
