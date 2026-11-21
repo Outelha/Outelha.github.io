@@ -124,3 +124,11 @@ and 100 %.
 - `SHOBEATS_SNAPSHOT_DELAY=<prefix> shobeats_plugin_tests "DELAY skin: Main and Advanced render at every editor size"`
   writes those renderings as PNG files (needs a display, for example `xvfb-run`).
 - The existing render-cost, scaling, lifecycle and pluginval checks run unchanged in CI.
+
+## CI result (commit 6e39cb8)
+
+- Windows build run 44923172419: Release build, 114/114 tests (including the five
+  `DELAY skin` tests), lifecycle stress host (exit 0), pluginval strictness 10, two
+  passes (exit 0). VST3 artifact `ShobeatsFX-VST3-Windows-x64-Release` (id 14715014193).
+- Linux AddressSanitizer run 44923172460: success.
+- Not tested inside FL Studio: pluginval and the lifecycle host are not a DAW.
