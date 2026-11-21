@@ -57,3 +57,34 @@ Complete:
 Removed on purpose: the small LCD read-outs on the resampler / reverse / delay pedals and
 the "SHOBEATS" silkscreen on the name plates (not in the approved designs; the same values
 are shown in the detail panel).
+
+## M5 + M6 — Resampler, Tape, Chorus, Tremolo, Reverse, Delay, Reverb
+Complete:
+* `EffectDisplay` is now a `FrameClock` client with access to the `VisualFeed`.
+  Modulation displays (chorus, tremolo, reverse) advance only while their effect is on;
+  static displays repaint only when a parameter or the tempo changes; nothing repaints
+  while the Advanced view is hidden.
+* Shared caption pill (accent outline, sine glyph, read-out) as in references 03–08.
+* Resampler: reference tone sample-and-held at Rate and quantised to Bits (real maths of
+  the effect), the clean tone faintly behind it. Pill "kHz / bit".
+* Tape: transport deck with two independent reels (`pedal::paintReel`), tape path, guides
+  and head. Reels spin up only while audio is being processed and the effect is on, coast
+  to a stop when bypassed or when the host stops calling the plugin. Pack size follows Age.
+  Wow/flutter trace below, hiss from Noise, "AGE %" read-out.
+* Chorus: four voices on their own LFO phases; depth = sweep, base delay = band height.
+* Tremolo: gain curve from `Tremolo::shapeValue` (shape, depth), right channel shown when
+  Stereo > 0, live LFO playhead, rate or synced division.
+* Reverse: forward segment (faint) vs reversed segment (bright) per window, left arrows,
+  window boundaries scrolling at the reverse time.
+* Delay: L / R lanes, dry hit, repeats at Time spaced and Feedback-scaled, ping-pong
+  alternates lanes, accent bars with glow. Pill "time / FB %".
+* Reverb: decay envelope reaching silence at RT60 after the pre-delay, damping envelope,
+  early reflections spread by Size, diffuse speckle, blue→violet fill.
+* All remaining hard-coded `Palette::` colours in the displays replaced by accent colours.
+
+Open / differences from references 03–09:
+* Reverse reference draws plain sines; ours draws enveloped segments because that is what
+  the effect does (kept on purpose).
+* Lower-left illustrations are procedural and simpler than the reference renders (the
+  optional `assets/images/art_<effect>.png` slot can take licensed art later).
+* Chassis warmth / reflections still for M8.

@@ -250,7 +250,8 @@ void EffectArt::paint (Graphics& g)
 }
 
 //==============================================================================
-DetailPanel::DetailPanel (APVTS& s) : state (s), display (s), art (s)
+DetailPanel::DetailPanel (APVTS& s, FrameClock& clock, const VisualFeed& feed)
+    : state (s), display (s, clock, feed), art (s)
 {
     addAndMakeVisible (art);
     addAndMakeVisible (display);

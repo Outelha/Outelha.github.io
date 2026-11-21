@@ -76,7 +76,7 @@ MainView::MainView (ShobeatsAudioProcessor& p)
       presetBar (p),
       mainPanel (p, frameClock),
       pedalboard (p.getState(), p.getChainOrder(), frameClock, p.getVisualFeed()),
-      detail (p.getState()),
+      detail (p.getState(), frameClock, p.getVisualFeed()),
       browser (p.getPresetManager()),
       savePanel (p.getPresetManager())
 {

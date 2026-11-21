@@ -137,6 +137,7 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/ui/Textures.cpp
     source/ui/Fonts.cpp
     source/ui/PedalArt.cpp
+    source/ui/PedalLive.cpp
     source/ui/MainPanel.cpp)
 
 target_compile_definitions(${PRODUCT_NAME} PUBLIC

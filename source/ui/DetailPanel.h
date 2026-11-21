@@ -30,7 +30,7 @@ private:
 class DetailPanel final : public juce::Component, private juce::Timer
 {
 public:
-    explicit DetailPanel (APVTS& state);
+    DetailPanel (APVTS& state, FrameClock& clock, const VisualFeed& feed);
 
     void showEffect (EffectId id);
     EffectId getEffect() const noexcept { return effect; }

@@ -1,16 +1,19 @@
 #pragma once
 
 #include "Controls.h"
+#include "FrameClock.h"
+#include "VisualFeed.h"
 
 namespace sfx::ui
 {
 // Visualises the selected effect from its current parameter values: transfer
 // curves, LFO shapes, echo taps, decay envelopes, etc. Animated where the effect
 // itself moves over time.
-class EffectDisplay final : public juce::Component, private juce::Timer
+class EffectDisplay final : public juce::Component, private FrameClock::Client
 {
 public:
-    explicit EffectDisplay (APVTS& state);
+    EffectDisplay (APVTS& state, FrameClock& clock, const VisualFeed& feed);
+    ~EffectDisplay() override;
 
     void setEffect (EffectId id);
     void paint (juce::Graphics&) override;
@@ -19,8 +22,9 @@ public:
     void setBpm (double newBpm) noexcept { bpm = newBpm; }
 
 private:
-    void timerCallback() override;
+    bool frame (double now, double dt) override;
     float value (const char* id) const;
+    void drawCaptionPill (juce::Graphics&, juce::Rectangle<float>, const juce::String&) const;
     bool isAnimated() const noexcept;
 
     void drawGrid (juce::Graphics&, juce::Rectangle<float>, int cols, int rows) const;
@@ -39,7 +43,11 @@ private:
     EffectId effect = EffectId::saturation;
     juce::Colour accent;
     double bpm = 120.0;
-    double time = 0.0, lastTick = 0.0;
+    FrameClock& clock;
+    const VisualFeed& feed;
+    double time = 0.0;
+    float reelPhase = 0.0f, reelSpeed = 0.0f;
+    std::uint64_t lastSamples = 0;
     std::vector<float> lastValues;
 };
 } // namespace sfx::ui
