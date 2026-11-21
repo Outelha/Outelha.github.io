@@ -2,6 +2,7 @@
 
 #include "ChainOrder.h"
 #include "Parameters.h"
+#include "VisualFeed.h"
 #include "presets/PresetManager.h"
 #include "dsp/Chorus.h"
 #include "dsp/Delay.h"
@@ -73,7 +74,10 @@ public:
     juce::AudioProcessorValueTreeState& getState() noexcept { return state; }
     ChainOrder& getChainOrder() noexcept { return chainOrder; }
     LevelMeters& getMeters() noexcept { return meters; }
+    const VisualFeed& getVisualFeed() const noexcept { return visualFeed; }
     double getCurrentBpm() const noexcept { return currentBpm.load (std::memory_order_relaxed); }
+    // True when the tempo comes from the host's transport (not the 120 BPM fallback).
+    bool isTempoFromHost() const noexcept { return tempoFromHost.load (std::memory_order_relaxed); }
 
     // For tests and hosts without a playhead.
     void setFallbackBpm (double bpm) noexcept { fallbackBpm = bpm; }
@@ -99,6 +103,7 @@ private:
     void processChunk (juce::dsp::AudioBlock<float> block) noexcept;
     void processEffect (EffectId id, juce::dsp::AudioBlock<float>& block) noexcept;
     double readHostBpm() const;
+    bool hostReportsTempo() const;
 
     juce::AudioProcessorValueTreeState state;
     ParameterReader params;
@@ -132,6 +137,7 @@ private:
     std::array<dsp::DelayLine, 2> bypassDelay;
 
     LevelMeters meters;
+    VisualFeed visualFeed;
 
     // Click-free transitions (preset loads, chain reordering).
     enum class Fade
@@ -152,6 +158,7 @@ private:
     juce::String presetName, presetCategory;
 
     std::atomic<double> currentBpm { defaultBpm };
+    std::atomic<bool> tempoFromHost { false };
     double fallbackBpm = defaultBpm;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShobeatsAudioProcessor)

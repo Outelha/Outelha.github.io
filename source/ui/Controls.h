@@ -24,11 +24,17 @@ public:
     Knob (APVTS& state, const juce::String& paramId, const juce::String& caption, juce::Colour accent, Style style = Style::panel);
 
     void resized() override;
+    void paint (juce::Graphics&) override;
     juce::Slider& getSlider() noexcept { return slider; }
     void setInkColour (juce::Colour c);
 
+    // Draw the value read-out in a recessed window (pill) instead of bare text.
+    void setValueWindow (bool shouldShow) { valueWindow = shouldShow; repaint(); }
+    void setCaptionFont (juce::Font f) { caption.setFont (f); }
+
 private:
     Style style;
+    bool valueWindow = false;
     juce::Slider slider;
     juce::Label caption;
     std::unique_ptr<APVTS::SliderAttachment> attachment;
@@ -75,6 +81,7 @@ private:
 };
 
 // Stereo peak meter (dBFS).
+// Stereo LED ladder meter (dBFS) in a recessed slot, caption below.
 class LevelMeter final : public juce::Component
 {
 public:
@@ -82,9 +89,12 @@ public:
     void setLevels (float left, float right);
     void paint (juce::Graphics&) override;
 
+    static constexpr int segments = 18;
+    static int litSegments (float gain) noexcept;
+
 private:
     juce::String caption;
     std::array<float, 2> levels {}, peaks {};
-    std::array<int, 2> peakHold {};
+    std::array<int, 2> peakHold {}, shownLit {}, shownPeak {};
 };
 } // namespace sfx::ui

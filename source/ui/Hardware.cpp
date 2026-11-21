@@ -503,19 +503,27 @@ void drawGlassTube (Graphics& g, Rectangle<float> r, Colour glow, float level)
     const auto glass = r.reduced (r.getWidth() * 0.12f, capH * 0.7f);
     // Light thrown on the surroundings.
     drawLightSpill (g, glass.expanded (glass.getWidth() * 1.4f, glass.getHeight() * 0.25f), glow, 0.25f + 0.75f * level);
-    // Glass body.
+    // Glass body with the glowing gas column: brightest in the middle, darker at the walls.
     g.setColour (Colour (0xff120c08));
     g.fillRoundedRectangle (glass, glass.getWidth() * 0.45f);
-    // Filament glow inside.
-    ColourGradient core (glow.brighter (0.5f).withAlpha (0.35f + 0.65f * level), glass.getCentreX(), glass.getCentreY(),
-                         glow.withAlpha (0.0f), glass.getRight(), glass.getCentreY(), true);
-    g.setGradientFill (core);
-    g.fillRoundedRectangle (glass.reduced (1.0f), glass.getWidth() * 0.45f);
-    g.setColour (glow.brighter (0.8f).withAlpha (0.25f + 0.7f * level));
-    g.fillRoundedRectangle (glass.withSizeKeepingCentre (jmax (1.5f, glass.getWidth() * 0.16f), glass.getHeight() * 0.7f), 1.0f);
+    {
+        ColourGradient column (glow.darker (0.6f).withAlpha (0.5f * level), glass.getX(), 0.0f, glow.darker (0.6f).withAlpha (0.5f * level), glass.getRight(), 0.0f, false);
+        column.addColour (0.5, glow.brighter (0.3f).withAlpha (0.35f + 0.65f * level));
+        column.addColour (0.3, glow.withAlpha (0.6f * level + 0.1f));
+        column.addColour (0.7, glow.withAlpha (0.6f * level + 0.1f));
+        g.setGradientFill (column);
+        g.fillRoundedRectangle (glass.reduced (1.0f), glass.getWidth() * 0.45f);
+        // Fade toward both ends.
+        g.setGradientFill (ColourGradient (Colour (0xff120c08).withAlpha (0.85f), 0.0f, glass.getY(), Colour (0x00120c08), 0.0f, glass.getY() + glass.getHeight() * 0.22f, false));
+        g.fillRoundedRectangle (glass.withHeight (glass.getHeight() * 0.22f), glass.getWidth() * 0.45f);
+        g.setGradientFill (ColourGradient (Colour (0x00120c08), 0.0f, glass.getBottom() - glass.getHeight() * 0.22f, Colour (0xff120c08).withAlpha (0.85f), 0.0f, glass.getBottom(), false));
+        g.fillRoundedRectangle (glass.withTrimmedTop (glass.getHeight() * 0.78f), glass.getWidth() * 0.45f);
+    }
+    g.setColour (Colour (0xffffe0b0).withAlpha (0.35f + 0.65f * level));
+    g.fillRoundedRectangle (glass.withSizeKeepingCentre (jmax (1.2f, glass.getWidth() * 0.1f), glass.getHeight() * 0.62f), 1.0f);
     // Glass reflections.
     g.setColour (Colours::white.withAlpha (0.22f));
-    g.fillRoundedRectangle (glass.withWidth (glass.getWidth() * 0.18f).translated (glass.getWidth() * 0.16f, 0.0f).reduced (0.0f, glass.getHeight() * 0.06f), 1.5f);
+    g.fillRoundedRectangle (glass.withWidth (glass.getWidth() * 0.14f).translated (glass.getWidth() * 0.14f, 0.0f).reduced (0.0f, glass.getHeight() * 0.06f), 1.5f);
     g.setColour (Colours::white.withAlpha (0.18f));
     g.drawRoundedRectangle (glass, glass.getWidth() * 0.45f, 0.8f);
     // Chrome end caps.
@@ -549,7 +557,11 @@ void drawVacuumTube (Graphics& g, Rectangle<float> r, Colour glow, float level)
                              glow.withAlpha (0.0f), envelope.getRight(), envelope.getCentreY(), true);
         g.setGradientFill (core);
         g.fillRect (envelope);
-        g.setColour (glow.withAlpha (0.35f * level));
+        g.setColour (glow.withAlpha (0.12f + 0.45f * level));
+        g.fillRect (envelope);
+        ColourGradient heart (Colour (0xffffd9a0).withAlpha (0.2f + 0.7f * level), envelope.getCentreX(), envelope.getCentreY() + envelope.getHeight() * 0.12f,
+                              glow.withAlpha (0.0f), envelope.getCentreX() + envelope.getWidth() * 0.45f, envelope.getCentreY(), true);
+        g.setGradientFill (heart);
         g.fillRect (envelope);
         const auto plate = envelope.reduced (envelope.getWidth() * 0.26f, envelope.getHeight() * 0.22f).translated (0.0f, envelope.getHeight() * 0.08f);
         g.setColour (Colour (0xff3a2414).withAlpha (0.9f));
@@ -611,7 +623,7 @@ void drawMachinedKnob (Graphics& g, Rectangle<float> bounds, const KnobLook& k)
             g.drawLine (Line<float> (polar (c, r0, a), polar (c, r1, a)), major ? jmax (1.2f, r * 0.028f) : jmax (0.9f, r * 0.018f));
             if (k.numbers && i % 4 == 0)
             {
-                g.setFont (font (Type::label, jmax (10.0f, r * 0.2f)));
+                g.setFont (font (Type::labelBold, jmax (11.0f, r * 0.24f)));
                 g.setColour (Colour (0xffd9d4ca));
                 const auto tp = polar (c, r * 1.25f, a);
                 g.drawText (String (i / 2), Rectangle<float> (r * 0.4f, r * 0.24f).withCentre (tp), Justification::centred, false);
@@ -649,6 +661,19 @@ void drawMachinedKnob (Graphics& g, Rectangle<float> bounds, const KnobLook& k)
 
     // Knob body: soft cast shadow, then the knurled black skirt.
     const auto kr = r * 0.74f;
+    if (k.numbers)
+    {
+        // Large knobs sit in an illuminated ring whose brightness follows the value.
+        const auto ringR = kr * 1.06f;
+        const auto glowAmount = 0.3f + 0.7f * k.proportion;
+        for (auto [w, a] : { std::pair { 9.0f, 0.06f }, { 5.0f, 0.12f }, { 2.5f, 0.3f } })
+        {
+            g.setColour (k.accent.withMultipliedAlpha (a * glowAmount * 1.4f));
+            g.drawEllipse (Rectangle<float> (ringR * 2.0f, ringR * 2.0f).withCentre (c), w);
+        }
+        g.setColour (k.accent.withMultipliedAlpha (0.35f + 0.65f * glowAmount));
+        g.drawEllipse (Rectangle<float> (ringR * 2.0f, ringR * 2.0f).withCentre (c), 1.6f);
+    }
     const auto body = Rectangle<float> (kr * 2.0f, kr * 2.0f).withCentre (c);
     {
         ColourGradient shadow (Colours::black.withAlpha (0.75f), c.x, c.y + kr * 0.18f, Colours::transparentBlack, c.x + kr * 1.25f, c.y + kr * 0.18f, true);

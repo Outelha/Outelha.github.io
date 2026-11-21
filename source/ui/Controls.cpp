@@ -1,5 +1,7 @@
 #include "Controls.h"
 
+#include "Hardware.h"
+
 namespace sfx::ui
 {
 //==============================================================================
@@ -24,7 +26,7 @@ Knob::Knob (APVTS& state, const juce::String& paramId, const juce::String& capti
     {
         slider.getProperties().set ("style", "alu");
         slider.setTextBoxStyle (juce::Slider::TextBoxBelow, false, 96, 22);
-        slider.setColour (juce::Slider::textBoxTextColourId, juce::Colour (0xffffb347));
+        slider.setColour (juce::Slider::textBoxTextColourId, juce::Colour (0xfff4efe6));
         slider.setMouseDragSensitivity (300);
     }
     else
@@ -58,13 +60,26 @@ void Knob::setInkColour (juce::Colour c)
     slider.setColour (juce::Slider::rotarySliderOutlineColourId, c.withAlpha (0.75f));
 }
 
+void Knob::paint (juce::Graphics& g)
+{
+    if (! valueWindow || slider.getTextBoxPosition() == juce::Slider::NoTextBox)
+        return;
+    const auto s = slider.getBounds();
+    const auto h = slider.getTextBoxHeight();
+    const auto w = juce::jmin (slider.getTextBoxWidth(), s.getWidth() - 4);
+    const auto box = juce::Rectangle<int> (w, h).withCentre ({ s.getCentreX(), s.getBottom() - h / 2 }).toFloat();
+    hw::drawTray (g, box.reduced (0.0f, 1.0f), 5.0f);
+    g.setColour (juce::Colours::white.withAlpha (0.07f));
+    g.drawRoundedRectangle (box.reduced (1.5f, 2.5f), 4.0f, 0.8f);
+}
+
 void Knob::resized()
 {
     auto area = getLocalBounds();
     if (style == Style::pedal)
         caption.setBounds (area.removeFromBottom (14));
     else
-        caption.setBounds (area.removeFromTop (style == Style::alu ? 22 : 16));
+        caption.setBounds (area.removeFromTop (style == Style::alu ? 30 : 20));
     slider.setBounds (area);
 }
 
@@ -143,9 +158,17 @@ LevelMeter::LevelMeter (const juce::String& c) : caption (c)
     setInterceptsMouseClicks (false, false);
 }
 
+int LevelMeter::litSegments (float gain) noexcept
+{
+    constexpr float minDb = -48.0f, maxDb = 3.0f;
+    const auto db = juce::Decibels::gainToDecibels (gain, minDb - 1.0f);
+    return juce::jlimit (0, segments, static_cast<int> (std::ceil ((db - minDb) / (maxDb - minDb) * segments)));
+}
+
 void LevelMeter::setLevels (float left, float right)
 {
     const std::array<float, 2> in { left, right };
+    bool changed = false;
     for (size_t i = 0; i < 2; ++i)
     {
         levels[i] = juce::jmax (in[i], levels[i] * 0.82f);
@@ -158,47 +181,40 @@ void LevelMeter::setLevels (float left, float right)
         {
             peaks[i] *= 0.92f;
         }
+        const auto lit = litSegments (levels[i]), peak = litSegments (peaks[i]);
+        changed = changed || lit != shownLit[i] || peak != shownPeak[i];
+        shownLit[i] = lit;
+        shownPeak[i] = peak;
     }
-    repaint();
+    if (changed)
+        repaint(); // only when a segment actually changes
 }
 
 void LevelMeter::paint (juce::Graphics& g)
 {
     auto area = getLocalBounds().toFloat();
-    g.setFont (uiFont (10.0f, true));
-    g.setColour (Palette::textFaint);
-    g.drawText (caption, area.removeFromBottom (14.0f), juce::Justification::centred);
-    area.removeFromBottom (3.0f);
+    auto label = area.removeFromBottom (16.0f);
+    hw::drawEngraved (g, caption, label, font (Type::labelBold, 12.0f, 0.08f), juce::Justification::centred, juce::Colour (0xffd8c8b0));
+    area.removeFromBottom (4.0f);
+    hw::drawTray (g, area, 4.0f);
 
-    constexpr float minDb = -60.0f, maxDb = 6.0f;
-    auto toNorm = [] (float gain) {
-        const auto db = juce::Decibels::gainToDecibels (gain, minDb);
-        return juce::jlimit (0.0f, 1.0f, (db - minDb) / (maxDb - minDb));
-    };
-
-    const auto barW = (area.getWidth() - 3.0f) * 0.5f;
-    for (size_t i = 0; i < 2; ++i)
-    {
-        auto bar = juce::Rectangle<float> (area.getX() + static_cast<float> (i) * (barW + 3.0f), area.getY(), barW, area.getHeight());
-        g.setColour (Palette::display);
-        g.fillRoundedRectangle (bar, 2.0f);
-
-        const auto zeroY = bar.getBottom() - bar.getHeight() * ((0.0f - minDb) / (maxDb - minDb));
-        auto fill = bar.withTop (bar.getBottom() - bar.getHeight() * toNorm (levels[i]));
-        juce::ColourGradient grad (juce::Colour (0xff4ad99a), 0.0f, bar.getBottom(), juce::Colour (0xffff4d5e), 0.0f, bar.getY(), false);
-        grad.addColour (0.70, juce::Colour (0xffd8e05a));
-        grad.addColour (0.88, juce::Colour (0xffff9d3d));
-        g.setGradientFill (grad);
-        g.fillRoundedRectangle (fill, 2.0f);
-
-        if (peaks[i] > 0.001f)
+    const auto slot = area.reduced (4.0f, 5.0f);
+    const auto colW = (slot.getWidth() - 2.0f) * 0.5f;
+    const auto segH = slot.getHeight() / static_cast<float> (segments);
+    for (size_t ch = 0; ch < 2; ++ch)
+        for (int k = 0; k < segments; ++k)
         {
-            const auto peakY = bar.getBottom() - bar.getHeight() * toNorm (peaks[i]);
-            g.setColour (peaks[i] > 1.0f ? juce::Colour (0xffff4d5e) : Palette::text.withAlpha (0.8f));
-            g.fillRect (bar.getX(), peakY - 1.0f, bar.getWidth(), 1.5f);
+            const auto cell = juce::Rectangle<float> (slot.getX() + static_cast<float> (ch) * (colW + 2.0f), slot.getBottom() - segH * static_cast<float> (k + 1),
+                                                      colW, segH).reduced (0.0f, segH * 0.18f);
+            const auto colour = k >= segments - 2 ? juce::Colour (0xffff4a2a) : k >= segments - 5 ? juce::Colour (0xffffc040) : brandOrange;
+            const bool lit = k < shownLit[ch] || k == shownPeak[ch] - 1;
+            if (lit)
+            {
+                g.setColour (colour.withAlpha (0.25f));
+                g.fillRect (cell.expanded (1.5f, 1.0f));
+            }
+            g.setColour (lit ? colour : colour.withAlpha (0.10f));
+            g.fillRect (cell);
         }
-        g.setColour (Palette::textFaint.withAlpha (0.8f));
-        g.fillRect (bar.getX(), zeroY, bar.getWidth(), 1.0f);
-    }
 }
 } // namespace sfx::ui

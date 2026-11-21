@@ -439,11 +439,11 @@ void paintPlate (Graphics& g, EffectId id, const Geometry& geo, const State& s)
     g.setColour (Colours::white.withAlpha (0.08f));
     g.drawLine (p.getX() + corner, p.getY() + 1.0f, p.getRight() - corner, p.getY() + 1.0f, 0.8f);
     const auto name = String (infoFor (id).name).toUpperCase();
-    g.setFont (font (Type::labelBold, p.getHeight() * 0.66f, 0.03f));
+    g.setFont (font (Type::labelBold, p.getHeight() * 0.86f, 0.0f));
     g.setColour (Colours::black);
-    g.drawFittedText (name, p.reduced (p.getHeight() * 0.25f, 0.0f).translated (0.0f, 1.0f).toNearestInt(), Justification::centred, 1, 0.8f);
+    g.drawFittedText (name, p.reduced (p.getHeight() * 0.12f, 0.0f).translated (0.0f, 1.0f).toNearestInt(), Justification::centred, 1, 0.7f);
     g.setColour (s.selected ? Colours::white : Colour (0xffeeeae2));
-    g.drawFittedText (name, p.reduced (p.getHeight() * 0.25f, 0.0f).toNearestInt(), Justification::centred, 1, 0.8f);
+    g.drawFittedText (name, p.reduced (p.getHeight() * 0.12f, 0.0f).toNearestInt(), Justification::centred, 1, 0.7f);
 }
 
 void paintCaption (Graphics& g, Rectangle<float> r, const String& text, Colour ink)
@@ -475,6 +475,22 @@ std::pair<String, String> captionsFor (EffectId id)
 } // namespace
 
 //==============================================================================
+FaceKnobs faceKnobs (EffectId id)
+{
+    switch (id)
+    {
+        case EffectId::saturation: return { ParamID::satDrive, ParamID::satMix };
+        case EffectId::resampler: return { ParamID::rsRate, ParamID::rsBits };
+        case EffectId::tape: return { ParamID::tapeWow, ParamID::tapeAge };
+        case EffectId::chorus: return { ParamID::chorusRate, ParamID::chorusDepth };
+        case EffectId::tremolo: return { ParamID::tremRate, ParamID::tremDepth, ParamID::tremSync, ParamID::tremDivision };
+        case EffectId::reverse: return { ParamID::revTime, ParamID::revMix, ParamID::revSync, ParamID::revDivision };
+        case EffectId::delay: return { ParamID::delayTime, ParamID::delayFeedback, ParamID::delaySync, ParamID::delayDivision };
+        case EffectId::reverb: return { ParamID::reverbDecay, ParamID::reverbMix };
+    }
+    return {};
+}
+
 Geometry layout (EffectId id, Rectangle<float> b, bool captions)
 {
     Geometry g;
@@ -521,7 +537,7 @@ Geometry layout (EffectId id, Rectangle<float> b, bool captions)
         g.captionB = rel (b, 0.48f, y, 0.92f, y + captionH).withCentre ({ g.knobB.getCentreX(), b.getY() + b.getHeight() * (y + captionH * 0.5f) });
     }
 
-    g.plate = rel (b, 0.1f, 0.505f, 0.9f, 0.595f);
+    g.plate = captions ? rel (b, 0.08f, 0.5f, 0.92f, 0.595f) : rel (b, 0.06f, 0.495f, 0.94f, 0.605f);
     g.led = { b.getCentreX(), b.getY() + b.getHeight() * 0.65f };
     g.footswitch = square (b, 0.5f, 0.785f, 0.32f);
     return g;

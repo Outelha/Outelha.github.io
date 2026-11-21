@@ -44,6 +44,17 @@ struct State
     std::array<float, 4> extra {};
 };
 
+// The parameters behind the two face knobs. When `syncId` is set, knob A shows
+// `divisionId` instead of `a` while the sync switch is on.
+struct FaceKnobs
+{
+    const char* a;
+    const char* b;
+    const char* syncId = nullptr;
+    const char* divisionId = nullptr;
+};
+FaceKnobs faceKnobs (EffectId);
+
 // Full pedal: shadow, enclosure finish, screws, window art, captions, knobs, plate, LED, switch.
 void paint (juce::Graphics&, EffectId, const Geometry&, const State&);
 

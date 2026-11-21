@@ -102,6 +102,7 @@ void ShobeatsAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     transitionRequested = false;
     resetRequested = false;
 
+    visualFeed.prepare (sampleRate);
     updateDspParameters (fallbackBpm);
     reset();
     prepared.store (true, std::memory_order_release);
@@ -140,6 +141,14 @@ double ShobeatsAudioProcessor::getTailLengthSeconds() const
 {
     // Longest reverb plus a long feedback delay tail.
     return static_cast<double> (dsp::Reverb::maxDecaySeconds + dsp::Reverb::maxPredelayMs * 0.001f) + 10.0;
+}
+
+bool ShobeatsAudioProcessor::hostReportsTempo() const
+{
+    if (auto* head = getPlayHead())
+        if (auto position = head->getPosition())
+            return position->getBpm().hasValue();
+    return false;
 }
 
 double ShobeatsAudioProcessor::readHostBpm() const
@@ -349,6 +358,10 @@ void ShobeatsAudioProcessor::processChunk (juce::dsp::AudioBlock<float> block) n
     }
     for (size_t ch = 0; ch < block.getNumChannels(); ++ch)
         LevelMeters::update (meters.output[ch], blockPeak (block, ch));
+    {
+        std::array<const float*, 2> out { block.getChannelPointer (0), block.getChannelPointer (numChannels > 1 ? 1u : 0u) };
+        visualFeed.push (out.data(), std::min (numChannels, 2), numSamples);
+    }
 
     // Silent now: switch to the new order, clear old tails, start fading in.
     if (fade == Fade::out && fadeRemaining == 0)
@@ -377,6 +390,7 @@ void ShobeatsAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 
     const auto bpm = readHostBpm();
     currentBpm.store (bpm, std::memory_order_relaxed);
+    tempoFromHost.store (hostReportsTempo(), std::memory_order_relaxed);
     updateDspParameters (bpm);
 
     const auto channels = std::min (buffer.getNumChannels(), preparedChannels);

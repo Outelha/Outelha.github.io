@@ -448,13 +448,40 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor opens, resizes and closes", "[plu
             CHECK (juce::PNGImageFormat().writeImageToStream (editor->createComponentSnapshot (editor->getLocalBounds(), true, 2.0f), out));
         };
         p.getPresetManager().load (p.getPresetManager().indexOf ("Dusty Memories", "Vintage / Analog"));
+        // Play ~1.5 s of a beat-like test signal so the audio-reactive visuals have real data.
+        double clockTime = 1.0;
+        auto playAudio = [&] {
+            juce::AudioBuffer<float> buffer (2, blockSize);
+            juce::MidiBuffer midi;
+            for (int b = 0; b < static_cast<int> (1.5 * sampleRate) / blockSize; ++b)
+            {
+                for (int i = 0; i < blockSize; ++i)
+                {
+                    const auto n = b * blockSize + i;
+                    const auto t = static_cast<float> (n) / static_cast<float> (sampleRate);
+                    const auto beat = std::fmod (t, 0.25f);
+                    const auto env = std::exp (-beat * 14.0f) * (0.4f + 0.6f * std::abs (std::sin (t * 1.7f)));
+                    const auto v = env * (0.6f * std::sin (juce::MathConstants<float>::twoPi * 110.0f * t) + 0.25f * std::sin (juce::MathConstants<float>::twoPi * 1320.0f * t));
+                    buffer.setSample (0, i, v);
+                    buffer.setSample (1, i, v);
+                }
+                p.processBlock (buffer, midi);
+                if (b % 8 == 0)
+                    view.getFrameClock().tick (clockTime += 1.0 / 60.0);
+            }
+            for (int i = 0; i < 4; ++i)
+                view.getFrameClock().tick (clockTime += 1.0 / 60.0);
+        };
+        playAudio();
         view.getMainPanel().refreshDisplay();
+        view.refresh();
         save ("main");
         view.setAdvanced (true);
         for (int i = 0; i < sfx::numEffects; ++i)
         {
             setParam (p, sfx::effectInfo[static_cast<size_t> (i)].enabledId, i % 3 == 0 ? 0.0f : 1.0f);
             view.getPedalboard().select (static_cast<sfx::EffectId> (i));
+            playAudio();
             juce::File file (juce::String::fromUTF8 (prefix) + juce::String (i) + ".png");
             file.deleteFile();
             juce::FileOutputStream out (file);

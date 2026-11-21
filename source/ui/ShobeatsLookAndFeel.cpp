@@ -134,7 +134,22 @@ void ShobeatsLookAndFeel::drawButtonText (juce::Graphics& g, juce::TextButton& b
     auto area = button.getLocalBounds().toFloat().reduced (4.0f, 0.0f);
     if (button.isDown())
         area = area.translated (0.0f, 0.8f);
-    hw::drawKeyText (g, button.getButtonText().toUpperCase(), area, font (Type::labelBold, size, 0.04f), lit,
+    const auto text = button.getButtonText().toUpperCase();
+    if (text == "<" || text == ">")
+    {
+        // Navigation arrows: orange chevrons.
+        const auto c = area.getCentre();
+        const auto h = juce::jmin (area.getHeight(), area.getWidth()) * 0.18f;
+        juce::Path chevron;
+        const auto dir = text == "<" ? -1.0f : 1.0f;
+        chevron.startNewSubPath (c.x - dir * h * 0.5f, c.y - h);
+        chevron.lineTo (c.x + dir * h * 0.5f, c.y);
+        chevron.lineTo (c.x - dir * h * 0.5f, c.y + h);
+        g.setColour (juce::Colour (0xffff8a1f).withMultipliedAlpha (button.isEnabled() ? 1.0f : 0.4f));
+        g.strokePath (chevron, juce::PathStrokeType (2.4f, juce::PathStrokeType::mitered, juce::PathStrokeType::rounded));
+        return;
+    }
+    hw::drawKeyText (g, text, area, font (Type::labelBold, size, 0.04f), lit,
                      button.findColour (juce::TextButton::buttonOnColourId), button.isEnabled());
 }
 

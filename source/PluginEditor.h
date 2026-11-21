@@ -19,8 +19,8 @@ namespace sfx
 class MainView final : public juce::Component
 {
 public:
-    static constexpr int designWidth = 1240;
-    static constexpr int designHeight = 800;
+    static constexpr int designWidth = 1260;
+    static constexpr int designHeight = 840;
 
     explicit MainView (ShobeatsAudioProcessor&);
 
@@ -36,12 +36,14 @@ public:
     ui::MainPanel& getMainPanel() noexcept { return mainPanel; }
     void showBrowser (bool show);
     ui::PresetBrowser& getBrowser() noexcept { return browser; }
+    ui::FrameClock& getFrameClock() noexcept { return frameClock; }
     void showSavePanel (bool show);
 
 private:
     ShobeatsAudioProcessor& processor;
     ui::PresetBar presetBar;
-    ui::KeyCap viewSwitch { "Advanced", juce::Colour (0xffffb347), true };
+    ui::FrameClock frameClock { *this };
+    ui::KeyCap viewSwitch { "Advanced", ui::brandOrange, true };
     ui::MainPanel mainPanel;
     ui::Pedalboard pedalboard;
     ui::DetailPanel detail;

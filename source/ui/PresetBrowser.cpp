@@ -37,7 +37,7 @@ PresetBar::PresetBar (ShobeatsAudioProcessor& p) : processor (p)
 
 juce::Rectangle<int> PresetBar::nameArea() const
 {
-    return getLocalBounds().withTrimmedLeft (44).withTrimmedRight (44 + 80);
+    return getLocalBounds().withTrimmedLeft (56).withTrimmedRight (56 + 102).reduced (0, 2);
 }
 
 void PresetBar::timerCallback()
@@ -53,30 +53,41 @@ void PresetBar::timerCallback()
 
 void PresetBar::paint (juce::Graphics& g)
 {
-    const auto area = nameArea().toFloat().reduced (2.0f);
-    hw::drawGlassDisplay (g, area, 6.0f);
-    if (isMouseOver())
+    const auto area = nameArea().toFloat();
+    const auto orange = juce::Colour (0xffff8a1f);
+    hw::drawTray (g, area, 9.0f);
+    // Warm light rising from the bottom edge of the preset well.
     {
-        g.setColour (hw::amber.withAlpha (0.35f));
-        g.drawRoundedRectangle (area, 6.0f, 1.0f);
+        juce::Graphics::ScopedSaveState save (g);
+        g.reduceClipRegion (area.toNearestInt());
+        hw::drawLightSpill (g, juce::Rectangle<float> (area.getWidth() * 0.8f, 24.0f).withCentre ({ area.getCentreX(), area.getBottom() }), orange,
+                            isMouseOver() ? 0.9f : 0.6f);
     }
+    g.setColour (isMouseOver() ? orange.withAlpha (0.7f) : juce::Colour (0xff3a3632));
+    g.drawRoundedRectangle (area.reduced (0.5f), 9.0f, 1.0f);
 
-    auto text = nameArea().reduced (14, 0);
-    g.setColour (hw::amber);
-    g.setFont (uiFont (16.0f, true));
-    g.drawText ((shownName.isEmpty() ? juce::String ("Init") : shownName).toUpperCase(), text, juce::Justification::centredLeft);
-    g.setColour (hw::amber.withAlpha (0.6f));
-    g.setFont (uiFont (10.5f, true));
-    g.drawText ((shownCategory.isEmpty() ? juce::String ("BROWSE") : shownCategory.toUpperCase()) + "   =", text, juce::Justification::centredRight);
+    auto text = nameArea().reduced (18, 0).toFloat();
+    g.setColour (orange.brighter (0.2f));
+    g.setFont (font (Type::labelBold, 23.0f, 0.04f));
+    g.drawText ((shownName.isEmpty() ? juce::String ("Init") : shownName).toUpperCase(), text, juce::Justification::centredLeft, true);
+
+    // BROWSE with a menu glyph; the category is shown in the central display.
+    auto browse = text.removeFromRight (96.0f);
+    auto glyph = browse.removeFromRight (16.0f).withSizeKeepingCentre (14.0f, 11.0f);
+    g.setColour (juce::Colour (0xffffb347));
+    for (int i = 0; i < 3; ++i)
+        g.fillRect (glyph.getX(), glyph.getY() + static_cast<float> (i) * 4.5f, glyph.getWidth(), 1.8f);
+    g.setFont (font (Type::labelBold, 16.0f, 0.06f));
+    g.drawText ("BROWSE", browse.withTrimmedRight (6.0f), juce::Justification::centredRight, false);
 }
 
 void PresetBar::resized()
 {
     auto area = getLocalBounds();
-    prev.setBounds (area.removeFromLeft (40));
-    save.setBounds (area.removeFromRight (76));
-    area.removeFromRight (4);
-    next.setBounds (area.removeFromRight (40));
+    prev.setBounds (area.removeFromLeft (46));
+    save.setBounds (area.removeFromRight (88));
+    area.removeFromRight (14);
+    next.setBounds (area.removeFromRight (46));
 }
 
 void PresetBar::mouseUp (const juce::MouseEvent& e)
