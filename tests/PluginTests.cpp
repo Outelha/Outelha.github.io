@@ -683,6 +683,7 @@ TEST_CASE_METHOD (JuceFixture, "UI: full-editor render cost stays within budget"
     enableAllModules (p);
     AnimatedEditor ui { p };
     ui.editor->setSize (sfx::MainView::designWidth, sfx::MainView::designHeight);
+    ui.view.getPedalboard().select (sfx::EffectId::delay); // the panel with the most artwork
 
     // Software-rendered full repaints (worst case: every pixel, no cached layers reused by the
     // host). Real frames only repaint the animated regions, so this is a loose upper bound.
@@ -760,4 +761,254 @@ TEST_CASE_METHOD (JuceFixture, "UI: editor scales cleanly at 100, 125, 150 and 2
             }
         }
     }
+}
+
+//==============================================================================
+// DELAY bitmap skin (assets/images/delay, docs/ui-redesign/DELAY_ASSETS.md)
+//==============================================================================
+#include "ui/PedalArt.h"
+#include "ui/Skin.h"
+
+TEST_CASE_METHOD (JuceFixture, "DELAY skin: all 20 assets are bundled at their exact @2x size", "[gui][skin]")
+{
+    using sfx::ui::Skin;
+    struct Expect
+    {
+        const char* name;
+        int w, h;
+        bool opaque, rotates;
+    };
+    const Expect expected[] = {
+        { "delay_adv_enclosure", 308, 544, false, false }, { "delay_adv_window_glass", 212, 92, false, false },
+        { "delay_adv_selected_glow", 308, 544, false, false }, { "delay_main_enclosure", 208, 448, false, false },
+        { "delay_main_window_glass", 160, 80, false, false }, { "pedal_knob_shadow", 88, 88, false, true },
+        { "pedal_knob_body", 88, 88, false, true }, { "pedal_knob_gloss", 88, 88, false, true },
+        { "footswitch_up", 88, 88, false, false }, { "footswitch_down", 88, 88, false, false },
+        { "led_amber_off", 48, 48, false, true }, { "led_amber_on", 48, 48, false, true },
+        { "panel_background", 2480, 816, true, false }, { "display_frame", 700, 688, false, false },
+        { "display_glass", 700, 688, false, false }, { "panel_knob_shadow", 144, 144, false, true },
+        { "panel_knob_skirt", 144, 144, false, true }, { "panel_knob_cap", 144, 144, false, true },
+        { "panel_knob_pointer", 144, 144, false, true }, { "art_delay", 600, 324, false, false },
+    };
+    REQUIRE (Skin::delayLayerNames().size() == 20);
+
+    Skin skin;
+    REQUIRE (skin.hasDelay());
+    for (const auto& e : expected)
+    {
+        INFO (e.name);
+        CHECK (Skin::delayLayerNames().contains (e.name));
+        const auto& layer = skin.get (e.name);
+        REQUIRE (layer.isValid());
+        CHECK (layer.full.getWidth() == e.w);
+        CHECK (layer.full.getHeight() == e.h);
+        // The @1x copy is an exact half.
+        CHECK (layer.half.getWidth() == e.w / 2);
+        CHECK (layer.half.getHeight() == e.h / 2);
+        if (e.rotates)
+            CHECK (e.w == e.h); // rotates about the canvas centre
+
+        const juce::Point<int> corners[] = { { 0, 0 }, { e.w - 1, 0 }, { 0, e.h - 1 }, { e.w - 1, e.h - 1 } };
+        if (e.opaque)
+        {
+            // panel_background: opaque, outer corners in chassis black.
+            for (auto c : corners)
+            {
+                const auto px = layer.full.getPixelAt (c.x, c.y);
+                CHECK (px.getAlpha() == 255);
+                CHECK (px.getBrightness() < 0.1f);
+            }
+        }
+        else
+        {
+            CHECK (layer.full.hasAlphaChannel());
+            for (auto c : corners)
+                CHECK (layer.full.getPixelAt (c.x, c.y).getAlpha() == 0);
+        }
+    }
+
+    // Glass overlays must let the live content through (spec: at least 80 % transparent).
+    for (auto name : { "delay_adv_window_glass", "delay_main_window_glass", "display_glass" })
+    {
+        INFO (name);
+        const auto& img = skin.get (name).full;
+        int maxAlpha = 0;
+        for (int y = 0; y < img.getHeight(); ++y)
+            for (int x = 0; x < img.getWidth(); ++x)
+                maxAlpha = std::max (maxAlpha, static_cast<int> (img.getPixelAt (x, y).getAlpha()));
+        CHECK (maxAlpha <= 51);
+    }
+
+    // Only DELAY is skinned; the other seven keep their procedural drawing.
+    for (int i = 0; i < sfx::numEffects; ++i)
+        CHECK (sfx::ui::pedal::hasSkin (static_cast<sfx::EffectId> (i)) == (static_cast<sfx::EffectId> (i) == sfx::EffectId::delay));
+}
+
+TEST_CASE_METHOD (JuceFixture, "DELAY skin: knob layers turn with the value (7:30 at minimum, 4:30 at maximum)", "[gui][skin]")
+{
+#if JUCE_LINUX
+    if (std::getenv ("DISPLAY") == nullptr)
+        SKIP ("No display available");
+#endif
+    ShobeatsAudioProcessor p;
+    sfx::ui::ShobeatsLookAndFeel laf;
+    sfx::ui::Knob knob (p.getState(), ParamID::delayFeedback, "", sfx::ui::accentColour (sfx::EffectId::delay), sfx::ui::Knob::Style::pedal);
+    knob.hideCaption();
+    knob.setLookAndFeel (&laf);
+    knob.getSlider().getProperties().set ("skin", "delay");
+    knob.getSlider().getProperties().set ("skinCanvas", 44.0f);
+    knob.setBounds (0, 0, 37, 37);
+
+    // Angle of the white pointer line, clockwise from 12 o'clock, in degrees.
+    auto pointerAngle = [&] (double proportion) {
+        auto& s = knob.getSlider();
+        s.setValue (s.proportionOfLengthToValue (proportion), juce::sendNotificationSync);
+        constexpr float scale = 4.0f;
+        const auto img = knob.createComponentSnapshot (knob.getLocalBounds(), true, scale);
+        const auto c = juce::Point<float> (img.getWidth() * 0.5f, img.getHeight() * 0.5f);
+        double sx = 0.0, sy = 0.0;
+        int count = 0;
+        for (int y = 0; y < img.getHeight(); ++y)
+            for (int x = 0; x < img.getWidth(); ++x)
+            {
+                const auto px = img.getPixelAt (x, y);
+                const auto d = juce::Point<float> (static_cast<float> (x), static_cast<float> (y)).getDistanceFrom (c);
+                if (px.getAlpha() > 200 && px.getBrightness() > 0.8f && d < 15.0f * scale)
+                {
+                    sx += x - c.x;
+                    sy += y - c.y;
+                    ++count;
+                }
+            }
+        REQUIRE (count > 10);
+        return juce::radiansToDegrees (std::atan2 (sx, -sy));
+    };
+
+    CHECK (std::abs (pointerAngle (0.0) - (-135.0)) < 8.0);
+    CHECK (std::abs (pointerAngle (0.5) - 0.0) < 8.0);
+    CHECK (std::abs (pointerAngle (1.0) - 135.0) < 8.0);
+    knob.setLookAndFeel (nullptr);
+}
+
+TEST_CASE_METHOD (JuceFixture, "DELAY skin: images live only while an editor exists (no static JUCE images)", "[gui][skin][lifecycle]")
+{
+#if JUCE_LINUX
+    if (std::getenv ("DISPLAY") == nullptr)
+        SKIP ("No display available");
+#endif
+    using sfx::ui::Skin;
+    CHECK (Skin::liveInstances() == 0);
+    {
+        ShobeatsAudioProcessor p;
+        prepare (p);
+        std::unique_ptr<juce::AudioProcessorEditor> editor (p.createEditorAndMakeActive());
+        auto& view = dynamic_cast<sfx::ShobeatsAudioProcessorEditor&> (*editor).getView();
+        view.setAdvanced (true);
+        view.getPedalboard().select (sfx::EffectId::delay);
+        juce::ignoreUnused (editor->createComponentSnapshot (editor->getLocalBounds()));
+        CHECK (Skin::liveInstances() == 1);
+        p.editorBeingDeleted (editor.get());
+        editor.reset();
+        CHECK (Skin::liveInstances() == 0);
+    }
+    CHECK (Skin::liveInstances() == 0);
+}
+
+TEST_CASE_METHOD (JuceFixture, "DELAY skin: controls keep driving their parameters", "[gui][skin]")
+{
+#if JUCE_LINUX
+    if (std::getenv ("DISPLAY") == nullptr)
+        SKIP ("No display available");
+#endif
+    ShobeatsAudioProcessor p;
+    prepare (p);
+    std::unique_ptr<juce::AudioProcessorEditor> editor (p.createEditorAndMakeActive());
+    auto& view = dynamic_cast<sfx::ShobeatsAudioProcessorEditor&> (*editor).getView();
+    view.setAdvanced (true);
+    view.getPedalboard().select (sfx::EffectId::delay);
+
+    // Every skinned slider is still attached: moving it moves the parameter, and the
+    // parameter (automation, preset recall) moves it back.
+    std::vector<juce::Slider*> skinned;
+    std::function<void (juce::Component&)> collect = [&] (juce::Component& c) {
+        if (auto* s = dynamic_cast<juce::Slider*> (&c); s != nullptr && s->getProperties()["skin"].toString() == "delay")
+            skinned.push_back (s);
+        for (auto* child : c.getChildren())
+            collect (*child);
+    };
+    collect (view);
+    // Advanced pedal: Time, Division, Feedback. Panel: Time, Division, Feedback, Low Cut, High Cut, Width, Mix.
+    CHECK (skinned.size() == 10);
+    for (auto* s : skinned)
+    {
+        const auto before = s->getValue();
+        s->setValue (s->proportionOfLengthToValue (s->valueToProportionOfLength (before) > 0.5 ? 0.2 : 0.8), juce::sendNotificationSync);
+        CHECK (s->getValue() != before);
+    }
+    setParam (p, ParamID::delayFeedback, 0.0f);
+    for (auto* s : skinned)
+        if (s->getTooltip().startsWith ("Delay Feedback"))
+            CHECK (s->getValue() == 0.0);
+
+    // Footswitch: still a button bound to Delay On.
+    setParam (p, ParamID::delayEnabled, 0.0f);
+    juce::Button* footswitch = nullptr;
+    std::function<void (juce::Component&)> findSwitch = [&] (juce::Component& c) {
+        if (c.getName() == "Footswitch" && c.getParentComponent() != nullptr && c.getParentComponent()->getTitle() == "Delay")
+            footswitch = dynamic_cast<juce::Button*> (&c);
+        for (auto* child : c.getChildren())
+            findSwitch (*child);
+    };
+    findSwitch (view);
+    REQUIRE (footswitch != nullptr);
+    footswitch->setToggleState (true, juce::sendNotificationSync); // what a stomp does
+    CHECK (p.getState().getRawParameterValue (ParamID::delayEnabled)->load() > 0.5f);
+
+    p.editorBeingDeleted (editor.get());
+    editor.reset();
+}
+
+TEST_CASE_METHOD (JuceFixture, "DELAY skin: Main and Advanced render at every editor size", "[gui][skin][scaling]")
+{
+#if JUCE_LINUX
+    if (std::getenv ("DISPLAY") == nullptr)
+        SKIP ("No display available");
+#endif
+    ShobeatsAudioProcessor p;
+    prepare (p);
+    disableAllModules (p);
+    setParam (p, ParamID::delayEnabled, 1.0f);
+    AnimatedEditor ui { p };
+    ui.view.getPedalboard().select (sfx::EffectId::delay);
+    for (int i = 0; i < 4; ++i)
+        ui.frame (true);
+
+    // Optional: SHOBEATS_SNAPSHOT_DELAY=/path/prefix saves each rendering (local visual check).
+    const auto* prefix = std::getenv ("SHOBEATS_SNAPSHOT_DELAY");
+    for (auto percent : { 85, 100, 125, 150, 200 })
+    {
+        const auto w = sfx::MainView::designWidth * percent / 100;
+        const auto h = sfx::MainView::designHeight * percent / 100;
+        ui.editor->setSize (w, h);
+        for (auto advanced : { false, true })
+            for (auto on : { true, false })
+            {
+                setParam (p, ParamID::delayEnabled, on ? 1.0f : 0.0f);
+                ui.view.setAdvanced (advanced);
+                ui.frame (true);
+                const auto start = juce::Time::getMillisecondCounterHiRes();
+                const auto image = ui.editor->createComponentSnapshot (ui.editor->getLocalBounds());
+                const auto ms = juce::Time::getMillisecondCounterHiRes() - start;
+                CHECK (image.getWidth() == w);
+                WARN ((advanced ? "advanced " : "main ") << (on ? "on " : "off ") << percent << " %: " << ms << " ms");
+                if (prefix != nullptr)
+                {
+                    juce::File file (juce::String::fromUTF8 (prefix) + (advanced ? "adv" : "main") + (on ? "_on_" : "_off_") + juce::String (percent) + ".png");
+                    file.deleteFile();
+                    juce::FileOutputStream out (file);
+                    CHECK (juce::PNGImageFormat().writeImageToStream (image, out));
+                }
+            }
+    }
+    p.editorBeingDeleted (ui.editor.get());
 }

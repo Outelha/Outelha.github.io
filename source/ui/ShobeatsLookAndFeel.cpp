@@ -53,7 +53,10 @@ void ShobeatsLookAndFeel::drawRotarySlider (juce::Graphics& g, int x, int y, int
     const auto style = slider.getProperties()["style"].toString();
     if (style == "pedal")
     {
-        drawPedalKnob (g, bounds, angle, startAngle, endAngle, slider);
+        if (usesDelaySkin (slider))
+            drawSkinnedPedalKnob (g, bounds, angle, slider);
+        else
+            drawPedalKnob (g, bounds, angle, startAngle, endAngle, slider);
         return;
     }
     if (style == "hidden")
@@ -71,7 +74,53 @@ void ShobeatsLookAndFeel::drawRotarySlider (juce::Graphics& g, int x, int y, int
     const auto range = slider.getRange();
     if (range.getStart() < 0.0 && range.getEnd() > 0.0)
         look.originProportion = static_cast<float> (slider.valueToProportionOfLength (0.0));
-    hw::drawMachinedKnob (g, bounds.reduced (2.0f), look);
+    if (! look.numbers && usesDelaySkin (slider))
+        drawSkinnedPanelKnob (g, bounds.reduced (2.0f), look);
+    else
+        hw::drawMachinedKnob (g, bounds.reduced (2.0f), look);
+}
+
+bool ShobeatsLookAndFeel::usesDelaySkin (juce::Slider& slider)
+{
+    return slider.getProperties()["skin"].toString() == "delay" && skin->hasDelay();
+}
+
+void ShobeatsLookAndFeel::drawSkinnedPedalKnob (juce::Graphics& g, juce::Rectangle<float> bounds, float angle, juce::Slider& slider)
+{
+    // The 44 px canvas holds a 34 px knob. Its contact shadow is painted by the pedal
+    // underneath (it reaches past this component's bounds).
+    const auto& canvasVar = slider.getProperties()["skinCanvas"];
+    const auto canvas = canvasVar.isVoid() ? juce::jmin (bounds.getWidth(), bounds.getHeight()) * (44.0f / 36.2f) : static_cast<float> (canvasVar);
+    const auto c = bounds.getCentre();
+    Skin::drawRotated (g, skin->get ("pedal_knob_body"), c, canvas, angle);
+    Skin::drawRotated (g, skin->get ("pedal_knob_gloss"), c, canvas, 0.0f, slider.isMouseOverOrDragging() ? 1.0f : 0.85f);
+}
+
+void ShobeatsLookAndFeel::drawSkinnedPanelKnob (juce::Graphics& g, juce::Rectangle<float> bounds, const hw::KnobLook& look)
+{
+    // Same geometry as hw::drawMachinedKnob: radius r = half the knob area, value arc at
+    // 0.86 r, scale ticks from 0.98 r. The 72 px canvas matches r = 42.
+    const auto r = juce::jmin (bounds.getWidth(), bounds.getHeight()) * 0.5f;
+    const auto c = bounds.getCentre();
+    const auto canvas = r * (72.0f / 42.0f);
+
+    auto layer = look;
+    layer.arc = layer.body = false;
+    hw::drawMachinedKnob (g, bounds, layer); // scale ticks and groove
+    // The shadow goes under the value arc so it never dims the lit arc.
+    Skin::drawRotated (g, skin->get ("panel_knob_shadow"), c, canvas, 0.0f);
+    layer = look;
+    layer.ticks = layer.groove = layer.body = false;
+    hw::drawMachinedKnob (g, bounds, layer); // illuminated value arc
+    Skin::drawRotated (g, skin->get ("panel_knob_skirt"), c, canvas, look.angle);
+    Skin::drawRotated (g, skin->get ("panel_knob_cap"), c, canvas, 0.0f);
+    Skin::drawRotated (g, skin->get ("panel_knob_pointer"), c, canvas, look.angle);
+    if (look.hover || look.dragging)
+    {
+        // Slight lift of the cap while hovered or turned.
+        g.setColour (juce::Colours::white.withAlpha (look.dragging ? 0.07f : 0.045f));
+        g.fillEllipse (juce::Rectangle<float> (canvas * 50.0f / 72.0f, canvas * 50.0f / 72.0f).withCentre (c));
+    }
 }
 
 void ShobeatsLookAndFeel::drawPedalKnob (juce::Graphics& g, juce::Rectangle<float> bounds, float angle,

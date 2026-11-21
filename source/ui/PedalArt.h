@@ -42,6 +42,12 @@ struct State
     float reelPhase = 0.0f;       // tape reels rotation (radians)
     // Effect-specific normalised parameters (see PedalArt.cpp for each effect's meaning).
     std::array<float, 4> extra {};
+
+    // Pedals with a bitmap skin (DELAY, see Skin.h):
+    bool mainTile = false;        // the main-screen tile (its own enclosure art), not the Advanced pedal
+    bool pressed = false;         // tile held down: the footswitch shows its pressed frame
+    float selectAmount = -1.0f;   // 0..1 fade of the selection glow; < 0 follows `selected`
+    float ledAmount = -1.0f;      // 0..1 status LED cross-fade; < 0 follows `enabled`
 };
 
 // The parameters behind the two face knobs. When `syncId` is set, knob A shows
@@ -57,6 +63,13 @@ FaceKnobs faceKnobs (EffectId);
 
 // Full pedal: shadow, enclosure finish, screws, window art, captions, knobs, plate, LED, switch.
 void paint (juce::Graphics&, EffectId, const Geometry&, const State&);
+
+// True when `id` is drawn from its bitmap skin (all files bundled).
+bool hasSkin (EffectId);
+
+// Advanced DELAY pedal with its skin: the tap-tempo LED (blink 0..1) and the contact
+// shadows under the real knob components (drawn here because they reach past the knobs).
+void paintDelayTapLed (juce::Graphics&, const Geometry&, float blink);
 
 // Pieces, used by components that draw parts separately.
 void paintReel (juce::Graphics&, juce::Rectangle<float>, float rotation, float tapeAmount);

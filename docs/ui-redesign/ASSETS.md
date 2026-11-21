@@ -43,3 +43,11 @@ the textures).
 
 Do not use artwork from commercial plugins, stock sites without a licence, or crops of the
 reference images (those are concept renders, not production art).
+
+## DELAY bitmap skin
+
+The DELAY pedal (main tile, Advanced pedal and its settings panel) is drawn from 20
+high-resolution files in `assets/images/delay/`. They were made from the DELAY asset
+specification and its positioning templates. Loading, layer order, validation results
+and the differences from the specification are in `DELAY_ASSETS.md`. The other seven
+pedals are unchanged.

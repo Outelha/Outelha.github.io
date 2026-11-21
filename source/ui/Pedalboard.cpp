@@ -1,6 +1,7 @@
 #include "Pedalboard.h"
 
 #include "Hardware.h"
+#include "Skin.h"
 #include "dsp/DspCommon.h"
 
 namespace sfx::ui
@@ -14,8 +15,29 @@ Footswitch::Footswitch (APVTS& state, const juce::String& paramId) : juce::Butto
     attachment = std::make_unique<APVTS::ButtonAttachment> (state, paramId, *this);
 }
 
+void Footswitch::useDelaySkin (juce::Rectangle<float> art)
+{
+    delaySkin = true;
+    skinArt = art;
+    repaint();
+}
+
 void Footswitch::paintButton (juce::Graphics& g, bool over, bool down)
 {
+    if (delaySkin)
+    {
+        const juce::SharedResourcePointer<Skin> skin;
+        if (skin->hasDelay())
+        {
+            Skin::draw (g, skin->get (down ? "footswitch_down" : "footswitch_up"), skinArt);
+            if (over)
+            {
+                g.setColour (juce::Colours::white.withAlpha (0.06f));
+                g.fillEllipse (skinArt.reduced (skinArt.getWidth() * 0.22f));
+            }
+            return;
+        }
+    }
     hw::drawFootswitch (g, getLocalBounds().toFloat(), over, down);
 }
 
@@ -55,6 +77,20 @@ Pedal::Pedal (APVTS& s, EffectId id, FrameClock& c, const VisualFeed& feed)
         enabledAttachment->sendInitialUpdate();
     }
 
+    if (id == EffectId::delay)
+    {
+        // Bitmap skin: the real sliders keep their attachments and hit areas; only their
+        // drawing switches to the image layers (ShobeatsLookAndFeel::drawSkinnedPedalKnob).
+        auto skinKnob = [] (Knob& kn) { kn.getSlider().getProperties().set ("skin", "delay"); };
+        if (auto* swap = dynamic_cast<SyncSwap*> (knobA.get()))
+            swap->forEachKnob (skinKnob);
+        else if (auto* kn = dynamic_cast<Knob*> (knobA.get()))
+            skinKnob (*kn);
+        if (auto* kn = dynamic_cast<Knob*> (knobB.get()))
+            skinKnob (*kn);
+        ledFade = live.state().enabled ? 1.0f : 0.0f;
+    }
+
     setMouseCursor (juce::MouseCursor::DraggingHandCursor);
     setTitle (infoFor (id).name);
     setSize (width, height);
@@ -78,6 +114,24 @@ bool Pedal::frame (double, double dt)
     bool animating = false;
     if (live.advance (dt, animating))
         repaint();
+    if (effect == EffectId::delay)
+    {
+        // Skin fades: selection glow about 150 ms, status LED about 80 ms.
+        auto step = [dt] (float& v, float target, double seconds) {
+            if (juce::exactlyEqual (v, target))
+                return false;
+            const auto d = static_cast<float> (dt / seconds);
+            v = target > v ? juce::jmin (target, v + d) : juce::jmax (target, v - d);
+            return true;
+        };
+        const bool a = step (selectFade, selected ? 1.0f : 0.0f, 0.15);
+        const bool b = step (ledFade, live.state().enabled ? 1.0f : 0.0f, 0.08);
+        if (a || b)
+        {
+            repaint();
+            animating = true;
+        }
+    }
     return animating;
 }
 
@@ -99,17 +153,28 @@ void Pedal::paint (juce::Graphics& g)
     st.captions = true;
     st.paintKnobs = effect == EffectId::tape; // tape: reels and value arcs are painted, the sliders are invisible
     st.paintFootswitch = false;
+    // Fades run on the frame clock; off screen (e.g. snapshots) show the end state.
+    st.selectAmount = isShowing() ? selectFade : (selected ? 1.0f : 0.0f);
+    st.ledAmount = isShowing() ? ledFade : (st.enabled ? 1.0f : 0.0f);
     const auto geo = geometry();
     pedal::paint (g, effect, geo, st);
 
     // Delay: a second amber "tap" LED blinks at the delay time (120 BPM reference when synced).
-    if (effect == EffectId::delay && st.enabled)
+    if (effect == EffectId::delay)
     {
-        const auto sync = state.getRawParameterValue (ParamID::delaySync)->load() > 0.5f;
-        const auto seconds = sync ? dsp::divisionSeconds (juce::roundToInt (state.getRawParameterValue (ParamID::delayDivision)->load()), 120.0)
-                                  : state.getRawParameterValue (ParamID::delayTime)->load() * 0.001f;
-        const bool blink = std::fmod (st.time, static_cast<double> (std::max (0.05f, static_cast<float> (seconds)))) < 0.06;
-        hw::drawLed (g, geo.led.translated (geo.body.getWidth() * 0.28f, 0.0f), 2.6f, ledAmber, blink);
+        float blink = 0.0f;
+        if (st.enabled)
+        {
+            const auto sync = state.getRawParameterValue (ParamID::delaySync)->load() > 0.5f;
+            const auto seconds = sync ? dsp::divisionSeconds (juce::roundToInt (state.getRawParameterValue (ParamID::delayDivision)->load()), 120.0)
+                                      : state.getRawParameterValue (ParamID::delayTime)->load() * 0.001f;
+            const auto phase = std::fmod (st.time, static_cast<double> (std::max (0.05f, static_cast<float> (seconds))));
+            blink = phase < 0.06 ? 1.0f : juce::jmax (0.0f, 1.0f - static_cast<float> ((phase - 0.06) / 0.05));
+        }
+        if (pedal::hasSkin (effect))
+            pedal::paintDelayTapLed (g, geo, blink);
+        else if (st.enabled)
+            hw::drawLed (g, geo.led.translated (geo.body.getWidth() * 0.28f, 0.0f), 2.6f, ledAmber, blink >= 1.0f);
     }
 }
 
@@ -128,6 +193,19 @@ void Pedal::resized()
     knobA->setBounds (geo.knobA.getSmallestIntegerContainer());
     knobB->setBounds (geo.knobB.getSmallestIntegerContainer());
     footswitch.setBounds (geo.footswitch.getSmallestIntegerContainer());
+    if (effect == EffectId::delay)
+    {
+        // Knob canvas 44 px per 36.2 px knob box; switch art at its exact float position.
+        const auto canvas = geo.knobA.getWidth() * (44.0f / 36.2f);
+        auto setCanvas = [canvas] (Knob& kn) { kn.getSlider().getProperties().set ("skinCanvas", canvas); };
+        if (auto* swap = dynamic_cast<SyncSwap*> (knobA.get()))
+            swap->forEachKnob (setCanvas);
+        else if (auto* kn = dynamic_cast<Knob*> (knobA.get()))
+            setCanvas (*kn);
+        if (auto* kn = dynamic_cast<Knob*> (knobB.get()))
+            setCanvas (*kn);
+        footswitch.useDelaySkin (geo.footswitch - footswitch.getPosition().toFloat());
+    }
 }
 
 void Pedal::mouseDown (const juce::MouseEvent&)

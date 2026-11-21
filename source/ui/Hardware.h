@@ -102,6 +102,9 @@ struct KnobLook
     bool hover = false, dragging = false;
     bool numbers = false;              // print 0..10 around the scale (large knobs)
     bool ticks = true;
+    // Layers, for knobs whose body is a bitmap skin (Skin.h): scale ticks and groove,
+    // illuminated value arc, and the knob itself (shadow, skirt, cap, pointer).
+    bool groove = true, arc = true, body = true;
 };
 void drawMachinedKnob (juce::Graphics&, juce::Rectangle<float>, const KnobLook&);
 

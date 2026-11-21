@@ -110,7 +110,9 @@ set_target_properties(ShobeatsLabData PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # raster artwork (see docs/ui-redesign/ASSETS.md). Everything else is drawn in code.
 file(GLOB SHOBEATS_UI_ASSETS CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/assets/fonts/*.ttf"
-    "${CMAKE_CURRENT_SOURCE_DIR}/assets/images/*.png")
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/images/*.png"
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/images/delay/*.png"
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/images/delay/*.jpg")
 juce_add_binary_data(ShobeatsAssets
     HEADER_NAME ShobeatsAssets.h
     NAMESPACE ShobeatsAssets
@@ -135,6 +137,7 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/ui/PresetBrowser.cpp
     source/ui/Hardware.cpp
     source/ui/Textures.cpp
+    source/ui/Skin.cpp
     source/ui/Fonts.cpp
     source/ui/PedalArt.cpp
     source/ui/PedalLive.cpp

@@ -149,3 +149,18 @@ Open (honest list):
   reference images; licensed art can be dropped into `assets/images/art_<effect>.png`.
 * The GENERATE key and hex grilles are smaller and flatter than on reference 01.
 * Not tested inside FL Studio by me: only pluginval + the lifecycle host run on CI.
+
+## DELAY skin — first pedal drawn from high-resolution artwork
+Complete (details in `DELAY_ASSETS.md`):
+* 20 supplied files bundled unchanged in `assets/images/delay/`. Each was checked for
+  exact @2x size, alpha, transparent corners, glass transparency and template alignment.
+* `Skin` loader: decodes on first use, keeps an exact @1x copy, and picks the copy from
+  the physical pixel scale. It is owned by the editors (no static images), and the
+  whole skin falls back to the procedural drawing if any file is missing.
+* Main tile, Advanced pedal, footswitch, LEDs, pedal knobs, settings-panel background,
+  display frame and glass, panel knobs and corner illustration use the images. Echo
+  rings, display graph, value arcs, ticks, value text, keys and badges stay in code.
+* Selection glow fade (150 ms), status LED cross-fade (80 ms), tap-tempo LED blink.
+* New tests `[skin]`: assets, knob rotation (-135 / 0 / +135 degrees measured on the
+  rendered pointer), image lifetime, the 10 skinned sliders and the footswitch still
+  drive their parameters, and rendering at 85–200 %.

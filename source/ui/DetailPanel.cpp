@@ -2,6 +2,7 @@
 
 #include "Hardware.h"
 #include "PedalArt.h"
+#include "Skin.h"
 #include "Textures.h"
 
 namespace sfx::ui
@@ -84,6 +85,13 @@ void EffectArt::paint (Graphics& g)
     const auto b = getLocalBounds().toFloat();
     const auto accent = accentColour (effect);
     const auto glow = on ? 0.35f + 0.65f * intensity : 0.12f;
+
+    if (pedal::hasSkin (effect))
+    {
+        // DELAY skin: 300 x 162 illustration with feathered edges (art_delay@2x.png).
+        Skin::draw (g, SharedResourcePointer<Skin>()->get ("art_delay"), b, on ? 1.0f : 0.55f);
+        return;
+    }
 
     static const char* names[] = { "art_saturation.png", "art_resampler.png", "art_tape.png", "art_chorus.png",
                                    "art_tremolo.png", "art_reverse.png", "art_delay.png", "art_reverb.png" };
@@ -357,6 +365,16 @@ void DetailPanel::showEffect (EffectId id)
     for (auto* c : knobs)
     {
         applyKnobLook (*c);
+        if (id == EffectId::delay)
+        {
+            // Bitmap knob layers (ShobeatsLookAndFeel::drawSkinnedPanelKnob); the slider,
+            // its attachment, value arc and value text are unchanged.
+            auto skinKnob = [] (Knob& k) { k.getSlider().getProperties().set ("skin", "delay"); };
+            if (auto* k = dynamic_cast<Knob*> (c))
+                skinKnob (*k);
+            else if (auto* sw = dynamic_cast<SyncSwap*> (c))
+                sw->forEachKnob (skinKnob);
+        }
         addAndMakeVisible (c);
     }
 
@@ -370,7 +388,11 @@ void DetailPanel::paintPanel (Graphics& g)
 {
     const auto b = getLocalBounds().toFloat().reduced (2.0f);
     const auto accent = accentColour (effect);
-    hw::drawBezelPanel (g, b, 22.0f, 9.0f, true);
+    const bool skinned = pedal::hasSkin (effect);
+    if (skinned)
+        Skin::draw (g, SharedResourcePointer<Skin>()->get ("panel_background"), getLocalBounds().toFloat()); // 1240 x 408, divider included
+    else
+        hw::drawBezelPanel (g, b, 22.0f, 9.0f, true);
 
     // Accent light seams along the frame: the panel takes the colour of the selected pedal.
     for (auto x : { 0.36f, 0.62f, 0.86f })
@@ -393,10 +415,13 @@ void DetailPanel::paintPanel (Graphics& g)
     g.setFont (font (Type::bodyItalic, 16.0f));
     g.drawFittedText (infoFor (effect).description, info.toNearestInt(), Justification::topLeft, 2, 0.9f);
 
-    // Thin rule above the controls (as on the references).
-    const auto rule = controlsArea.toFloat();
-    g.setColour (Colours::white.withAlpha (0.07f));
-    g.fillRect (rule.getX(), rule.getY() - 6.0f, rule.getWidth(), 1.0f);
+    // Thin rule above the controls (as on the references); part of the skin's background.
+    if (! skinned)
+    {
+        const auto rule = controlsArea.toFloat();
+        g.setColour (Colours::white.withAlpha (0.07f));
+        g.fillRect (rule.getX(), rule.getY() - 6.0f, rule.getWidth(), 1.0f);
+    }
 }
 
 void DetailPanel::resized()

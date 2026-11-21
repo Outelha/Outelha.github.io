@@ -14,8 +14,14 @@ public:
     Footswitch (APVTS& state, const juce::String& paramId);
     void paintButton (juce::Graphics&, bool over, bool down) override;
 
+    // DELAY: draw the up / down frames of the bitmap skin into `art` (local
+    // coordinates) instead of the procedural switch. The hit area is unchanged.
+    void useDelaySkin (juce::Rectangle<float> art);
+
 private:
     std::unique_ptr<APVTS::ButtonAttachment> attachment;
+    bool delaySkin = false;
+    juce::Rectangle<float> skinArt;
 };
 
 // One effect pedal: individually designed enclosure (PedalArt), two real knobs, name
@@ -55,6 +61,7 @@ private:
     FrameClock& clock;
     PedalLive live;
     bool selected = false, dragging = false;
+    float selectFade = 0.0f, ledFade = 0.0f; // skinned pedals: selection glow and status LED fades
     std::unique_ptr<juce::Component> knobA, knobB;
     Footswitch footswitch;
     std::unique_ptr<juce::ParameterAttachment> enabledAttachment;

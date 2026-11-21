@@ -81,6 +81,7 @@ private:
     FrameClock& clock;
     PedalLive live;
     int slot = 0;
+    float ledFade = 0.0f; // skinned pedals: status LED cross-fade
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> attachment;
 };
 

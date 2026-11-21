@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Fonts.h"
+#include "Hardware.h"
+#include "Skin.h"
 #include "Textures.h"
 #include "Theme.h"
 
@@ -32,6 +34,13 @@ private:
     // Keeps the shared texture images alive for as long as this editor exists.
     juce::SharedResourcePointer<Textures> textures;
     juce::SharedResourcePointer<Fonts> fonts;
+    juce::SharedResourcePointer<Skin> skin;
+
+    // Knobs of a pedal with a bitmap skin (slider property "skin" = "delay"): image
+    // layers rotate with the value; scale, value arc and value text stay in code.
+    bool usesDelaySkin (juce::Slider&);
+    void drawSkinnedPedalKnob (juce::Graphics&, juce::Rectangle<float>, float angle, juce::Slider&);
+    void drawSkinnedPanelKnob (juce::Graphics&, juce::Rectangle<float>, const hw::KnobLook&);
 
     void drawPedalKnob (juce::Graphics&, juce::Rectangle<float>, float angle, float startAngle, float endAngle, juce::Slider&);
     void drawArcKnob (juce::Graphics&, juce::Rectangle<float>, float angle, float startAngle, float endAngle, juce::Slider&);

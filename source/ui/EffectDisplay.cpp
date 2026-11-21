@@ -2,6 +2,7 @@
 
 #include "Hardware.h"
 #include "PedalArt.h"
+#include "Skin.h"
 #include "dsp/Saturation.h"
 #include "dsp/Tremolo.h"
 
@@ -116,14 +117,25 @@ bool EffectDisplay::frame (double, double dt)
 void EffectDisplay::paint (juce::Graphics& g)
 {
     const auto outer = getLocalBounds().toFloat().reduced (1.0f);
-    // Bezel: dark frame with a thin polished lip, then black glass.
-    g.setColour (juce::Colours::black.withAlpha (0.6f));
-    g.fillRoundedRectangle (outer.translated (0.0f, 2.0f), 14.0f);
-    g.setGradientFill (juce::ColourGradient (juce::Colour (0xff7d7f85), 0.0f, outer.getY(), juce::Colour (0xff141517), 0.0f, outer.getBottom(), false));
-    g.fillRoundedRectangle (outer, 14.0f);
     const auto bounds = outer.reduced (4.0f);
-    g.setGradientFill (juce::ColourGradient (juce::Colour (0xff0b0c0e), 0.0f, bounds.getY(), juce::Colour (0xff050506), 0.0f, bounds.getBottom(), false));
-    g.fillRoundedRectangle (bounds, 11.0f);
+    // DELAY skin: machined frame with empty glass (display_frame), live content in code,
+    // reflections on top (display_glass). Both images cover the whole 350 x 344 display.
+    const bool skinned = pedal::hasSkin (effect);
+    const juce::SharedResourcePointer<Skin> skin;
+    if (skinned)
+    {
+        Skin::draw (g, skin->get ("display_frame"), getLocalBounds().toFloat());
+    }
+    else
+    {
+        // Bezel: dark frame with a thin polished lip, then black glass.
+        g.setColour (juce::Colours::black.withAlpha (0.6f));
+        g.fillRoundedRectangle (outer.translated (0.0f, 2.0f), 14.0f);
+        g.setGradientFill (juce::ColourGradient (juce::Colour (0xff7d7f85), 0.0f, outer.getY(), juce::Colour (0xff141517), 0.0f, outer.getBottom(), false));
+        g.fillRoundedRectangle (outer, 14.0f);
+        g.setGradientFill (juce::ColourGradient (juce::Colour (0xff0b0c0e), 0.0f, bounds.getY(), juce::Colour (0xff050506), 0.0f, bounds.getBottom(), false));
+        g.fillRoundedRectangle (bounds, 11.0f);
+    }
     {
         juce::Graphics::ScopedSaveState save (g);
         juce::Path clip;
@@ -152,9 +164,17 @@ void EffectDisplay::paint (juce::Graphics& g)
         }
         // Glass reflection.
         g.setOpacity (1.0f);
-        g.setGradientFill (juce::ColourGradient (juce::Colours::white.withAlpha (0.06f), bounds.getX(), bounds.getY(), juce::Colours::white.withAlpha (0.0f),
-                                                 bounds.getX() + bounds.getWidth() * 0.5f, bounds.getY() + bounds.getHeight() * 0.5f, false));
-        g.fillRect (bounds);
+        if (! skinned)
+        {
+            g.setGradientFill (juce::ColourGradient (juce::Colours::white.withAlpha (0.06f), bounds.getX(), bounds.getY(), juce::Colours::white.withAlpha (0.0f),
+                                                     bounds.getX() + bounds.getWidth() * 0.5f, bounds.getY() + bounds.getHeight() * 0.5f, false));
+            g.fillRect (bounds);
+        }
+    }
+    if (skinned)
+    {
+        Skin::draw (g, skin->get ("display_glass"), getLocalBounds().toFloat());
+        return;
     }
     g.setColour (juce::Colours::black);
     g.drawRoundedRectangle (bounds, 11.0f, 1.2f);

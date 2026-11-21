@@ -640,6 +640,7 @@ void drawMachinedKnob (Graphics& g, Rectangle<float> bounds, const KnobLook& k)
     }
 
     // Groove ring.
+    if (k.groove)
     {
         Path ring;
         ring.addCentredArc (c.x, c.y, groove, groove, 0.0f, 0.0f, MathConstants<float>::twoPi, true);
@@ -651,7 +652,7 @@ void drawMachinedKnob (Graphics& g, Rectangle<float> bounds, const KnobLook& k)
 
     // Illuminated value arc with layered glow.
     const auto a0 = k.startAngle + (k.endAngle - k.startAngle) * k.originProportion;
-    if (std::abs (k.angle - a0) > 0.002f)
+    if (k.arc && std::abs (k.angle - a0) > 0.002f)
     {
         Path arc;
         arc.addCentredArc (c.x, c.y, groove, groove, 0.0f, jmin (a0, k.angle), jmax (a0, k.angle), true);
@@ -666,6 +667,9 @@ void drawMachinedKnob (Graphics& g, Rectangle<float> bounds, const KnobLook& k)
         g.setColour (k.accent.brighter (0.7f).withAlpha (0.8f));
         g.strokePath (arc, PathStrokeType (grooveW * 0.25f, PathStrokeType::curved, PathStrokeType::rounded));
     }
+
+    if (! k.body)
+        return;
 
     // Knob body: soft cast shadow, then the knurled black skirt.
     const auto kr = r * 0.74f;

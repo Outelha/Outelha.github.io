@@ -308,6 +308,7 @@ EffectTile::EffectTile (AudioProcessorValueTreeState& state, EffectId id, FrameC
     setTooltip (String (infoFor (id).name) + ": click to switch on/off, double-click to open the pedal");
     attachment = std::make_unique<AudioProcessorValueTreeState::ButtonAttachment> (state, infoFor (id).enabledId, *this);
     setMouseCursor (MouseCursor::PointingHandCursor);
+    ledFade = getToggleState() ? 1.0f : 0.0f;
     clock.add (*this);
 }
 
@@ -323,6 +324,14 @@ bool EffectTile::frame (double, double dt)
     bool animating = false;
     if (live.advance (dt, animating))
         repaint();
+    if (const auto target = getToggleState() ? 1.0f : 0.0f; effect == EffectId::delay && ! exactlyEqual (ledFade, target))
+    {
+        // Status LED cross-fade (about 80 ms), used by skinned pedals.
+        const auto d = static_cast<float> (dt / 0.08);
+        ledFade = target > ledFade ? jmin (target, ledFade + d) : jmax (target, ledFade - d);
+        repaint();
+        animating = true;
+    }
     return animating;
 }
 
@@ -347,6 +356,9 @@ void EffectTile::paintButton (Graphics& g, bool over, bool down)
     s.hover = over;
     s.captions = false;
     s.selected = false;
+    s.mainTile = true;
+    s.pressed = down;
+    s.ledAmount = isShowing() ? ledFade : (s.enabled ? 1.0f : 0.0f);
     pedal::paint (g, effect, pedal::layout (effect, body, false), s);
     pedal::paintSlotBadge (g, badge.withSizeKeepingCentre (34.0f, 21.0f).translated (0.0f, 2.0f), slot, false, accentColour (effect));
 }

@@ -1,6 +1,7 @@
 #include "PedalArt.h"
 
 #include "Hardware.h"
+#include "Skin.h"
 #include "Textures.h"
 
 namespace sfx::ui::pedal
@@ -118,6 +119,114 @@ void drawStarfield (Graphics& g, Rectangle<float> area, int seed, int count, flo
             g.setColour (Colour (0xffcfe0ff).withAlpha (brightness * 0.7f));
             g.drawLine (p.x - size * 3.0f, p.y, p.x + size * 3.0f, p.y, 0.6f);
             g.drawLine (p.x, p.y - size * 3.0f, p.x, p.y + size * 3.0f, 0.6f);
+        }
+    }
+}
+
+// DELAY window: one echo ring per audible repeat (Feedback), fading like the taps.
+void paintEchoRings (Graphics& g, Rectangle<float> w, const State& s)
+{
+    const auto accent = accentColour (EffectId::delay);
+    const auto inten = s.enabled ? 1.0f : 0.25f;
+    const auto inner = w.reduced (w.getWidth() * 0.08f, w.getHeight() * 0.18f);
+    const auto stroke = jmax (1.2f, w.getHeight() * 0.045f);
+    const auto rings = 2 + static_cast<int> (s.extra[1] * 3.0f + 0.5f);
+    const auto rr = inner.getHeight() * 0.62f;
+    const auto spacing = rr * 0.85f;
+    const auto x0 = w.getCentreX() - spacing * static_cast<float> (rings - 1) * 0.5f;
+    for (int i = 0; i < rings; ++i)
+    {
+        Path ring;
+        ring.addEllipse (Rectangle<float> (rr * 2.0f, rr * 2.0f).withCentre ({ x0 + spacing * static_cast<float> (i), w.getCentreY() }));
+        strokeGlow (g, ring, accent, stroke * 0.85f, inten * std::pow (0.78f, static_cast<float> (i)));
+    }
+}
+
+//==============================================================================
+// DELAY from its bitmap skin (docs/ui-redesign/DELAY_ASSETS.md). Layer order, bottom to
+// top: selection glow, light spill, enclosure, echo rings (code), window glass, status
+// LED, knobs, footswitch. Every position comes from the asset canvas, mapped onto the
+// pedal body: the Advanced art is 154 x 272 around a 134 x 252 body (10 px margin),
+// the main-tile art 104 x 224 around a 100 x 216 body (2 px / 4 px margin).
+struct SkinCanvas
+{
+    Point<float> origin;
+    float unit = 1.0f;
+    Rectangle<float> at (float x, float y, float w, float h) const { return { origin.x + x * unit, origin.y + y * unit, w * unit, h * unit }; }
+};
+
+SkinCanvas skinCanvas (const Geometry& geo, bool tile)
+{
+    const auto b = geo.body;
+    const auto unit = b.getWidth() / (tile ? 100.0f : 134.0f);
+    return { b.getTopLeft().translated ((tile ? -2.0f : -10.0f) * unit, (tile ? -4.0f : -10.0f) * unit), unit };
+}
+
+// The knob canvas is 44 px for a knob box of 36.2 px (Advanced pedal); 34 px knob inside.
+float pedalKnobCanvas (Rectangle<float> knob) { return knob.getWidth() * (44.0f / 36.2f); }
+
+// LED canvas is 24 px for a 10 px lens.
+void drawSkinLed (Graphics& g, Skin& skin, Point<float> c, float lens, float amount)
+{
+    const auto size = lens * 2.4f;
+    Skin::drawRotated (g, skin.get ("led_amber_off"), c, size, 0.0f);
+    Skin::drawRotated (g, skin.get ("led_amber_on"), c, size, 0.0f, jlimit (0.0f, 1.0f, amount));
+}
+
+void paintDelaySkin (Graphics& g, Skin& skin, const Geometry& geo, const State& s)
+{
+    const auto b = geo.body;
+    const bool tile = s.mainTile;
+    const auto cv = skinCanvas (geo, tile);
+    const auto accent = accentColour (EffectId::delay);
+
+    const auto select = s.selectAmount >= 0.0f ? s.selectAmount : (s.selected ? 1.0f : 0.0f);
+    if (! tile && select > 0.0f)
+        Skin::drawTinted (g, skin.get ("delay_adv_selected_glow"), cv.at (0.0f, 0.0f, 154.0f, 272.0f), accent.withMultipliedAlpha (select));
+
+    // Light spilling on the board below an active pedal (code, follows ON).
+    if (s.enabled)
+        hw::drawLightSeam (g, { b.getCentreX(), b.getBottom() + 3.0f }, b.getWidth() * 0.8f, ledAmber, 0.75f);
+
+    Skin::draw (g, skin.get (tile ? "delay_main_enclosure" : "delay_adv_enclosure"), tile ? cv.at (0.0f, 0.0f, 104.0f, 224.0f) : cv.at (0.0f, 0.0f, 154.0f, 272.0f));
+
+    // Live window content between the empty glass of the art and its reflections.
+    {
+        const auto w = geo.window;
+        const auto corner = jmax (3.0f, w.getHeight() * 0.12f);
+        Graphics::ScopedSaveState save (g);
+        Path clip;
+        clip.addRoundedRectangle (w, corner);
+        g.reduceClipRegion (clip);
+        if (s.enabled)
+            hw::drawLightSpill (g, w.reduced (w.getWidth() * 0.05f, 0.0f), accent, 0.35f);
+        paintEchoRings (g, w, s);
+    }
+    Skin::draw (g, skin.get (tile ? "delay_main_window_glass" : "delay_adv_window_glass"),
+                tile ? cv.at (12.0f, 64.6f, 80.0f, 40.0f) : cv.at (24.0f, 81.0f, 106.0f, 46.0f));
+
+    const auto led = s.ledAmount >= 0.0f ? s.ledAmount : (s.enabled ? 1.0f : 0.0f);
+    drawSkinLed (g, skin, geo.led, (tile ? 6.8f : 9.1f) * cv.unit, led);
+
+    // Knob shadows always; the knobs themselves only where no real slider sits on top.
+    for (auto [r, v] : { std::pair { geo.knobA, s.knobA }, { geo.knobB, s.knobB } })
+    {
+        const auto size = pedalKnobCanvas (r);
+        Skin::drawRotated (g, skin.get ("pedal_knob_shadow"), r.getCentre(), size, 0.0f);
+        if (s.paintKnobs)
+        {
+            Skin::drawRotated (g, skin.get ("pedal_knob_body"), r.getCentre(), size, knobStart + (knobEnd - knobStart) * v);
+            Skin::drawRotated (g, skin.get ("pedal_knob_gloss"), r.getCentre(), size, 0.0f, 0.85f);
+        }
+    }
+
+    if (s.paintFootswitch)
+    {
+        Skin::draw (g, skin.get (s.pressed ? "footswitch_down" : "footswitch_up"), geo.footswitch);
+        if (s.hover)
+        {
+            g.setColour (Colours::white.withAlpha (0.06f));
+            g.fillEllipse (geo.footswitch.reduced (geo.footswitch.getWidth() * 0.22f));
         }
     }
 }
@@ -377,20 +486,8 @@ void paintWindow (Graphics& g, EffectId id, const Geometry& geo, const State& s)
                 break;
             }
             case EffectId::delay:
-            {
-                // Echo rings: one per audible repeat (Feedback), fading like the taps.
-                const auto rings = 2 + static_cast<int> (s.extra[1] * 3.0f + 0.5f);
-                const auto rr = inner.getHeight() * 0.62f;
-                const auto spacing = rr * 0.85f;
-                const auto x0 = w.getCentreX() - spacing * static_cast<float> (rings - 1) * 0.5f;
-                for (int i = 0; i < rings; ++i)
-                {
-                    Path ring;
-                    ring.addEllipse (Rectangle<float> (rr * 2.0f, rr * 2.0f).withCentre ({ x0 + spacing * static_cast<float> (i), w.getCentreY() }));
-                    strokeGlow (g, ring, accent, stroke * 0.85f, inten * std::pow (0.78f, static_cast<float> (i)));
-                }
+                paintEchoRings (g, w, s);
                 break;
-            }
             case EffectId::tape:
             case EffectId::reverb:
                 break;
@@ -622,8 +719,29 @@ void paintSlotBadge (Graphics& g, Rectangle<float> r, int number, bool selected,
     g.drawText (String (number), r, Justification::centred, false);
 }
 
+bool hasSkin (EffectId id)
+{
+    return id == EffectId::delay && SharedResourcePointer<Skin>()->hasDelay();
+}
+
+void paintDelayTapLed (Graphics& g, const Geometry& geo, float blink)
+{
+    const SharedResourcePointer<Skin> skin;
+    drawSkinLed (g, *skin, geo.led.translated (geo.body.getWidth() * 0.28f, 0.0f), 5.2f * geo.body.getWidth() / 134.0f, blink);
+}
+
 void paint (Graphics& g, EffectId id, const Geometry& geo, const State& s)
 {
+    if (id == EffectId::delay)
+    {
+        const SharedResourcePointer<Skin> skin;
+        if (skin->hasDelay())
+        {
+            paintDelaySkin (g, *skin, geo, s);
+            return;
+        }
+    }
+
     paintEnclosure (g, id, geo, s);
     paintDome (g, geo, s);
     paintWindow (g, id, geo, s);
