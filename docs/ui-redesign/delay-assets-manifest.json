@@ -1,0 +1,177 @@
+{
+  "collection": "SHOBEATS FX DELAY",
+  "version": "v2 alignment prototype",
+  "status": "asset candidate set; visual review and JUCE integration required before release",
+  "source": "User-supplied SHOBEATS_DELAY_TEMPLATES.zip, and original SHOBEATS enclosure illustration generated in this conversation",
+  "assets_count": 20,
+  "files": {
+    "panel_background@2x.jpg": {
+      "size": [
+        2480,
+        816
+      ],
+      "mode": "RGB",
+      "bytes": 293068
+    },
+    "delay_adv_selected_glow@2x.png": {
+      "size": [
+        308,
+        544
+      ],
+      "mode": "RGBA",
+      "bytes": 4147
+    },
+    "led_amber_on@2x.png": {
+      "size": [
+        48,
+        48
+      ],
+      "mode": "RGBA",
+      "bytes": 859
+    },
+    "display_frame@2x.png": {
+      "size": [
+        700,
+        688
+      ],
+      "mode": "RGBA",
+      "bytes": 3974
+    },
+    "delay_adv_window_glass@2x.png": {
+      "size": [
+        212,
+        92
+      ],
+      "mode": "RGBA",
+      "bytes": 885
+    },
+    "panel_knob_skirt@2x.png": {
+      "size": [
+        144,
+        144
+      ],
+      "mode": "RGBA",
+      "bytes": 8334
+    },
+    "footswitch_down@2x.png": {
+      "size": [
+        88,
+        88
+      ],
+      "mode": "RGBA",
+      "bytes": 4555
+    },
+    "panel_knob_pointer@2x.png": {
+      "size": [
+        144,
+        144
+      ],
+      "mode": "RGBA",
+      "bytes": 241
+    },
+    "panel_knob_cap@2x.png": {
+      "size": [
+        144,
+        144
+      ],
+      "mode": "RGBA",
+      "bytes": 14158
+    },
+    "display_glass@2x.png": {
+      "size": [
+        700,
+        688
+      ],
+      "mode": "RGBA",
+      "bytes": 4684
+    },
+    "panel_knob_shadow@2x.png": {
+      "size": [
+        144,
+        144
+      ],
+      "mode": "RGBA",
+      "bytes": 5299
+    },
+    "pedal_knob_gloss@2x.png": {
+      "size": [
+        88,
+        88
+      ],
+      "mode": "RGBA",
+      "bytes": 1376
+    },
+    "footswitch_up@2x.png": {
+      "size": [
+        88,
+        88
+      ],
+      "mode": "RGBA",
+      "bytes": 4694
+    },
+    "pedal_knob_shadow@2x.png": {
+      "size": [
+        88,
+        88
+      ],
+      "mode": "RGBA",
+      "bytes": 2771
+    },
+    "delay_main_window_glass@2x.png": {
+      "size": [
+        160,
+        80
+      ],
+      "mode": "RGBA",
+      "bytes": 2236
+    },
+    "pedal_knob_body@2x.png": {
+      "size": [
+        88,
+        88
+      ],
+      "mode": "RGBA",
+      "bytes": 5469
+    },
+    "led_amber_off@2x.png": {
+      "size": [
+        48,
+        48
+      ],
+      "mode": "RGBA",
+      "bytes": 323
+    },
+    "art_delay@2x.png": {
+      "size": [
+        600,
+        324
+      ],
+      "mode": "RGBA",
+      "bytes": 10109
+    },
+    "delay_adv_enclosure@2x.png": {
+      "size": [
+        308,
+        544
+      ],
+      "mode": "RGBA",
+      "bytes": 298503
+    },
+    "delay_main_enclosure@2x.png": {
+      "size": [
+        208,
+        448
+      ],
+      "mode": "RGBA",
+      "bytes": 174439
+    }
+  },
+  "notes": [
+    "20 exact-size @2x assets including one JPEG panel.",
+    "Images are visual layers; DSP, controls, live curves, knobs and sliders remain implemented by JUCE.",
+    "Treat this as a first assembled candidate: painter implementation must be verified in FL Studio with supplied actual renders.",
+    "The main enclosure was re-composed from the separately generated Advanced art; detail alignment and text cleanliness require visual inspection.",
+    "Do not use JUCE global ImageCache or static Image objects due to prior Direct2D plugin-unload crash.",
+    "Do not overwrite the working Sound Lab branch."
+  ]
+}
