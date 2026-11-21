@@ -186,6 +186,16 @@ juce::Font ShobeatsLookAndFeel::getSliderPopupFont (juce::Slider&)
     return font (Type::value, 15.0f);
 }
 
+juce::Font ShobeatsLookAndFeel::getComboBoxFont (juce::ComboBox& box)
+{
+    return font (Type::value, juce::jmin (18.0f, static_cast<float> (box.getHeight()) * 0.55f));
+}
+
+juce::Font ShobeatsLookAndFeel::getPopupMenuFont()
+{
+    return font (Type::value, 17.0f);
+}
+
 int ShobeatsLookAndFeel::getSliderPopupPlacement (juce::Slider&)
 {
     return juce::BubbleComponent::above;

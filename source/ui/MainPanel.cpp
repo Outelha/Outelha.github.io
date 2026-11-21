@@ -67,8 +67,15 @@ void drawModulePlate (Graphics& g, Rectangle<float> r)
         g.setColour (Colours::black.withAlpha (0.16f));
         g.fillPath (p, AffineTransform::translation (0.0f, 2.0f + static_cast<float> (i) * 1.6f));
     }
-    g.setGradientFill (ColourGradient (Colour (0xff6a6b70), r.getX(), r.getY(), Colour (0xff1a1b1e), r.getRight(), r.getBottom(), false));
+    g.setGradientFill (ColourGradient (Colour (0xff776b62), r.getX(), r.getY(), Colour (0xff1c1816), r.getRight(), r.getBottom(), false));
     g.fillPath (p);
+    {
+        // Warm light reflected in the lower chamfers.
+        Graphics::ScopedSaveState save (g);
+        g.reduceClipRegion (p);
+        g.setGradientFill (ColourGradient (Colour (0x00ff7a1f), 0.0f, r.getBottom() - ch * 1.4f, Colour (0x66ff7a1f), 0.0f, r.getBottom(), false));
+        g.fillRect (r.withTop (r.getBottom() - ch * 1.4f));
+    }
     const auto inner = r.reduced (3.0f);
     Path in;
     in.startNewSubPath (inner.getX() + ch - 1.0f, inner.getY());
@@ -80,7 +87,7 @@ void drawModulePlate (Graphics& g, Rectangle<float> r)
     in.lineTo (inner.getX(), inner.getBottom() - ch + 1.0f);
     in.lineTo (inner.getX(), inner.getY() + ch - 1.0f);
     in.closeSubPath();
-    g.setGradientFill (ColourGradient (Colour (0xff3b3c41), inner.getX(), inner.getY(), Colour (0xff17181b), inner.getRight(), inner.getBottom(), false));
+    g.setGradientFill (ColourGradient (Colour (0xff3e3a37), inner.getX(), inner.getY(), Colour (0xff181615), inner.getRight(), inner.getBottom(), false));
     g.fillPath (in);
     {
         Graphics::ScopedSaveState save (g);
@@ -551,6 +558,9 @@ void MainBackdrop::paint (Graphics& g)
     // Upper hardware section.
     hw::drawBezelPanel (g, f (hardwarePlate), 18.0f, 7.0f, true);
     hw::drawLightSeam (g, { f (hardwarePlate).getCentreX(), f (hardwarePlate).getBottom() - 3.5f }, 900.0f, brandOrange, 0.8f);
+    // Light leaking from the seams of the chassis, as on the reference hardware.
+    for (auto x : { 0.08f, 0.3f, 0.7f, 0.92f })
+        hw::drawLightSeam (g, { f (hardwarePlate).getX() + f (hardwarePlate).getWidth() * x, f (hardwarePlate).getY() + 3.5f }, 120.0f, brandOrange, 0.55f);
     for (auto module : { driftModule, unstableModule })
         drawModulePlate (g, f (module));
     // Vent slots under the tubes.
@@ -572,6 +582,8 @@ void MainBackdrop::paint (Graphics& g)
     hw::drawTray (g, f (chainTray), 14.0f);
     hw::drawTray (g, f (masterTray), 14.0f);
     hw::drawLightSeam (g, { f (masterTray).getCentreX(), f (masterTray).getBottom() - 6.0f }, 170.0f, brandOrange, 0.7f);
+    for (auto x : { 0.25f, 0.5f, 0.75f })
+        hw::drawLightSeam (g, { f (chainPlate).getX() + f (chainPlate).getWidth() * x, f (chainPlate).getBottom() - 3.5f }, 160.0f, brandOrange, 0.6f);
     // A machined strip under the master section.
     g.setColour (Colours::black.withAlpha (0.6f));
     g.fillRoundedRectangle (f (V (1012, 786, 190, 8)), 4.0f);
@@ -716,14 +728,14 @@ void MainPanel::resized()
 
     layoutTiles();
 
-    auto master = masterTray.reduced (8, 12);
+    auto master = masterTray.reduced (7, 12);
     inputMeter.setBounds (master.removeFromLeft (20).withTrimmedBottom (4));
     outputMeter.setBounds (master.removeFromRight (20).withTrimmedBottom (4));
-    master.reduce (2, 0);
     const auto kw = master.getWidth() / 3;
     for (auto* k : { &input, &mix, &output })
     {
-        k->setBounds (master.removeFromLeft (kw).withSizeKeepingCentre (kw, 140).translated (0, -10));
+        // Slightly overlapping cells so the knobs read as large as on the reference.
+        k->setBounds (master.removeFromLeft (kw).withSizeKeepingCentre (kw + 12, 150).translated (0, -10));
         k->getSlider().setTextBoxStyle (Slider::TextBoxBelow, false, kw, 24);
     }
 }

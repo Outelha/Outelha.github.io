@@ -295,10 +295,11 @@ void drawBezelPanel (Graphics& g, Rectangle<float> r, float corner, float bezel,
     // Polished bezel: bright upper edge, dark lower edge, a sharp specular line.
     Path outer;
     outer.addRoundedRectangle (r, corner);
-    ColourGradient rim (Colour (0xff8d8f95), r.getX(), r.getY(), Colour (0xff1e1f22), r.getX(), r.getBottom(), false);
-    rim.addColour (0.08, Colour (0xff5d5f65));
-    rim.addColour (0.5, Colour (0xff35363a));
-    rim.addColour (0.92, Colour (0xff4a4b50));
+    // Smoked-bronze anodising: warm greys rather than neutral steel.
+    ColourGradient rim (Colour (0xff9c9186), r.getX(), r.getY(), Colour (0xff211c19), r.getX(), r.getBottom(), false);
+    rim.addColour (0.08, Colour (0xff6b6159));
+    rim.addColour (0.5, Colour (0xff3a3430));
+    rim.addColour (0.92, Colour (0xff574b42));
     g.setGradientFill (rim);
     g.fillPath (outer);
     {
@@ -313,6 +314,13 @@ void drawBezelPanel (Graphics& g, Rectangle<float> r, float corner, float bezel,
         sheen.addColour (0.7, Colours::white.withAlpha (0.06f));
         g.setGradientFill (sheen);
         g.fillPath (outer);
+        // Orange light from the panel below / the lit controls, reflected in the lower bezel.
+        ColourGradient warm (Colour (0x00ff7a1f), 0.0f, r.getBottom() - bezel * 2.2f, Colour (0x44ff7a1f), 0.0f, r.getBottom(), false);
+        g.setGradientFill (warm);
+        g.fillRect (r.withTop (r.getBottom() - bezel * 2.2f));
+        ColourGradient warmTop (Colour (0x22ff8a30), 0.0f, r.getY(), Colour (0x00ff8a30), 0.0f, r.getY() + bezel * 1.6f, false);
+        g.setGradientFill (warmTop);
+        g.fillRect (r.withHeight (bezel * 1.6f));
     }
     g.setColour (Colours::white.withAlpha (0.28f));
     g.drawRoundedRectangle (r.reduced (0.8f), corner, 0.8f);
@@ -326,7 +334,7 @@ void drawBezelPanel (Graphics& g, Rectangle<float> r, float corner, float bezel,
     in.addRoundedRectangle (inner, innerCorner);
     g.setColour (Colours::black.withAlpha (0.7f));
     g.drawRoundedRectangle (inner.expanded (1.0f), innerCorner + 1.0f, 2.0f);
-    g.setGradientFill (ColourGradient (Colour (0xff1b1c1f), inner.getX(), inner.getY(), Colour (0xff0e0f11), inner.getX(), inner.getBottom(), false));
+    g.setGradientFill (ColourGradient (Colour (0xff1e1b19), inner.getX(), inner.getY(), Colour (0xff0f0e0d), inner.getX(), inner.getBottom(), false));
     g.fillPath (in);
     {
         Graphics::ScopedSaveState save (g);

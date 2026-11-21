@@ -709,3 +709,55 @@ TEST_CASE_METHOD (JuceFixture, "UI: full-editor render cost stays within budget"
         CHECK (advMs < 400.0);
     }
 }
+
+TEST_CASE_METHOD (JuceFixture, "UI: editor scales cleanly at 100, 125, 150 and 200 %", "[plugin][gui][scaling]")
+{
+#if JUCE_LINUX
+    if (std::getenv ("DISPLAY") == nullptr)
+        SKIP ("No display available");
+#endif
+    ShobeatsAudioProcessor p;
+    prepare (p);
+    AnimatedEditor ui { p };
+    auto& editor = *ui.editor;
+
+    // Every visible control must lie inside its parent at design size; scaling is one transform.
+    std::function<void (juce::Component&)> checkInside = [&] (juce::Component& c) {
+        for (auto* child : c.getChildren())
+        {
+            if (! child->isVisible() || child->getWidth() == 0)
+                continue;
+            INFO (typeid (*child).name() << " '" << child->getName() << "' " << child->getBounds().toString() << " in " << c.getLocalBounds().toString());
+            CHECK (c.getLocalBounds().expanded (2).contains (child->getBounds()));
+            checkInside (*child);
+        }
+    };
+
+    for (auto percent : { 100, 125, 150, 200 })
+    {
+        const auto w = sfx::MainView::designWidth * percent / 100;
+        const auto h = sfx::MainView::designHeight * percent / 100;
+        editor.setSize (w, h);
+        CHECK (editor.getWidth() == w);
+        CHECK (editor.getHeight() == h);
+        const auto viewArea = ui.view.getBoundsInParent();
+        CHECK (std::abs (viewArea.getWidth() - w) <= 1);
+        CHECK (std::abs (viewArea.getHeight() - h) <= 1);
+
+        for (auto advanced : { false, true })
+        {
+            ui.view.setAdvanced (advanced);
+            checkInside (ui.view);
+            ui.frame (true);
+            const auto image = editor.createComponentSnapshot (editor.getLocalBounds());
+            CHECK (image.getWidth() == w);
+            if (const auto* prefix = std::getenv ("SHOBEATS_SNAPSHOT"))
+            {
+                juce::File file (juce::String::fromUTF8 (prefix) + "scale" + juce::String (percent) + (advanced ? "_adv" : "_main") + ".png");
+                file.deleteFile();
+                juce::FileOutputStream out (file);
+                CHECK (juce::PNGImageFormat().writeImageToStream (image, out));
+            }
+        }
+    }
+}

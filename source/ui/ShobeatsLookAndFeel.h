@@ -25,6 +25,8 @@ public:
     void drawBubble (juce::Graphics&, juce::BubbleComponent&, const juce::Point<float>& tip, const juce::Rectangle<float>& body) override;
     juce::Font getSliderPopupFont (juce::Slider&) override;
     int getSliderPopupPlacement (juce::Slider&) override;
+    juce::Font getComboBoxFont (juce::ComboBox&) override;
+    juce::Font getPopupMenuFont() override;
 
 private:
     // Keeps the shared texture images alive for as long as this editor exists.

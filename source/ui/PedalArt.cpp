@@ -34,14 +34,14 @@ Finish finishFor (EffectId id)
 {
     switch (id)
     {
-        case EffectId::saturation: return { 0.55f, 0.15f, 0.0f };
-        case EffectId::resampler: return { 0.22f, 0.45f, 0.0f };
+        case EffectId::saturation: return { 0.45f, 0.3f, 0.0f };
+        case EffectId::resampler: return { 0.15f, 0.6f, 0.0f };
         case EffectId::tape: return { 0.22f, 0.12f, 0.35f };
-        case EffectId::chorus: return { 0.28f, 0.40f, 0.0f };
-        case EffectId::tremolo: return { 0.28f, 0.45f, 0.0f };
+        case EffectId::chorus: return { 0.18f, 0.55f, 0.0f };
+        case EffectId::tremolo: return { 0.18f, 0.6f, 0.0f };
         case EffectId::reverse: return { 0.12f, 0.08f, 0.65f };
-        case EffectId::delay: return { 0.32f, 0.35f, 0.0f };
-        case EffectId::reverb: return { 0.10f, 0.30f, 0.0f };
+        case EffectId::delay: return { 0.22f, 0.5f, 0.0f };
+        case EffectId::reverb: return { 0.08f, 0.4f, 0.0f };
     }
     return {};
 }
@@ -191,6 +191,18 @@ void paintEnclosure (Graphics& g, EffectId id, const Geometry& geo, const State&
                               b.getY() + b.getHeight() * 0.45f, false);
         g.setGradientFill (sheen);
         g.fillPath (body);
+        // Clear-coat: a crisp diagonal reflection band ...
+        ColourGradient gloss (Colours::white.withAlpha (0.0f), b.getX(), b.getY() + b.getHeight() * 0.02f, Colours::white.withAlpha (0.0f),
+                              b.getX() + b.getWidth() * 0.95f, b.getY() + b.getHeight() * 0.5f, false);
+        gloss.addColour (0.30, Colours::white.withAlpha (0.0f));
+        gloss.addColour (0.355, Colours::white.withAlpha (0.17f));
+        gloss.addColour (0.40, Colours::white.withAlpha (0.06f));
+        gloss.addColour (0.47, Colours::white.withAlpha (0.0f));
+        g.setGradientFill (gloss);
+        g.fillPath (body);
+        // ... and warm light from the lit room caught along the right-hand edge.
+        g.setGradientFill (ColourGradient (Colour (0x00ff8a30), b.getRight() - b.getWidth() * 0.14f, 0.0f, Colour (0x38ff8a30), b.getRight(), 0.0f, false));
+        g.fillRect (b.withLeft (b.getRight() - b.getWidth() * 0.14f));
     }
 
     // Bevel: bright top/left lip, dark bottom/right lip, black outline.

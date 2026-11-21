@@ -125,3 +125,27 @@ New regression tests:
 * `UI: full-editor render cost stays within budget` (prints the timings above).
 
 Also fixed the MSVC shadowing warnings (C4458/C4459) introduced in M2–M4.
+
+## M8 — polish, scaling, overlays
+Complete:
+* Warmth: bezels are smoked bronze instead of neutral steel, with orange light reflected
+  in their lower edges; module plates catch orange in the lower chamfers; extra light
+  seams along the chassis (top of the hardware plate, bottom of the chain plate).
+* Pedal finish: clear-coat diagonal reflection band, warm rim light on the right edge,
+  more metal flake / less hammer-tone on the sparkle finishes (resampler, chorus,
+  tremolo, delay, reverb).
+* Master section: larger Input / Mix / Output knobs (cells overlap slightly).
+* Combo-box and pop-up menu text use the condensed value face.
+* Preset browser and Save panel sit in the same bezel panel as the rest of the hardware
+  (separate commit, 2 small hunks in `PresetBrowser.cpp` paint code only).
+* Scaling test at 100 / 125 / 150 / 200 %: editor size, single view transform, every
+  visible control inside its parent in both views, renders at each size
+  (`SHOBEATS_SNAPSHOT` also writes `scale<percent>_{main,adv}.png`). Visual check of the
+  crops: identical layout, crisp text and strokes at every scale.
+
+Open (honest list):
+* Pedal enclosures are still less glossy / saturated than the reference renders.
+* Lower-left illustrations in the Advanced panel are procedural and simpler than the
+  reference images; licensed art can be dropped into `assets/images/art_<effect>.png`.
+* The GENERATE key and hex grilles are smaller and flatter than on reference 01.
+* Not tested inside FL Studio by me: only pluginval + the lifecycle host run on CI.
