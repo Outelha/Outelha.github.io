@@ -536,10 +536,7 @@ void PresetBrowser::paint (juce::Graphics& g)
 {
     g.fillAll (juce::Colours::black.withAlpha (0.55f));
     const auto panel = getLocalBounds().reduced (60, 40).toFloat();
-    g.setColour (Palette::panel);
-    g.fillRoundedRectangle (panel, 14.0f);
-    g.setColour (Palette::panelEdge);
-    g.drawRoundedRectangle (panel.reduced (0.5f), 14.0f, 1.0f);
+    hw::drawBezelPanel (g, panel.expanded (6.0f), 18.0f, 6.0f, true);
 
     auto header = panel.reduced (24.0f, 18.0f).removeFromTop (30.0f);
     g.setColour (Palette::text);
@@ -643,10 +640,7 @@ void SavePresetPanel::paint (juce::Graphics& g)
 {
     g.fillAll (juce::Colours::black.withAlpha (0.55f));
     const auto panel = getLocalBounds().withSizeKeepingCentre (520, 260).toFloat();
-    g.setColour (Palette::panel);
-    g.fillRoundedRectangle (panel, 14.0f);
-    g.setColour (Palette::panelEdge);
-    g.drawRoundedRectangle (panel.reduced (0.5f), 14.0f, 1.0f);
+    hw::drawBezelPanel (g, panel.expanded (6.0f), 18.0f, 6.0f, true);
     g.setColour (Palette::text);
     g.setFont (uiFont (20.0f, true));
     g.drawText ("SAVE USER PRESET", panel.reduced (24.0f, 18.0f).removeFromTop (28.0f), juce::Justification::centredLeft);
