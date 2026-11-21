@@ -165,6 +165,7 @@ void Pedal::endDrag()
 //==============================================================================
 Pedalboard::Pedalboard (APVTS& state, ChainOrder& o, FrameClock& clock, const VisualFeed& feed) : order (o)
 {
+    addAndMakeVisible (backdrop);
     for (int i = 0; i < numEffects; ++i)
     {
         auto& pedal = pedals[static_cast<size_t> (i)];
@@ -182,6 +183,7 @@ void Pedalboard::select (EffectId id)
     selected = id;
     for (auto& p : pedals)
         p->setSelected (p->getEffect() == id);
+    backdrop.repaint();
     repaint();
     if (onSelectionChanged)
         onSelectionChanged (id);
@@ -230,11 +232,13 @@ void Pedalboard::layoutPedals (bool animate)
         else
             pedal->setBounds (target);
     }
+    backdrop.repaint();
     repaint();
 }
 
 void Pedalboard::resized()
 {
+    backdrop.setBounds (getLocalBounds());
     layoutPedals (false);
 }
 
@@ -248,7 +252,7 @@ void Pedalboard::timerCallback()
     }
 }
 
-void Pedalboard::paint (juce::Graphics& g)
+void Pedalboard::paintBoard (juce::Graphics& g)
 {
     // Dark board in a polished frame; slot badges under each position.
     hw::drawBezelPanel (g, boardArea(), 16.0f, 5.0f, false);

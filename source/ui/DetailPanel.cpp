@@ -253,6 +253,7 @@ void EffectArt::paint (Graphics& g)
 DetailPanel::DetailPanel (APVTS& s, FrameClock& clock, const VisualFeed& feed)
     : state (s), display (s, clock, feed), art (s)
 {
+    addAndMakeVisible (backdrop);
     addAndMakeVisible (art);
     addAndMakeVisible (display);
     for (auto* b : { &moveLeft, &moveRight })
@@ -365,7 +366,7 @@ void DetailPanel::showEffect (EffectId id)
     repaint();
 }
 
-void DetailPanel::paint (Graphics& g)
+void DetailPanel::paintPanel (Graphics& g)
 {
     const auto b = getLocalBounds().toFloat().reduced (2.0f);
     const auto accent = accentColour (effect);
@@ -400,6 +401,7 @@ void DetailPanel::paint (Graphics& g)
 
 void DetailPanel::resized()
 {
+    backdrop.setBounds (getLocalBounds());
     art.setBounds (artArea);
     display.setBounds (displayArea);
     if (power != nullptr)

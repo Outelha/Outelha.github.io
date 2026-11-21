@@ -597,3 +597,115 @@ TEST_CASE_METHOD (JuceFixture, "Plugin: editor survives parameter changes from a
     editor.reset();
     SUCCEED();
 }
+
+namespace
+{
+struct AnimatedEditor
+{
+    ShobeatsAudioProcessor& p;
+    std::unique_ptr<juce::AudioProcessorEditor> editor { p.createEditorAndMakeActive() };
+    sfx::MainView& view = dynamic_cast<sfx::ShobeatsAudioProcessorEditor&> (*editor).getView();
+    double clockTime = 1.0;
+
+    // One 60 Hz UI frame, optionally with audio processed since the previous frame.
+    void frame (bool processAudio)
+    {
+        if (processAudio)
+            processSine (p, 2);
+        view.getFrameClock().tick (clockTime += 1.0 / 60.0);
+    }
+    float reel() { return view.getDetailPanel().getDisplay().getReelPhase(); }
+};
+} // namespace
+
+TEST_CASE_METHOD (JuceFixture, "UI: tape reels turn only while audio is processed and the pedal is on", "[plugin][gui][animation]")
+{
+#if JUCE_LINUX
+    if (std::getenv ("DISPLAY") == nullptr)
+        SKIP ("No display available");
+#endif
+    ShobeatsAudioProcessor p;
+    prepare (p);
+    disableAllModules (p);
+    setParam (p, ParamID::tapeEnabled, 1.0f);
+    AnimatedEditor ui { p };
+    ui.view.setAdvanced (true);
+    ui.view.getPedalboard().select (sfx::EffectId::tape);
+
+    // Host not calling processBlock (transport stopped / plugin idle): reels stay still.
+    for (int i = 0; i < 30; ++i)
+        ui.frame (false);
+    const auto idle = ui.reel();
+    for (int i = 0; i < 30; ++i)
+        ui.frame (false);
+    CHECK (ui.reel() == idle);
+
+    // Audio running: reels turn.
+    for (int i = 0; i < 60; ++i)
+        ui.frame (true);
+    const auto running = ui.reel();
+    CHECK (running > idle + 0.5f);
+
+    // Audio stops: reels coast down and settle.
+    for (int i = 0; i < 240; ++i)
+        ui.frame (false);
+    const auto settled = ui.reel();
+    for (int i = 0; i < 30; ++i)
+        ui.frame (false);
+    CHECK (ui.reel() == settled);
+
+    // Pedal bypassed: audio runs, reels stay settled.
+    setParam (p, ParamID::tapeEnabled, 0.0f);
+    for (int i = 0; i < 240; ++i)
+        ui.frame (true);
+    const auto bypassed = ui.reel();
+    for (int i = 0; i < 30; ++i)
+        ui.frame (true);
+    CHECK (ui.reel() == bypassed);
+
+    // Pedal on but the Advanced view hidden: nothing animates.
+    setParam (p, ParamID::tapeEnabled, 1.0f);
+    ui.view.setAdvanced (false);
+    const auto hidden = ui.reel();
+    for (int i = 0; i < 60; ++i)
+        ui.frame (true);
+    CHECK (ui.reel() == hidden);
+}
+
+TEST_CASE_METHOD (JuceFixture, "UI: full-editor render cost stays within budget", "[plugin][gui][perf]")
+{
+#if JUCE_LINUX
+    if (std::getenv ("DISPLAY") == nullptr)
+        SKIP ("No display available");
+#endif
+    ShobeatsAudioProcessor p;
+    prepare (p);
+    enableAllModules (p);
+    AnimatedEditor ui { p };
+    ui.editor->setSize (sfx::MainView::designWidth, sfx::MainView::designHeight);
+
+    // Software-rendered full repaints (worst case: every pixel, no cached layers reused by the
+    // host). Real frames only repaint the animated regions, so this is a loose upper bound.
+    auto measure = [&] (bool advanced, float scale) {
+        ui.view.setAdvanced (advanced);
+        for (int i = 0; i < 4; ++i)
+            ui.frame (true);
+        juce::ignoreUnused (ui.editor->createComponentSnapshot (ui.editor->getLocalBounds(), true, scale)); // warm caches
+        constexpr int runs = 6;
+        const auto start = juce::Time::getMillisecondCounterHiRes();
+        for (int i = 0; i < runs; ++i)
+        {
+            ui.frame (true);
+            juce::ignoreUnused (ui.editor->createComponentSnapshot (ui.editor->getLocalBounds(), true, scale));
+        }
+        return (juce::Time::getMillisecondCounterHiRes() - start) / runs;
+    };
+    for (auto scale : { 1.0f, 1.25f, 1.5f, 2.0f })
+    {
+        const auto mainMs = measure (false, scale);
+        const auto advMs = measure (true, scale);
+        WARN ("scale " << scale << ": main " << mainMs << " ms, advanced " << advMs << " ms per full repaint");
+        CHECK (mainMs < 400.0);
+        CHECK (advMs < 400.0);
+    }
+}

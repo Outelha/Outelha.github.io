@@ -77,7 +77,6 @@ public:
     // Moves the selected pedal one slot left (-1) or right (+1).
     void nudgeSelected (int direction);
 
-    void paint (juce::Graphics&) override;
     void paintOverChildren (juce::Graphics&) override;
     void resized() override;
 
@@ -89,6 +88,7 @@ public:
 
 private:
     void timerCallback() override;
+    void paintBoard (juce::Graphics&);
     void layoutPedals (bool animate);
     juce::Rectangle<int> slotBounds (int slot) const;
     juce::Rectangle<float> boardArea() const;
@@ -96,6 +96,7 @@ private:
 
     ChainOrder& order;
     ChainOrder::Order shownOrder {};
+    Backdrop backdrop { [this] (juce::Graphics& g) { paintBoard (g); } };
     std::array<std::unique_ptr<Pedal>, numEffects> pedals;
     EffectId selected = EffectId::saturation;
     int dropSlot = -1;

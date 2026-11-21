@@ -88,7 +88,24 @@ private:
     std::unique_ptr<juce::ParameterAttachment> attachment;
 };
 
-// Stereo peak meter (dBFS).
+// Static artwork behind a panel's controls, cached as an image. Animated children then
+// repaint over a cached bitmap instead of re-running the panel's gradients and textures
+// every frame. Call repaint() on it when the artwork itself changes.
+class Backdrop final : public juce::Component
+{
+public:
+    explicit Backdrop (std::function<void (juce::Graphics&)> paintFn, bool opaque = false) : painter (std::move (paintFn))
+    {
+        setInterceptsMouseClicks (false, false);
+        setOpaque (opaque);
+        setBufferedToImage (true);
+    }
+    void paint (juce::Graphics& g) override { painter (g); }
+
+private:
+    std::function<void (juce::Graphics&)> painter;
+};
+
 // Stereo LED ladder meter (dBFS) in a recessed slot, caption below.
 class LevelMeter final : public juce::Component
 {

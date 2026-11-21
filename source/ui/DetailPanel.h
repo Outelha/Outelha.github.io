@@ -40,14 +40,15 @@ public:
     // Called with -1 / +1 when the user moves the effect in the chain.
     std::function<void (int)> onMove;
 
-    void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
     void timerCallback() override { art.refresh(); }
+    void paintPanel (juce::Graphics&);
 
     APVTS& state;
     EffectId effect = EffectId::saturation;
+    Backdrop backdrop { [this] (juce::Graphics& g) { paintPanel (g); } };
     EffectDisplay display;
     EffectArt art;
     juce::TextButton moveLeft { "<  Earlier" }, moveRight { "Later  >" };

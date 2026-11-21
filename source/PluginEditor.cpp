@@ -80,6 +80,7 @@ MainView::MainView (ShobeatsAudioProcessor& p)
       browser (p.getPresetManager()),
       savePanel (p.getPresetManager())
 {
+    addAndMakeVisible (chassis);
     addAndMakeVisible (presetBar);
     addAndMakeVisible (viewSwitch);
     addAndMakeVisible (mainPanel);
@@ -118,7 +119,7 @@ void MainView::setAdvanced (bool shouldShowAdvanced)
     detail.setVisible (advanced);
     viewSwitch.setButtonText (advanced ? "Main" : "Advanced");
     viewSwitch.repaint();
-    repaint();
+    chassis.repaint();
 }
 
 void MainView::showBrowser (bool show)
@@ -141,7 +142,7 @@ void MainView::showSavePanel (bool show)
     }
 }
 
-void MainView::paint (juce::Graphics& g)
+void MainView::paintChassis (juce::Graphics& g)
 {
     // Chassis: near-black with a faint brushed grain.
     g.fillAll (juce::Colour (0xff0b0b0c));
@@ -159,6 +160,7 @@ void MainView::paint (juce::Graphics& g)
 
 void MainView::resized()
 {
+    chassis.setBounds (getLocalBounds());
     presetBar.setBounds (presetArea);
     viewSwitch.setBounds (switchArea);
 

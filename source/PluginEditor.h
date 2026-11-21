@@ -24,7 +24,6 @@ public:
 
     explicit MainView (ShobeatsAudioProcessor&);
 
-    void paint (juce::Graphics&) override;
     void resized() override;
     void refresh();
 
@@ -40,7 +39,10 @@ public:
     void showSavePanel (bool show);
 
 private:
+    void paintChassis (juce::Graphics&);
+
     ShobeatsAudioProcessor& processor;
+    ui::Backdrop chassis { [this] (juce::Graphics& g) { paintChassis (g); }, true };
     ui::PresetBar presetBar;
     ui::FrameClock frameClock { *this };
     ui::KeyCap viewSwitch { "Advanced", ui::brandOrange, true };

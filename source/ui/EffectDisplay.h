@@ -21,6 +21,9 @@ public:
     // Tempo used to draw synced effects.
     void setBpm (double newBpm) noexcept { bpm = newBpm; }
 
+    // Current tape-reel angle (radians). Exposed for regression tests.
+    float getReelPhase() const noexcept { return reelPhase; }
+
 private:
     bool frame (double now, double dt) override;
     float value (const char* id) const;

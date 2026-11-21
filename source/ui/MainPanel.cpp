@@ -224,18 +224,18 @@ void KeyCap::paintButton (Graphics& g, bool over, bool down)
         key.down = down;
         key.corner = 10.0f;
         hw::drawKey (g, b, key);
-        auto text = b.translated (0.0f, down ? 0.8f : 0.0f);
+        auto textArea = b.translated (0.0f, down ? 0.8f : 0.0f);
         const auto f = hasLabelFont ? labelFont : font (Type::labelBold, b.getHeight() * 0.52f, 0.22f);
         const auto label = getButtonText().toUpperCase();
-        hw::drawKeyText (g, label, text, f, true, accent);
+        hw::drawKeyText (g, label, textArea, f, true, accent);
         if (icon == Icon::chevrons)
         {
             const auto textW = GlyphArrangement::getStringWidth (f, label);
             const auto ch = b.getHeight() * 0.36f;
             for (int side = 0; side < 2; ++side)
             {
-                const auto x = side == 0 ? text.getCentreX() - textW * 0.5f - ch * 2.2f : text.getCentreX() + textW * 0.5f + ch * 1.15f;
-                auto chev = iconPath (Icon::chevrons, Rectangle<float> (ch * 1.2f, ch).withPosition (x, text.getCentreY() - ch * 0.5f));
+                const auto x = side == 0 ? textArea.getCentreX() - textW * 0.5f - ch * 2.2f : textArea.getCentreX() + textW * 0.5f + ch * 1.15f;
+                auto chev = iconPath (Icon::chevrons, Rectangle<float> (ch * 1.2f, ch).withPosition (x, textArea.getCentreY() - ch * 0.5f));
                 if (side == 1)
                     chev.applyTransform (AffineTransform::scale (-1.0f, 1.0f, x + ch * 0.6f, 0.0f));
                 g.setColour (Colour (0xff5a1e00).withAlpha (0.6f));

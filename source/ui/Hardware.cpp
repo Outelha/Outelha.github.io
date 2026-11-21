@@ -500,32 +500,32 @@ void drawGlassTube (Graphics& g, Rectangle<float> r, Colour glow, float level)
 {
     level = jlimit (0.0f, 1.0f, level);
     const auto capH = r.getWidth() * 0.55f;
-    const auto glass = r.reduced (r.getWidth() * 0.12f, capH * 0.7f);
+    const auto tubeGlass = r.reduced (r.getWidth() * 0.12f, capH * 0.7f);
     // Light thrown on the surroundings.
-    drawLightSpill (g, glass.expanded (glass.getWidth() * 1.4f, glass.getHeight() * 0.25f), glow, 0.25f + 0.75f * level);
+    drawLightSpill (g, tubeGlass.expanded (tubeGlass.getWidth() * 1.4f, tubeGlass.getHeight() * 0.25f), glow, 0.25f + 0.75f * level);
     // Glass body with the glowing gas column: brightest in the middle, darker at the walls.
     g.setColour (Colour (0xff120c08));
-    g.fillRoundedRectangle (glass, glass.getWidth() * 0.45f);
+    g.fillRoundedRectangle (tubeGlass, tubeGlass.getWidth() * 0.45f);
     {
-        ColourGradient column (glow.darker (0.6f).withAlpha (0.5f * level), glass.getX(), 0.0f, glow.darker (0.6f).withAlpha (0.5f * level), glass.getRight(), 0.0f, false);
+        ColourGradient column (glow.darker (0.6f).withAlpha (0.5f * level), tubeGlass.getX(), 0.0f, glow.darker (0.6f).withAlpha (0.5f * level), tubeGlass.getRight(), 0.0f, false);
         column.addColour (0.5, glow.brighter (0.3f).withAlpha (0.35f + 0.65f * level));
         column.addColour (0.3, glow.withAlpha (0.6f * level + 0.1f));
         column.addColour (0.7, glow.withAlpha (0.6f * level + 0.1f));
         g.setGradientFill (column);
-        g.fillRoundedRectangle (glass.reduced (1.0f), glass.getWidth() * 0.45f);
+        g.fillRoundedRectangle (tubeGlass.reduced (1.0f), tubeGlass.getWidth() * 0.45f);
         // Fade toward both ends.
-        g.setGradientFill (ColourGradient (Colour (0xff120c08).withAlpha (0.85f), 0.0f, glass.getY(), Colour (0x00120c08), 0.0f, glass.getY() + glass.getHeight() * 0.22f, false));
-        g.fillRoundedRectangle (glass.withHeight (glass.getHeight() * 0.22f), glass.getWidth() * 0.45f);
-        g.setGradientFill (ColourGradient (Colour (0x00120c08), 0.0f, glass.getBottom() - glass.getHeight() * 0.22f, Colour (0xff120c08).withAlpha (0.85f), 0.0f, glass.getBottom(), false));
-        g.fillRoundedRectangle (glass.withTrimmedTop (glass.getHeight() * 0.78f), glass.getWidth() * 0.45f);
+        g.setGradientFill (ColourGradient (Colour (0xff120c08).withAlpha (0.85f), 0.0f, tubeGlass.getY(), Colour (0x00120c08), 0.0f, tubeGlass.getY() + tubeGlass.getHeight() * 0.22f, false));
+        g.fillRoundedRectangle (tubeGlass.withHeight (tubeGlass.getHeight() * 0.22f), tubeGlass.getWidth() * 0.45f);
+        g.setGradientFill (ColourGradient (Colour (0x00120c08), 0.0f, tubeGlass.getBottom() - tubeGlass.getHeight() * 0.22f, Colour (0xff120c08).withAlpha (0.85f), 0.0f, tubeGlass.getBottom(), false));
+        g.fillRoundedRectangle (tubeGlass.withTrimmedTop (tubeGlass.getHeight() * 0.78f), tubeGlass.getWidth() * 0.45f);
     }
     g.setColour (Colour (0xffffe0b0).withAlpha (0.35f + 0.65f * level));
-    g.fillRoundedRectangle (glass.withSizeKeepingCentre (jmax (1.2f, glass.getWidth() * 0.1f), glass.getHeight() * 0.62f), 1.0f);
+    g.fillRoundedRectangle (tubeGlass.withSizeKeepingCentre (jmax (1.2f, tubeGlass.getWidth() * 0.1f), tubeGlass.getHeight() * 0.62f), 1.0f);
     // Glass reflections.
     g.setColour (Colours::white.withAlpha (0.22f));
-    g.fillRoundedRectangle (glass.withWidth (glass.getWidth() * 0.14f).translated (glass.getWidth() * 0.14f, 0.0f).reduced (0.0f, glass.getHeight() * 0.06f), 1.5f);
+    g.fillRoundedRectangle (tubeGlass.withWidth (tubeGlass.getWidth() * 0.14f).translated (tubeGlass.getWidth() * 0.14f, 0.0f).reduced (0.0f, tubeGlass.getHeight() * 0.06f), 1.5f);
     g.setColour (Colours::white.withAlpha (0.18f));
-    g.drawRoundedRectangle (glass, glass.getWidth() * 0.45f, 0.8f);
+    g.drawRoundedRectangle (tubeGlass, tubeGlass.getWidth() * 0.45f, 0.8f);
     // Chrome end caps.
     for (auto cap : { r.withHeight (capH), r.withTrimmedTop (r.getHeight() - capH) })
     {
@@ -543,15 +543,15 @@ void drawVacuumTube (Graphics& g, Rectangle<float> r, Colour glow, float level)
     const auto baseH = r.getHeight() * 0.14f;
     const auto envelope = r.withTrimmedBottom (baseH);
     const auto rad = envelope.getWidth() * 0.5f;
-    Path glass;
-    glass.addRoundedRectangle (envelope.getX(), envelope.getY(), envelope.getWidth(), envelope.getHeight(), rad, rad, true, true, false, false);
+    Path glassPath;
+    glassPath.addRoundedRectangle (envelope.getX(), envelope.getY(), envelope.getWidth(), envelope.getHeight(), rad, rad, true, true, false, false);
 
     drawLightSpill (g, envelope.expanded (envelope.getWidth() * 0.9f, envelope.getHeight() * 0.15f), glow, 0.2f + 0.8f * level);
     g.setColour (Colour (0xff160d07).withAlpha (0.85f));
-    g.fillPath (glass);
+    g.fillPath (glassPath);
     {
         Graphics::ScopedSaveState save (g);
-        g.reduceClipRegion (glass);
+        g.reduceClipRegion (glassPath);
         // Internal glow and plate structure.
         ColourGradient core (glow.brighter (0.6f).withAlpha (0.25f + 0.75f * level), envelope.getCentreX(), envelope.getCentreY() + envelope.getHeight() * 0.1f,
                              glow.withAlpha (0.0f), envelope.getRight(), envelope.getCentreY(), true);
@@ -579,7 +579,7 @@ void drawVacuumTube (Graphics& g, Rectangle<float> r, Colour glow, float level)
         g.fillRoundedRectangle (Rectangle<float> (envelope.getWidth() * 0.12f, envelope.getHeight() * 0.6f).withPosition (envelope.getX() + envelope.getWidth() * 0.16f, envelope.getY() + envelope.getHeight() * 0.15f), 1.5f);
     }
     g.setColour (Colours::white.withAlpha (0.25f));
-    g.strokePath (glass, PathStrokeType (0.8f));
+    g.strokePath (glassPath, PathStrokeType (0.8f));
     // Bakelite base with pins.
     const auto base = r.withTop (envelope.getBottom()).reduced (envelope.getWidth() * 0.04f, 0.0f);
     g.setGradientFill (ColourGradient (Colour (0xff3a3632), base.getX(), 0.0f, Colour (0xff0e0d0c), base.getRight(), 0.0f, false));

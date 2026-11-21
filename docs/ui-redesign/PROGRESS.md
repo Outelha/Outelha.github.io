@@ -88,3 +88,40 @@ Open / differences from references 03–09:
 * Lower-left illustrations are procedural and simpler than the reference renders (the
   optional `assets/images/art_<effect>.png` slot can take licensed art later).
 * Chassis warmth / reflections still for M8.
+
+## M7 — audio-reactive integration and rendering cost
+Real data behind every moving element (summary):
+
+| Element | Driven by |
+|---|---|
+| Main display waveform | `VisualFeed` output peaks (lock-free ring written at the end of `processChunk`) |
+| Tape reels (main, Advanced pedal, Advanced display) | `VisualFeed::samplesProcessed()` changing + tape on; coast down when either stops |
+| Resampler bars / Tape VU on pedals | smoothed output level from the feed |
+| Chorus / Tremolo / Reverse / Delay animation | parameter values; time advances only while the effect is on |
+| Saturation tubes, Drift/Unstable tubes, reverb dome, delay rings | parameter values |
+| LED meters | processor meters (30 Hz editor timer, repaint only when a segment changes) |
+
+Rendering cost:
+* Static artwork (chassis + header, pedalboard frame and badges, Advanced panel frame and
+  title) moved into cached `Backdrop` components. Animated children now repaint over a
+  bitmap instead of re-running the panel gradients and textures each frame.
+* Measured with the new `[perf]` test (Linux, software renderer, RelWithDebInfo; Windows
+  uses Direct2D and is faster). Full-editor repaint, worst case:
+
+| Scale | Main before → after | Advanced before → after |
+|---|---|---|
+| 100 % | 35 → 26 ms | 63 → 30 ms |
+| 125 % | 72 → 46 ms | 162 → 65 ms |
+| 150 % | 99 → 62 ms | 204 → 59 ms |
+| 200 % | 172 → 88 ms | 353 → 99 ms |
+
+  A normal animation frame only repaints the moving parts: about 1.5–2.3 ms per pedal or
+  display at 100 %.
+
+New regression tests:
+* `UI: tape reels turn only while audio is processed and the pedal is on`: still when the
+  host isn't processing, turning while it is, settling after audio stops, still when
+  bypassed, and still when the Advanced view is hidden.
+* `UI: full-editor render cost stays within budget` (prints the timings above).
+
+Also fixed the MSVC shadowing warnings (C4458/C4459) introduced in M2–M4.

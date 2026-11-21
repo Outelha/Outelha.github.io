@@ -58,7 +58,7 @@ void PresetBar::paint (juce::Graphics& g)
     hw::drawTray (g, area, 9.0f);
     // Warm light rising from the bottom edge of the preset well.
     {
-        juce::Graphics::ScopedSaveState save (g);
+        juce::Graphics::ScopedSaveState saved (g);
         g.reduceClipRegion (area.toNearestInt());
         hw::drawLightSpill (g, juce::Rectangle<float> (area.getWidth() * 0.8f, 24.0f).withCentre ({ area.getCentreX(), area.getBottom() }), orange,
                             isMouseOver() ? 0.9f : 0.6f);
