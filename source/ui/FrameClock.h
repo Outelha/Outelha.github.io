@@ -61,4 +61,14 @@ private:
     bool busy = true;
     juce::VBlankAttachment attachment;
 };
+// Visible in the editor's hierarchy. (isShowing() also needs a native window, which a
+// headless snapshot render does not have; VBlank callbacks already stop when hidden.)
+inline bool visibleInEditor (const juce::Component& c)
+{
+    // The top-level editor itself is made visible by the host window; only its children count.
+    for (auto* p = &c; p != nullptr && p->getParentComponent() != nullptr; p = p->getParentComponent())
+        if (! p->isVisible())
+            return false;
+    return true;
+}
 } // namespace sfx::ui

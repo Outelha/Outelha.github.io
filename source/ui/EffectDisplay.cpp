@@ -1,5 +1,6 @@
 #include "EffectDisplay.h"
 
+#include "Hardware.h"
 #include "dsp/Saturation.h"
 #include "dsp/Tremolo.h"
 
@@ -63,20 +64,30 @@ void EffectDisplay::timerCallback()
 
 void EffectDisplay::paint (juce::Graphics& g)
 {
-    const auto bounds = getLocalBounds().toFloat().reduced (0.5f);
-    g.setColour (Palette::display);
-    g.fillRoundedRectangle (bounds, 8.0f);
+    const auto outer = getLocalBounds().toFloat().reduced (1.0f);
+    // Bezel: dark frame with a thin polished lip, then black glass.
+    g.setColour (juce::Colours::black.withAlpha (0.6f));
+    g.fillRoundedRectangle (outer.translated (0.0f, 2.0f), 14.0f);
+    g.setGradientFill (juce::ColourGradient (juce::Colour (0xff7d7f85), 0.0f, outer.getY(), juce::Colour (0xff141517), 0.0f, outer.getBottom(), false));
+    g.fillRoundedRectangle (outer, 14.0f);
+    const auto bounds = outer.reduced (4.0f);
+    g.setGradientFill (juce::ColourGradient (juce::Colour (0xff0b0c0e), 0.0f, bounds.getY(), juce::Colour (0xff050506), 0.0f, bounds.getBottom(), false));
+    g.fillRoundedRectangle (bounds, 11.0f);
     {
         juce::Graphics::ScopedSaveState save (g);
         juce::Path clip;
-        clip.addRoundedRectangle (bounds, 8.0f);
+        clip.addRoundedRectangle (bounds, 11.0f);
         g.reduceClipRegion (clip);
+
+        // Faint accent light from the bottom of the screen.
+        hw::drawLightSpill (g, juce::Rectangle<float> (bounds.getWidth(), bounds.getHeight() * 0.5f).withCentre ({ bounds.getCentreX(), bounds.getBottom() }),
+                            accent, 0.18f);
 
         const bool on = value (infoFor (effect).enabledId) > 0.5f;
         if (! on)
             g.setOpacity (0.45f);
 
-        const auto area = bounds.reduced (12.0f, 12.0f);
+        const auto area = bounds.reduced (16.0f, 14.0f);
         switch (effect)
         {
             case EffectId::saturation: drawSaturation (g, area); break;
@@ -88,14 +99,19 @@ void EffectDisplay::paint (juce::Graphics& g)
             case EffectId::delay: drawDelay (g, area); break;
             case EffectId::reverb: drawReverb (g, area); break;
         }
+        // Glass reflection.
+        g.setOpacity (1.0f);
+        g.setGradientFill (juce::ColourGradient (juce::Colours::white.withAlpha (0.06f), bounds.getX(), bounds.getY(), juce::Colours::white.withAlpha (0.0f),
+                                                 bounds.getX() + bounds.getWidth() * 0.5f, bounds.getY() + bounds.getHeight() * 0.5f, false));
+        g.fillRect (bounds);
     }
-    g.setColour (Palette::panelEdge);
-    g.drawRoundedRectangle (bounds, 8.0f, 1.0f);
+    g.setColour (juce::Colours::black);
+    g.drawRoundedRectangle (bounds, 11.0f, 1.2f);
 }
 
 void EffectDisplay::drawGrid (juce::Graphics& g, juce::Rectangle<float> area, int cols, int rows) const
 {
-    g.setColour (Palette::track.withAlpha (0.35f));
+    g.setColour (juce::Colour (0xff2a2d33).withAlpha (0.55f));
     for (int c = 1; c < cols; ++c)
         g.drawVerticalLine (juce::roundToInt (area.getX() + area.getWidth() * static_cast<float> (c) / static_cast<float> (cols)), area.getY(), area.getBottom());
     for (int r = 1; r < rows; ++r)
@@ -104,26 +120,35 @@ void EffectDisplay::drawGrid (juce::Graphics& g, juce::Rectangle<float> area, in
 
 void EffectDisplay::drawCaption (juce::Graphics& g, juce::Rectangle<float> area, const juce::String& text) const
 {
-    g.setFont (uiFont (11.0f, true));
-    g.setColour (Palette::textDim);
-    g.drawText (text, area.removeFromTop (14.0f), juce::Justification::topRight);
+    g.setFont (font (Type::labelBold, 17.0f, 0.04f));
+    const auto line = area.removeFromTop (20.0f);
+    g.setColour (juce::Colours::black.withAlpha (0.7f));
+    g.drawText (text, line.translated (0.0f, 1.0f), juce::Justification::topRight);
+    g.setColour (juce::Colour (0xfff2ede4));
+    g.drawText (text, line, juce::Justification::topRight);
 }
 
 namespace
 {
-void strokeGlow (juce::Graphics& g, const juce::Path& p, juce::Colour c, float width = 2.0f)
+// Neon trace: layered soft halo, saturated core and a hot centre line.
+void strokeGlow (juce::Graphics& g, const juce::Path& p, juce::Colour c, float width = 2.4f)
 {
-    g.setColour (c.withAlpha (0.22f));
-    g.strokePath (p, juce::PathStrokeType (width * 3.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+    for (auto [w, a] : { std::pair { 6.0f, 0.05f }, { 4.0f, 0.09f }, { 2.4f, 0.18f } })
+    {
+        g.setColour (c.withMultipliedAlpha (a));
+        g.strokePath (p, juce::PathStrokeType (width * w, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+    }
     g.setColour (c);
     g.strokePath (p, juce::PathStrokeType (width, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+    g.setColour (c.brighter (0.8f).withMultipliedAlpha (0.8f));
+    g.strokePath (p, juce::PathStrokeType (width * 0.35f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 }
 } // namespace
 
 void EffectDisplay::drawSaturation (juce::Graphics& g, juce::Rectangle<float> area) const
 {
     using dsp::Saturation;
-    drawGrid (g, area, 4, 4);
+    drawGrid (g, area, 6, 6);
     const auto mode = static_cast<Saturation::Mode> (juce::jlimit (0, Saturation::numModes - 1, juce::roundToInt (value (ParamID::satMode))));
     const auto drive = std::pow (10.0f, value (ParamID::satDrive) / 20.0f);
     const auto comp = Saturation::compensationGain (mode, drive) * std::pow (10.0f, value (ParamID::satOutput) / 20.0f);
@@ -132,8 +157,8 @@ void EffectDisplay::drawSaturation (juce::Graphics& g, juce::Rectangle<float> ar
     auto toScreen = [area] (float x, float y) {
         return juce::Point<float> { area.getX() + (x * 0.5f + 0.5f) * area.getWidth(), area.getY() + (0.5f - y * 0.45f) * area.getHeight() };
     };
-    g.setColour (Palette::textFaint.withAlpha (0.6f));
-    g.drawLine ({ toScreen (-1.0f, -1.0f), toScreen (1.0f, 1.0f) }, 1.0f);
+    g.setColour (juce::Colour (0xffd8d2c8).withAlpha (0.55f));
+    g.drawLine ({ toScreen (-1.0f, -1.0f), toScreen (1.0f, 1.0f) }, 0.9f);
 
     juce::Path curve;
     for (int i = 0; i <= 200; ++i)
@@ -143,7 +168,7 @@ void EffectDisplay::drawSaturation (juce::Graphics& g, juce::Rectangle<float> ar
         i == 0 ? curve.startNewSubPath (toScreen (x, y)) : curve.lineTo (toScreen (x, y));
     }
     strokeGlow (g, curve, accent);
-    drawCaption (g, area, "TRANSFER  +" + juce::String (value (ParamID::satDrive), 1) + " dB");
+    drawCaption (g, area, "TRANSFER    +" + juce::String (value (ParamID::satDrive), 1) + " dB");
 }
 
 void EffectDisplay::drawResampler (juce::Graphics& g, juce::Rectangle<float> area) const

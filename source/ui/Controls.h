@@ -31,6 +31,12 @@ public:
     // Draw the value read-out in a recessed window (pill) instead of bare text.
     void setValueWindow (bool shouldShow) { valueWindow = shouldShow; repaint(); }
     void setCaptionFont (juce::Font f) { caption.setFont (f); }
+    // Pedal knobs whose caption is printed on the enclosure art.
+    void hideCaption()
+    {
+        caption.setVisible (false);
+        resized();
+    }
 
 private:
     Style style;
@@ -51,6 +57,7 @@ public:
     void resized() override;
     Knob& getTimeKnob() noexcept { return time; }
     Knob& getDivisionKnob() noexcept { return division; }
+    void forEachKnob (const std::function<void (Knob&)>& fn) { fn (time); fn (division); }
 
 private:
     Knob time, division;
@@ -61,7 +68,8 @@ private:
 class ToggleChip final : public juce::TextButton
 {
 public:
-    ToggleChip (APVTS& state, const juce::String& paramId, const juce::String& label, juce::Colour accent);
+    // `withLed`: dark key with a status LED (the panel's ON switch) instead of a lit key.
+    ToggleChip (APVTS& state, const juce::String& paramId, const juce::String& label, juce::Colour accent, bool withLed = false);
 
 private:
     std::unique_ptr<APVTS::ButtonAttachment> attachment;

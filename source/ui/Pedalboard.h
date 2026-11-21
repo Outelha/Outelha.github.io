@@ -2,6 +2,8 @@
 
 #include "ChainOrder.h"
 #include "Controls.h"
+#include "FrameClock.h"
+#include "PedalLive.h"
 
 namespace sfx::ui
 {
@@ -16,14 +18,17 @@ private:
     std::unique_ptr<APVTS::ButtonAttachment> attachment;
 };
 
-// One effect pedal: enclosure, two main knobs, name plate, status LED, stomp switch.
-// Click the enclosure to open its detail panel; drag it to move it in the chain.
-class Pedal final : public juce::Component, private juce::Timer
+// One effect pedal: individually designed enclosure (PedalArt), two real knobs, name
+// plate, status LED, real stomp switch. Click the enclosure to open its detail panel;
+// drag it to move it in the chain.
+class Pedal final : public juce::Component, private FrameClock::Client
 {
 public:
-    static constexpr int width = 138, height = 300;
+    static constexpr int margin = 10;                         // room for the selection glow
+    static constexpr int bodyWidth = 134, bodyHeight = 252;
+    static constexpr int width = bodyWidth + 2 * margin, height = bodyHeight + 2 * margin;
 
-    Pedal (APVTS& state, EffectId id);
+    Pedal (APVTS& state, EffectId id, FrameClock& clock, const VisualFeed& feed);
     ~Pedal() override;
 
     EffectId getEffect() const noexcept { return effect; }
@@ -37,21 +42,19 @@ public:
     void mouseDown (const juce::MouseEvent&) override;
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
+    void mouseEnter (const juce::MouseEvent&) override { repaint(); }
+    void mouseExit (const juce::MouseEvent&) override { repaint(); }
     void endDrag();
 
 private:
-    void timerCallback() override;
-    void drawSurface (juce::Graphics&, const juce::Path& body, juce::Rectangle<float> bounds) const;
-    void drawNamePlate (juce::Graphics&, juce::Rectangle<float> plate) const;
-    juce::String readout() const;
-    float value (const char* id) const;
+    bool frame (double now, double dt) override;
+    pedal::Geometry geometry() const;
 
     APVTS& state;
     EffectId effect;
-    juce::Colour colour, ink;
-    juce::String lastReadout;
-    double animationTime = 0.0;
-    bool selected = false, enabled = false, dragging = false;
+    FrameClock& clock;
+    PedalLive live;
+    bool selected = false, dragging = false;
     std::unique_ptr<juce::Component> knobA, knobB;
     Footswitch footswitch;
     std::unique_ptr<juce::ParameterAttachment> enabledAttachment;
@@ -65,7 +68,7 @@ class Pedalboard final : public juce::Component,
                          private juce::Timer
 {
 public:
-    Pedalboard (APVTS& state, ChainOrder& order);
+    Pedalboard (APVTS& state, ChainOrder& order, FrameClock& clock, const VisualFeed& feed);
 
     void select (EffectId id);
     EffectId getSelected() const noexcept { return selected; }
@@ -88,6 +91,7 @@ private:
     void timerCallback() override;
     void layoutPedals (bool animate);
     juce::Rectangle<int> slotBounds (int slot) const;
+    juce::Rectangle<float> boardArea() const;
     int slotForX (int x) const;
 
     ChainOrder& order;

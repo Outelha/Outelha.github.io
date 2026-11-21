@@ -37,3 +37,23 @@ Visible differences from reference 01 still open (for M8 polish):
 * Overall warmth: the reference has more orange light reflections on the chassis edges.
 * Pedal enclosures are a bit flatter (less glossy clear-coat highlight) than the renders.
 * Master knobs are smaller than in the reference.
+
+## M4 — shared Advanced layout + Saturation
+Complete:
+* One `DetailPanel` layout for all eight effects (rebuilt on selection): PEDAL SETTINGS,
+  italic accent title, description, ON key with LED, EARLIER / LATER keys, illustration
+  corner, effect display, mode segments / switches, machined knobs with value windows.
+  The panel's light seams take the selected pedal's accent colour.
+* Advanced pedalboard: eight pedals drawn with the shared pedal art at full size; real
+  pedal knobs (tape: the reels are the Wow/Age controls), real footswitch, selection glow
+  in the pedal's accent, slot badges. Drag-and-drop reordering, Earlier/Later, click to
+  select unchanged. Delay tap LED kept.
+* `PedalLive` drives main-screen and Advanced pedals from the same parameter/feed logic.
+* `EffectArt`: bundled artwork if present, otherwise procedural; its glow follows the
+  effect (Saturation tubes follow Drive and on/off).
+* Saturation display: transfer curve computed from the real DSP (`Saturation::shape`,
+  `compensationGain`, Drive, Output, Mix, mode), neon styling, grid, caption.
+
+Removed on purpose: the small LCD read-outs on the resampler / reverse / delay pedals and
+the "SHOBEATS" silkscreen on the name plates (not in the approved designs; the same values
+are shown in the detail panel).

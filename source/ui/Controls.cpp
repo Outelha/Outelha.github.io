@@ -76,7 +76,9 @@ void Knob::paint (juce::Graphics& g)
 void Knob::resized()
 {
     auto area = getLocalBounds();
-    if (style == Style::pedal)
+    if (! caption.isVisible())
+        ;
+    else if (style == Style::pedal)
         caption.setBounds (area.removeFromBottom (14));
     else
         caption.setBounds (area.removeFromTop (style == Style::alu ? 30 : 20));
@@ -107,9 +109,11 @@ void SyncSwap::resized()
 }
 
 //==============================================================================
-ToggleChip::ToggleChip (APVTS& state, const juce::String& paramId, const juce::String& label, juce::Colour accent)
+ToggleChip::ToggleChip (APVTS& state, const juce::String& paramId, const juce::String& label, juce::Colour accent, bool withLed)
     : juce::TextButton (label)
 {
+    if (withLed)
+        getProperties().set ("led", true);
     setClickingTogglesState (true);
     setColour (juce::TextButton::buttonOnColourId, accent);
     attachment = std::make_unique<APVTS::ButtonAttachment> (state, paramId, *this);

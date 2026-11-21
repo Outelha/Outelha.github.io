@@ -497,7 +497,7 @@ Geometry layout (EffectId id, Rectangle<float> b, bool captions)
     g.body = b;
     g.scale = b.getWidth() / 170.0f;
 
-    const auto captionH = 0.042f;
+    const auto captionH = 0.05f;
     switch (id)
     {
         case EffectId::resampler:
@@ -532,7 +532,7 @@ Geometry layout (EffectId id, Rectangle<float> b, bool captions)
     {
         // Captions sit below the knobs (or below the dome / bar display, above the knobs).
         const bool above = id == EffectId::resampler || id == EffectId::reverb;
-        const auto y = above ? 0.215f : (id == EffectId::tape ? 0.243f : 0.225f);
+        const auto y = above ? 0.212f : (id == EffectId::tape ? 0.24f : 0.222f);
         g.captionA = rel (b, 0.08f, y, 0.52f, y + captionH).withCentre ({ g.knobA.getCentreX(), b.getY() + b.getHeight() * (y + captionH * 0.5f) });
         g.captionB = rel (b, 0.48f, y, 0.92f, y + captionH).withCentre ({ g.knobB.getCentreX(), b.getY() + b.getHeight() * (y + captionH * 0.5f) });
     }

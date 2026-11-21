@@ -119,6 +119,22 @@ void ShobeatsLookAndFeel::drawButtonBackground (juce::Graphics& g, juce::Button&
     hw::KeyLook key;
     key.accent = button.findColour (juce::TextButton::buttonOnColourId);
     key.lit = button.getToggleState();
+    if (button.getProperties()["led"])
+    {
+        // Dark key with an LED and an accent rim when on.
+        key.lit = false;
+        key.over = over;
+        key.down = down;
+        key.corner = 8.0f;
+        const auto r = button.getLocalBounds().toFloat().reduced (1.0f, 1.5f);
+        if (button.getToggleState())
+            hw::drawRimGlow (g, r, 8.0f, key.accent, 6.0f, 0.7f);
+        hw::drawKey (g, r, key);
+        g.setColour (button.getToggleState() ? key.accent.withAlpha (0.9f) : juce::Colour (0xff3a3632));
+        g.drawRoundedRectangle (r.reduced (0.5f), 8.0f, 1.2f);
+        hw::drawLed (g, { r.getX() + 22.0f, r.getCentreY() }, 4.2f, key.accent, button.getToggleState());
+        return;
+    }
     key.over = over;
     key.down = down;
     key.connectedLeft = button.isConnectedOnLeft();
@@ -135,6 +151,11 @@ void ShobeatsLookAndFeel::drawButtonText (juce::Graphics& g, juce::TextButton& b
     if (button.isDown())
         area = area.translated (0.0f, 0.8f);
     const auto text = button.getButtonText().toUpperCase();
+    if (button.getProperties()["led"])
+    {
+        hw::drawKeyText (g, text, area.withTrimmedLeft (26.0f), font (Type::labelBold, size, 0.06f), false, juce::Colours::white);
+        return;
+    }
     if (text == "<" || text == ">")
     {
         // Navigation arrows: orange chevrons.

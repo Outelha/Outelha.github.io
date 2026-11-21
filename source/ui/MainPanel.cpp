@@ -43,39 +43,9 @@ const auto masterTray = V (996, 528, 222, 248);
 
 constexpr int tileW = 104, tileH = 214;
 
-// Visible in the editor's hierarchy. (isShowing() also needs a native window, which a
-// headless snapshot render does not have; VBlank callbacks already stop when hidden.)
-bool visibleInHierarchy (const Component& c)
-{
-    // The top-level editor itself is made visible by the host window; only its children count.
-    for (auto* p = &c; p != nullptr && p->getParentComponent() != nullptr; p = p->getParentComponent())
-        if (! p->isVisible())
-            return false;
-    return true;
-}
 
-float normalised (const AudioProcessorValueTreeState& s, const char* id)
-{
-    if (auto* p = s.getParameter (id))
-        return p->getValue();
-    return 0.0f;
-}
 
-float raw (const AudioProcessorValueTreeState& s, const char* id)
-{
-    if (auto* v = s.getRawParameterValue (id))
-        return v->load();
-    return 0.0f;
-}
 
-// Signal level (0..1 on a 48 dB scale) from the newest few segments of the visual feed.
-float feedLevel (const VisualFeed& feed)
-{
-    std::array<float, 12> recent {};
-    feed.read (recent.data(), static_cast<std::uint32_t> (recent.size()));
-    const auto peak = *std::max_element (recent.begin(), recent.end());
-    return jlimit (0.0f, 1.0f, (Decibels::gainToDecibels (peak, -60.0f) + 48.0f) / 48.0f);
-}
 
 // Machined module housing with chamfered corners (Drift / Unstable).
 void drawModulePlate (Graphics& g, Rectangle<float> r)
@@ -324,14 +294,13 @@ void KeyCap::paintButton (Graphics& g, bool over, bool down)
 }
 
 //==============================================================================
-EffectTile::EffectTile (AudioProcessorValueTreeState& s, EffectId id, FrameClock& c, const ShobeatsAudioProcessor& p)
-    : Button (infoFor (id).name), state (s), processor (p), effect (id), clock (c)
+EffectTile::EffectTile (AudioProcessorValueTreeState& state, EffectId id, FrameClock& c, const ShobeatsAudioProcessor& p)
+    : Button (infoFor (id).name), effect (id), clock (c), live (state, id, p.getVisualFeed())
 {
     setClickingTogglesState (true);
     setTooltip (String (infoFor (id).name) + ": click to switch on/off, double-click to open the pedal");
     attachment = std::make_unique<AudioProcessorValueTreeState::ButtonAttachment> (state, infoFor (id).enabledId, *this);
     setMouseCursor (MouseCursor::PointingHandCursor);
-    readState (state, effect, shown);
     clock.add (*this);
 }
 
@@ -340,73 +309,12 @@ EffectTile::~EffectTile()
     clock.remove (*this);
 }
 
-void EffectTile::readState (const AudioProcessorValueTreeState& s, EffectId id, pedal::State& out)
-{
-    out.enabled = raw (s, infoFor (id).enabledId) > 0.5f;
-    const auto knobs = pedal::faceKnobs (id);
-    const bool synced = knobs.syncId != nullptr && raw (s, knobs.syncId) > 0.5f;
-    out.knobA = normalised (s, synced ? knobs.divisionId : knobs.a);
-    out.knobB = normalised (s, knobs.b);
-    out.extra = {};
-    switch (id)
-    {
-        case EffectId::saturation: out.extra[0] = normalised (s, ParamID::satDrive); break;
-        case EffectId::resampler: out.extra[1] = normalised (s, ParamID::rsBits); break;
-        case EffectId::chorus:
-            out.extra[0] = normalised (s, ParamID::chorusRate);
-            out.extra[1] = normalised (s, ParamID::chorusDepth);
-            break;
-        case EffectId::tremolo:
-            out.extra[0] = normalised (s, ParamID::tremRate);
-            out.extra[1] = normalised (s, ParamID::tremDepth);
-            out.extra[2] = raw (s, ParamID::tremShape);
-            break;
-        case EffectId::delay: out.extra[1] = normalised (s, ParamID::delayFeedback); break;
-        case EffectId::reverb: out.extra[0] = 0.6f * normalised (s, ParamID::reverbDecay) + 0.4f * normalised (s, ParamID::reverbMix); break;
-        case EffectId::tape:
-        case EffectId::reverse:
-            break;
-    }
-}
-
 bool EffectTile::frame (double, double dt)
 {
-    if (! visibleInHierarchy (*this))
+    if (! visibleInEditor (*this))
         return false;
-
-    pedal::State next = shown;
-    readState (state, effect, next);
-
-    // Audio is running when the processor keeps consuming samples.
-    const auto samples = processor.getVisualFeed().samplesProcessed();
-    const bool running = samples != lastSamples;
-    lastSamples = samples;
-
     bool animating = false;
-    const auto newLevel = next.enabled && running ? feedLevel (processor.getVisualFeed()) : 0.0f;
-    level += (newLevel - level) * static_cast<float> (jmin (1.0, dt * (newLevel > level ? 20.0 : 6.0)));
-    next.level = level;
-    if (effect == EffectId::tape || effect == EffectId::resampler)
-        animating = animating || std::abs (level - shown.level) > 0.002f;
-
-    if (effect == EffectId::tape && next.enabled && running)
-    {
-        reelPhase += static_cast<float> (dt) * 2.4f;
-        animating = true;
-    }
-    next.reelPhase = reelPhase;
-
-    if ((effect == EffectId::chorus || effect == EffectId::tremolo) && next.enabled)
-    {
-        animTime += dt;
-        animating = true;
-    }
-    next.time = animTime;
-
-    const bool changed = next.enabled != shown.enabled || ! exactlyEqual (next.knobA, shown.knobA) || ! exactlyEqual (next.knobB, shown.knobB)
-                         || next.extra != shown.extra;
-    shown = next;
-    if (animating || changed)
+    if (live.advance (dt, animating))
         repaint();
     return animating;
 }
@@ -427,7 +335,7 @@ void EffectTile::paintButton (Graphics& g, bool over, bool down)
     if (down)
         body.translate (0.0f, 1.0f);
 
-    pedal::State s = shown;
+    pedal::State s = live.state();
     s.enabled = getToggleState();
     s.hover = over;
     s.captions = false;
@@ -503,7 +411,7 @@ void CentralDisplay::timerCallback()
 
 bool CentralDisplay::frame (double, double)
 {
-    if (! visibleInHierarchy (*this))
+    if (! visibleInEditor (*this))
         return false;
     const auto written = processor.getVisualFeed().read (wave.data(), static_cast<std::uint32_t> (wave.size()));
     if (written == lastWritten)

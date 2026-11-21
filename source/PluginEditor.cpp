@@ -75,7 +75,7 @@ MainView::MainView (ShobeatsAudioProcessor& p)
     : processor (p),
       presetBar (p),
       mainPanel (p, frameClock),
-      pedalboard (p.getState(), p.getChainOrder()),
+      pedalboard (p.getState(), p.getChainOrder(), frameClock, p.getVisualFeed()),
       detail (p.getState()),
       browser (p.getPresetManager()),
       savePanel (p.getPresetManager())
@@ -165,10 +165,8 @@ void MainView::resized()
     const auto content = getLocalBounds().withTrimmedTop (topBarHeight);
     mainPanel.setBounds (content);
 
-    auto adv = content.reduced (22, 0).withTrimmedBottom (16);
-    pedalboard.setBounds (adv.removeFromTop (330));
-    adv.removeFromTop (10);
-    detail.setBounds (adv);
+    pedalboard.setBounds (14, 96, 1232, 318);
+    detail.setBounds (10, 422, 1240, 408);
 
     browser.setBounds (getLocalBounds());
     savePanel.setBounds (getLocalBounds());

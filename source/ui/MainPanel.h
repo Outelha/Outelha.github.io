@@ -3,7 +3,7 @@
 #include "ChainOrder.h"
 #include "Controls.h"
 #include "FrameClock.h"
-#include "PedalArt.h"
+#include "PedalLive.h"
 #include "presets/PresetManager.h"
 
 namespace sfx
@@ -74,21 +74,13 @@ public:
 
     std::function<void (EffectId)> onOpen;
 
-    // Fills a painter state from the live parameters (shared with the Advanced pedals).
-    static void readState (const juce::AudioProcessorValueTreeState&, EffectId, pedal::State&);
-
 private:
     bool frame (double now, double dt) override;
 
-    juce::AudioProcessorValueTreeState& state;
-    const ShobeatsAudioProcessor& processor;
     EffectId effect;
     FrameClock& clock;
+    PedalLive live;
     int slot = 0;
-    double animTime = 0.0;
-    float reelPhase = 0.0f, level = 0.0f;
-    std::uint64_t lastSamples = 0;
-    pedal::State shown;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> attachment;
 };
 
