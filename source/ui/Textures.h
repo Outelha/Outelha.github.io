@@ -2,6 +2,8 @@
 
 #include <juce_graphics/juce_graphics.h>
 
+#include <map>
+
 namespace sfx::ui
 {
 // Texture images used while painting.
@@ -23,7 +25,17 @@ struct Textures
     // Number of Textures objects currently alive (0 or 1); used by lifecycle tests.
     static int liveInstances() noexcept;
 
-    juce::Image noise;   // fine grain, 128 x 128
-    juce::Image brushed; // horizontal brushed-metal streaks, 512 x 512, seamless
+    juce::Image noise;    // fine grain, 128 x 128
+    juce::Image brushed;  // horizontal brushed-metal streaks, 512 x 512, seamless
+    juce::Image conic;    // spun (conically brushed) aluminium disc, 512 x 512, for knob caps
+    juce::Image hammered; // embossed hammer-tone finish (light/dark alpha), 256 x 256, seamless
+    juce::Image sparkle;  // sparse metal-flake glints, 256 x 256, seamless
+
+    // Optional raster artwork from assets/images (see docs/ui-redesign/ASSETS.md).
+    // Returns an invalid image when the asset is not bundled; callers draw a fallback.
+    juce::Image artwork (const juce::String& name);
+
+private:
+    std::map<juce::String, juce::Image> artworkCache;
 };
 } // namespace sfx::ui

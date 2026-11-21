@@ -106,6 +106,17 @@ juce_add_binary_data(ShobeatsLabData
     SOURCES ${SHOBEATS_LAB_PRESETS})
 set_target_properties(ShobeatsLabData PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
+# UI assets: embedded fonts (SIL OFL, see assets/fonts/OFL-Barlow.txt) and optional
+# raster artwork (see docs/ui-redesign/ASSETS.md). Everything else is drawn in code.
+file(GLOB SHOBEATS_UI_ASSETS CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/fonts/*.ttf"
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/images/*.png")
+juce_add_binary_data(ShobeatsAssets
+    HEADER_NAME ShobeatsAssets.h
+    NAMESPACE ShobeatsAssets
+    SOURCES ${SHOBEATS_UI_ASSETS})
+set_target_properties(ShobeatsAssets PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 target_sources(${PRODUCT_NAME} PRIVATE
     source/Parameters.cpp
     source/presets/Preset.cpp
@@ -124,6 +135,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/ui/PresetBrowser.cpp
     source/ui/Hardware.cpp
     source/ui/Textures.cpp
+    source/ui/Fonts.cpp
+    source/ui/PedalArt.cpp
     source/ui/MainPanel.cpp)
 
 target_compile_definitions(${PRODUCT_NAME} PUBLIC
@@ -139,6 +152,7 @@ target_link_libraries(${PRODUCT_NAME}
         shobeats_dsp
         ShobeatsPresetData
         ShobeatsLabData
+        ShobeatsAssets
     PRIVATE
         juce::juce_audio_utils
         juce::juce_dsp

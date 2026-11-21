@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Parameters.h"
+#include "Fonts.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -22,25 +23,43 @@ inline const juce::Colour brand { 0xffff6a2b };   // SHOBEATS signal orange
 inline const juce::Colour ledOn { 0xffff3b30 };
 } // namespace Palette
 
-// Each pedal gets its own enclosure colour.
+// Each pedal gets its own enclosure finish colour (the painted / anodised metal).
 inline juce::Colour pedalColour (EffectId id)
 {
     switch (id)
     {
-        case EffectId::saturation: return juce::Colour (0xffd9512c);
-        case EffectId::resampler: return juce::Colour (0xff2b8fd0);
-        case EffectId::tape: return juce::Colour (0xffc7a46a);
-        case EffectId::chorus: return juce::Colour (0xff27b394);
-        case EffectId::tremolo: return juce::Colour (0xffcf4a86);
-        case EffectId::reverse: return juce::Colour (0xff8a6be0);
-        case EffectId::delay: return juce::Colour (0xffd9ad2f);
-        case EffectId::reverb: return juce::Colour (0xff5866c4);
+        case EffectId::saturation: return juce::Colour (0xffc0531f); // copper
+        case EffectId::resampler: return juce::Colour (0xff1c5d8c);  // deep blue
+        case EffectId::tape: return juce::Colour (0xffb39d7c);       // champagne bronze
+        case EffectId::chorus: return juce::Colour (0xff11807a);     // teal
+        case EffectId::tremolo: return juce::Colour (0xff8a2b8e);    // magenta / purple
+        case EffectId::reverse: return juce::Colour (0xff8c8a93);    // violet-tinted silver
+        case EffectId::delay: return juce::Colour (0xffc99a1e);      // gold
+        case EffectId::reverb: return juce::Colour (0xff22389c);     // cosmic blue
     }
     return juce::Colours::grey;
 }
 
-// Readable accent for drawing on dark backgrounds.
-inline juce::Colour accentColour (EffectId id) { return pedalColour (id).brighter (0.25f); }
+// The light colour of each effect: displays, selection glow, value arcs, panel trim.
+inline juce::Colour accentColour (EffectId id)
+{
+    switch (id)
+    {
+        case EffectId::saturation: return juce::Colour (0xffff7a1f);
+        case EffectId::resampler: return juce::Colour (0xff2fd6ff);
+        case EffectId::tape: return juce::Colour (0xffffa53a);
+        case EffectId::chorus: return juce::Colour (0xff35eadc);
+        case EffectId::tremolo: return juce::Colour (0xffff4fd6);
+        case EffectId::reverse: return juce::Colour (0xffb072ff);
+        case EffectId::delay: return juce::Colour (0xffffbf2e);
+        case EffectId::reverb: return juce::Colour (0xff4f8dff);
+    }
+    return juce::Colours::orange;
+}
+
+// SHOBEATS signal orange: global controls, master section, LEDs.
+inline const juce::Colour brandOrange { 0xffff7a1f };
+inline const juce::Colour ledAmber { 0xffffa236 };
 
 juce::Font uiFont (float height, bool bold = false);
 
